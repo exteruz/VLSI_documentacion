@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        <link rel="canonical" href="https://github.com/exteruz/VLSI_documentacion/user/2-simulacion/">
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>Simulación - VLSI</title>
+        <link href="../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../../css/brands.min.css" rel="stylesheet">
+        <link href="../../css/solid.min.css" rel="stylesheet">
+        <link href="../../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="../..">VLSI</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="../.." class="nav-link">Inicio</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../../tools/tools/" class="nav-link">Herramientas</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle active" aria-current="page" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Guía de Usuario</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../1-introduccion/" class="dropdown-item">Introducción</a>
+</li>
+                                    
+<li>
+    <a href="./" class="dropdown-item active" aria-current="page">Simulación</a>
+</li>
+                                    
+<li>
+    <a href="../3-sintesis/" class="dropdown-item">Síntesis</a>
+</li>
+                                    
+<li>
+    <a href="../4-openlane/" class="dropdown-item">Flujo Físico</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../1-introduccion/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../3-sintesis/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#guia-de-simulacion-y-generacion-de-firmware" class="nav-link">Guía de Simulación y Generación de Firmware</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#1-generacion-del-firmware" class="nav-link">1. Generación del Firmware</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#2-simulacion-del-soc-tiny-tapeout" class="nav-link">2. Simulación del SoC Tiny Tapeout</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#3-visualizacion-e-inspeccion-de-senales-en-gtkwave" class="nav-link">3. Visualización e Inspección de Señales en GTKWave</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="guia-de-simulacion-y-generacion-de-firmware">Guía de Simulación y Generación de Firmware</h1>
+<p>Esta sección explica cómo compilar el software (firmware) en ensamblador RISC-V y cómo ejecutar la simulación del SoC para Tiny Tapeout utilizando Icarus Verilog y GTKWave.</p>
+<p><img alt="Simulación del SoC" src="../../img/simulation.png" /></p>
+<hr />
+<h2 id="1-generacion-del-firmware">1. Generación del Firmware</h2>
+<p>El repositorio cuenta con un <code>Makefile</code> dentro de <code>femtoRV/firmware/asm/</code> que automatiza todo el flujo de ensamblado, enlace y generación de las imágenes hexadecimales para la memoria Flash.</p>
+<h3 id="paso-1-seleccionar-el-programa-a-compilar">Paso 1: Seleccionar el Programa a Compilar</h3>
+<p>En el archivo <code>femtoRV/firmware/asm/Makefile</code>, la variable <code>OBJECTS</code> define qué archivos objeto se compilarán y enlazarán en el binario final:</p>
+<div class="language-makefile highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Ejemplo: seleccionar el programa de prueba deseado</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">OBJECTS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>test_ram_load.o
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c"># OBJECTS = blink.o</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># OBJECTS = uart_full_demo.o putchar.o</span>
+</code></pre></div>
+<h3 id="paso-2-ejecutar-el-comando-de-compilacion">Paso 2: Ejecutar el Comando de Compilación</h3>
+<p>Desde el directorio de firmware, ejecute:</p>
+<div class="language-bash highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">cd</span><span class="w"> </span>femtoRV/firmware/asm
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>make
+</code></pre></div>
+<details class="info">
+<summary>Ver detalles de la ejecución interna </summary>
+<p>Este comando ejecuta de forma automatizada los siguientes procesos internos:</p>
+<ol>
+<li><strong>Ensamblado:</strong> Compila los archivos fuente en ensamblador (<code>.S</code>) a objetos (<code>.o</code>) mediante <code>riscv32-unknown-elf-as</code> con las banderas <code>-march=rv32i -mabi=ilp32</code>.</li>
+<li><strong>Enlace:</strong> Enlaza los objetos con el script de linker <code>bram.ld</code> usando <code>riscv32-unknown-elf-ld</code> para generar el ejecutable <code>firmware.elf</code>.</li>
+<li><strong>Extracción de Formatos:</strong> Utiliza <code>riscv32-unknown-elf-objcopy</code> para generar:</li>
+<li><code>firmware.bin</code>: Binario plano del programa.</li>
+<li><code>firmware_flash.hex</code>: Archivo en formato hexadecimal Verilog cargado por el modelo de simulación de la Flash SPI.</li>
+<li><strong>Compensación de Corrimiento (Silicio Físico):</strong> Ejecuta el script <code>fix_shift.py</code> para generar <code>firmware_shifted.hex</code>, compensando el desplazamiento de 1 bit del silicio original.</li>
+<li><strong>Copia de Archivos:</strong> Transfiere automáticamente las imágenes hexadecimales generadas a las carpetas destino para la simulación.</li>
+</ol>
+</details>
+<hr />
+<h2 id="2-simulacion-del-soc-tiny-tapeout">2. Simulación del SoC Tiny Tapeout</h2>
+<p>La simulación se ejecuta desde la carpeta <code>tinytapeout/</code>.</p>
+<h3 id="paso-1-ejecutar-la-simulacion-con-make">Paso 1: Ejecutar la Simulación con Make</h3>
+<p>Navegue a la carpeta <code>tinytapeout/</code> y ejecute:</p>
+<div class="language-bash highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">cd</span><span class="w"> </span>tinytapeout
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>make<span class="w"> </span>sim
+</code></pre></div>
+<details class="info">
+<summary>Ver detalles de la ejecución interna </summary>
+<p>El comando realiza los siguientes pasos de manera automática:</p>
+<ol>
+<li><strong>Limpieza:</strong> Elimina simulaciones previas (<code>rm -f a.out *.vcd</code>).</li>
+<li><strong>Compilación (Icarus Verilog):</strong> Ensambla el banco de pruebas y los módulos RTL ejecutando internamente:<br />
+<code>iverilog -DBENCH -DSIM -DPASSTHROUGH_PLL -DBOARD_FREQ=27 -DCPU_FREQ=27 tt_um_femto_TB.v ${OBJS}${SIM_OBJS}</code></li>
+<li><strong>Simulación (VVP):</strong> Ejecuta el motor con <code>vvp a.out</code>. El modelo <code>spiflash.v</code> lee automáticamente el firmware mediante <code>$readmemh</code> y el procesador inicia su ciclo de <em>fetch</em>.</li>
+<li><strong>Registro:</strong> Genera el archivo de ondas <code>tt_um_femto_TB.vcd</code>.</li>
+<li><strong>Visualización:</strong> Abre <strong>GTKWave</strong> de forma automática para ver las señales.</li>
+</ol>
+</details>
+<hr />
+<h2 id="3-visualizacion-e-inspeccion-de-senales-en-gtkwave">3. Visualización e Inspección de Señales en GTKWave</h2>
+<p>Una vez abierto GTKWave (o ejecutando manualmente <code>gtkwave tt_um_femto_TB.vcd &amp;</code>), las principales señales a inspeccionar son:</p>
+<ul>
+<li><strong>Reloj y Reset</strong>:</li>
+<li><code>CLK</code>: Reloj maestro de simulación (27 MHz).</li>
+<li>
+<p><code>RESET</code>: Señal de inicialización y reset.</p>
+</li>
+<li>
+<p><strong>Pines de Tiny Tapeout (<code>ui_in</code> y <code>uo_out</code>)</strong>:</p>
+</li>
+<li><code>uo_out[0]</code> (<code>MOSI</code>) y <code>ui_in[0]</code> (<code>MISO</code>): Líneas de datos de la Flash SPI.</li>
+<li><code>uo_out[2]</code> (<code>CS#</code>): Selección de chip de la memoria Flash (activo en bajo durante lectura de instrucciones).</li>
+<li><code>uo_out[5]</code> (<code>SCK</code>): Reloj generado para el bus serie SPI.</li>
+<li>
+<p><code>uo_out[7]</code> (<code>TXD</code>) y <code>ui_in[2]</code> (<code>RXD</code>): Comunicación serie UART.</p>
+</li>
+<li>
+<p><strong>Registros Internos del Procesador</strong>:</p>
+</li>
+<li><code>tt_um_femto_TB.uut.femto0.CPU.registerFile</code>: Arreglo de los 32 registros del procesador RISC-V (<code>x0</code> a <code>x31</code>) para verificar los resultados de las instrucciones ejecutadas.</li>
+<li><code>tt_um_femto_TB.flashram0.mem</code>: Contenido de la memoria RAM SPI externa.</li>
+</ul></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js"></script>
+        <script src="../../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

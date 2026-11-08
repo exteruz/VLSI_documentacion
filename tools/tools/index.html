@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        <link rel="canonical" href="https://github.com/exteruz/VLSI_documentacion/tools/tools/">
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>Herramientas - VLSI</title>
+        <link href="../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../../css/brands.min.css" rel="stylesheet">
+        <link href="../../css/solid.min.css" rel="stylesheet">
+        <link href="../../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="../..">VLSI</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="../.." class="nav-link">Inicio</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="./" class="nav-link active" aria-current="page">Herramientas</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Guía de Usuario</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../user/1-introduccion/" class="dropdown-item">Introducción</a>
+</li>
+                                    
+<li>
+    <a href="../../user/2-simulacion/" class="dropdown-item">Simulación</a>
+</li>
+                                    
+<li>
+    <a href="../../user/3-sintesis/" class="dropdown-item">Síntesis</a>
+</li>
+                                    
+<li>
+    <a href="../../user/4-openlane/" class="dropdown-item">Flujo Físico</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../.." class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../../user/1-introduccion/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#entorno-de-trabajo-y-herramientas" class="nav-link">Entorno de Trabajo y Herramientas</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#tools-overview" class="nav-link">Tools overview</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#instalacion-paso-a-paso-flujo-asic" class="nav-link">Instalación Paso a Paso (Flujo ASIC)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#herramientas-adicionales-y-verificacion" class="nav-link">Herramientas Adicionales y Verificación</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="entorno-de-trabajo-y-herramientas">Entorno de Trabajo y Herramientas</h1>
+<p>Installation of the following tools is required.</p>
+<h2 id="tools-overview">Tools overview</h2>
+<div class="admonition info">
+<p class="admonition-title">Tools Summary</p>
+<ol>
+<li><strong>Yosys:</strong> Síntesis lógica (convierte código a compuertas).</li>
+<li><strong>Icarus Verilog:</strong> Compilación de netlists y simulación.</li>
+<li><strong>GTKWave:</strong> Visualización de ondas (debugging).</li>
+<li><strong>ngspice:</strong> Simulación de circuitos a nivel de transistor.</li>
+<li><strong>OpenSTA:</strong> (Static Timing Analysis).</li>
+<li><strong>Magic:</strong> (Layout).</li>
+<li><strong>OpenLane:</strong> Sistema automatizado que integra todas las herramientas.</li>
+<li><strong>Python venv &amp; cocotb:</strong> framework where user are allow to write Verilog testbenches in Python. .</li>
+</ol>
+</div>
+<hr />
+<h2 id="instalacion-paso-a-paso-flujo-asic">Instalación Paso a Paso (Flujo ASIC)</h2>
+<p>A continuación, haz clic en la herramienta que desees en el menú lateral derecho, o desplázate hacia abajo para ver los comandos de instalación.</p>
+<h3 id="1-yosys">1. Yosys</h3>
+<div class="admonition abstract">
+<p class="admonition-title">Instalación y Configuración</p>
+<p><strong>Función:</strong> Framework principal para síntesis Verilog-RTL.</p>
+<div class="language-bash highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git<span class="w"> </span>clone<span class="w"> </span><span class="o">[</span>https://github.com/YosysHQ/yosys.git<span class="o">](</span>https://github.com/YosysHQ/yosys.git<span class="o">)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">cd</span><span class="w"> </span>yosys
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>make
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>build-essential<span class="w"> </span>clang<span class="w"> </span>bison<span class="w"> </span>flex<span class="w"> </span>libreadline-dev<span class="w"> </span>gawk<span class="w"> </span>tcl-dev<span class="w"> </span>libffi-dev<span class="w"> </span>git<span class="w"> </span>graphviz<span class="w"> </span>xdot<span class="w"> </span>pkg-config<span class="w"> </span>python3<span class="w"> </span>libboost-system-dev<span class="w"> </span>libboost-python-dev<span class="w"> </span>libboost-filesystem-dev<span class="w"> </span>zlib1g-dev
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>make<span class="w"> </span>config-gcc
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>make
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>sudo<span class="w"> </span>make<span class="w"> </span>install
+</code></pre></div>
+</div>
+<h3 id="2-icarus-verilog">2. Icarus Verilog</h3>
+<div class="admonition abstract">
+<p class="admonition-title">Instalación y Configuración</p>
+<p><strong>Función:</strong> Compilador rápido para probar el código RTL.</p>
+<div class="language-bash highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>iverilog
+</code></pre></div>
+</div>
+<h3 id="3-gtkwave">3. GTKWave</h3>
+<div class="admonition abstract">
+<p class="admonition-title">Instalación y Configuración</p>
+<p><strong>Función:</strong> Interfaz gráfica para ver los resultados de la simulación (archivos .VCD).</p>
+<div class="language-bash highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>gtkwave
+</code></pre></div>
+</div>
+<h3 id="4-ngspice">4. ngspice</h3>
+<div class="admonition abstract">
+<p class="admonition-title">Instalación y Configuración</p>
+<p><strong>Función:</strong> Simulador analógico para circuitos. Requiere compilación manual.</p>
+<div class="language-bash highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>build-essential<span class="w"> </span>libxaw7-dev
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>tar<span class="w"> </span>-zxvf<span class="w"> </span>ngspice-40.tar.gz
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nb">cd</span><span class="w"> </span>ngspice-40
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>mkdir<span class="w"> </span>release
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">cd</span><span class="w"> </span>release
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>../configure<span class="w"> </span>--with-x<span class="w"> </span>--with-readline<span class="o">=</span>yes<span class="w"> </span>--disable-debug
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>make
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>sudo<span class="w"> </span>make<span class="w"> </span>install
+</code></pre></div>
+</div>
+<h3 id="5-opensta">5. OpenSTA</h3>
+<div class="admonition abstract">
+<p class="admonition-title">Instalación y Configuración</p>
+<p><strong>Función:</strong> Comprueba que las señales eléctricas lleguen a tiempo.</p>
+<div class="language-bash highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>cmake<span class="w"> </span>clang<span class="w"> </span>gcc<span class="w"> </span>tcl<span class="w"> </span>swig<span class="w"> </span>bison<span class="w"> </span>flex
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>git<span class="w"> </span>clone<span class="w"> </span><span class="o">[</span>https://github.com/The-OpenROAD-Project/OpenSTA.git<span class="o">](</span>https://github.com/The-OpenROAD-Project/OpenSTA.git<span class="o">)</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nb">cd</span><span class="w"> </span>OpenSTA
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>mkdir<span class="w"> </span>build
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">cd</span><span class="w"> </span>build
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>cmake<span class="w"> </span>..
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>make
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>sudo<span class="w"> </span>make<span class="w"> </span>install
+</code></pre></div>
+</div>
+<h3 id="6-magic">6. Magic</h3>
+<div class="admonition abstract">
+<p class="admonition-title">Instalación y Configuración</p>
+<p><strong>Función:</strong> Herramienta para editar y ver los polígonos del chip (GDSII).</p>
+<div class="language-bash highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>m4<span class="w"> </span>tcsh<span class="w"> </span>csh<span class="w"> </span>libx11-dev<span class="w"> </span>tcl-dev<span class="w"> </span>tk-dev<span class="w"> </span>libcairo2-dev<span class="w"> </span>mesa-common-dev<span class="w"> </span>libglu1-mesa-dev<span class="w"> </span>libncurses-dev
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>git<span class="w"> </span>clone<span class="w"> </span><span class="o">[</span>https://github.com/RTimothyEdwards/magic<span class="o">](</span>https://github.com/RTimothyEdwards/magic<span class="o">)</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nb">cd</span><span class="w"> </span>magic
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>./configure
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>make
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>sudo<span class="w"> </span>make<span class="w"> </span>install
+</code></pre></div>
+</div>
+<h3 id="7-openlane">7. OpenLane</h3>
+<div class="admonition warning">
+<p class="admonition-title">Instalación y Configuración (Requiere Docker)</p>
+<p><strong>Paso 1: Dependencias del sistema</strong>
+<div class="language-bash highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>sudo<span class="w"> </span>apt-get<span class="w"> </span>update
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>build-essential<span class="w"> </span>python3<span class="w"> </span>python3-venv<span class="w"> </span>python3-pip<span class="w"> </span>make<span class="w"> </span>git
+</code></pre></div></p>
+<p><strong>Paso 2: Instalar Docker (Si no lo tienes)</strong>
+<div class="language-bash highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>apt-transport-https<span class="w"> </span>ca-certificates<span class="w"> </span>curl<span class="w"> </span>software-properties-common
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>curl<span class="w"> </span>-fsSL<span class="w"> </span><span class="o">[</span>https://download.docker.com/linux/ubuntu/gpg<span class="o">](</span>https://download.docker.com/linux/ubuntu/gpg<span class="o">)</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>gpg<span class="w"> </span>--dearmor<span class="w"> </span>-o<span class="w"> </span>/usr/share/keyrings/docker-archive-keyring.gpg
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] [https://download.docker.com/linux/ubuntu](https://download.docker.com/linux/ubuntu) </span><span class="k">$(</span>lsb_release<span class="w"> </span>-cs<span class="k">)</span><span class="s2"> stable"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>/etc/apt/sources.list.d/docker.list<span class="w"> </span>&gt;<span class="w"> </span>/dev/null
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>sudo<span class="w"> </span>apt<span class="w"> </span>update
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>docker-ce<span class="w"> </span>docker-ce-cli<span class="w"> </span>containerd.io
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>sudo<span class="w"> </span>groupadd<span class="w"> </span>docker
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>sudo<span class="w"> </span>usermod<span class="w"> </span>-aG<span class="w"> </span>docker<span class="w"> </span><span class="nv">$USER</span>
+</code></pre></div>
+<em>(Nota: Es necesario cerrar y volver a abrir la terminal tras este paso para aplicar los permisos de usuario).</em></p>
+<p><strong>Paso 3: Clonar repositorio e instalar</strong>
+<div class="language-bash highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">cd</span><span class="w"> </span><span class="nv">$HOME</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>git<span class="w"> </span>clone<span class="w"> </span><span class="o">[</span>https://github.com/The-OpenROAD-Project/OpenLane<span class="o">](</span>https://github.com/The-OpenROAD-Project/OpenLane<span class="o">)</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nb">cd</span><span class="w"> </span>OpenLane
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>make
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>make<span class="w"> </span><span class="nb">test</span>
+</code></pre></div></p>
+</div>
+<hr />
+<h2 id="herramientas-adicionales-y-verificacion">Herramientas Adicionales y Verificación</h2>
+<p>Se recomienda ampliamente el uso de un entorno virtual de Python (<code>venv</code>) para aislar las dependencias del proyecto y evitar conflictos con los paquetes del sistema operativo.</p>
+<h3 id="entorno-virtual-de-python-venv">Entorno Virtual de Python (venv)</h3>
+<div class="admonition example">
+<p class="admonition-title">Configuración del Entorno Virtual</p>
+<p><strong>Función:</strong> Permite instalar paquetes y paquetes de verificación de forma aislada.</p>
+<p><strong>Paso 1: Instalar soporte para venv</strong>
+<div class="language-bash highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>sudo<span class="w"> </span>apt<span class="w"> </span>update
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>python3-venv<span class="w"> </span>python3-pip
+</code></pre></div></p>
+<p><strong>Paso 2: Crear el entorno virtual</strong>
+<div class="language-bash highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>venv
+</code></pre></div></p>
+<p><strong>Paso 3: Activar el entorno virtual</strong>
+<div class="language-bash highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nb">source</span><span class="w"> </span>venv/bin/activate
+</code></pre></div>
+<em>(Sabrás que está activo porque aparecerá <code>(venv)</code> al inicio de tu terminal).</em></p>
+<p><strong>Paso 4: Desactivar cuando termines de trabajar</strong>
+<div class="language-bash highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>deactivate
+</code></pre></div></p>
+</div>
+<h3 id="cocotb">cocotb</h3>
+<div class="admonition tip">
+<p class="admonition-title">Instalación de cocotb</p>
+<p><strong>Función:</strong> Entorno de verificación de hardware basado en python</p>
+<p><strong>Paso 1: Activar el entorno virtual (Recomendado)</strong>
+<div class="language-bash highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nb">source</span><span class="w"> </span>venv/bin/activate
+</code></pre></div></p>
+<p><strong>Paso 2: Instalar cocotb mediante pip</strong>
+<div class="language-bash highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>pip<span class="w"> </span>install<span class="w"> </span>cocotb
+</code></pre></div></p>
+<p><strong>Paso 3: Verificar la instalación</strong>
+<div class="language-bash highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>cocotb-config<span class="w"> </span>--version
+</code></pre></div></p>
+</div></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js"></script>
+        <script src="../../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

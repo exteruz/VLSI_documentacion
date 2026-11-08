@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        <link rel="canonical" href="https://github.com/exteruz/VLSI_documentacion/user/1-introduccion/">
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>Introducción - VLSI</title>
+        <link href="../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../../css/brands.min.css" rel="stylesheet">
+        <link href="../../css/solid.min.css" rel="stylesheet">
+        <link href="../../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="../..">VLSI</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="../.." class="nav-link">Inicio</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../../tools/tools/" class="nav-link">Herramientas</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle active" aria-current="page" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Guía de Usuario</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="./" class="dropdown-item active" aria-current="page">Introducción</a>
+</li>
+                                    
+<li>
+    <a href="../2-simulacion/" class="dropdown-item">Simulación</a>
+</li>
+                                    
+<li>
+    <a href="../3-sintesis/" class="dropdown-item">Síntesis</a>
+</li>
+                                    
+<li>
+    <a href="../4-openlane/" class="dropdown-item">Flujo Físico</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../../tools/tools/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../2-simulacion/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#introduccion-al-soc-y-estructura-del-proyecto" class="nav-link">Introducción al SoC y Estructura del Proyecto</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#1-vision-general-del-soc" class="nav-link">1. Visión General del SoC</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#2-estructura-de-archivos-del-repositorio-vlsi" class="nav-link">2. Estructura de Archivos del Repositorio VLSI</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#3-mapa-de-memoria-memory-map" class="nav-link">3. Mapa de Memoria (Memory Map)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#4-puntos-criticos-y-cosas-a-tener-en-cuenta" class="nav-link">4. Puntos Críticos y Cosas a Tener en Cuenta</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="introduccion-al-soc-y-estructura-del-proyecto">Introducción al SoC y Estructura del Proyecto</h1>
+<p>Bienvenido a la Guía de Usuario del SoC <strong><code>tt_um_femto</code></strong>. Este proyecto implementa un Sistema en Chip (<em>System on Chip</em>) basado en la arquitectura de código abierto <strong>RISC-V (RV32I)</strong>, diseñado para fabricación en tecnología de 130 nm (<strong>SkyWater SKY130</strong>) a través del programa <strong>Tiny Tapeout</strong>.</p>
+<hr />
+<h2 id="1-vision-general-del-soc">1. Visión General del SoC</h2>
+<p>El SoC <code>tt_um_femto</code> integra un núcleo procesador RISC-V (RV32I) con controladores de memoria externa y perifericos de multiplicacion y uart.</p>
+<h2 id="2-estructura-de-archivos-del-repositorio-vlsi">2. Estructura de Archivos del Repositorio VLSI</h2>
+<p>El repositorio se divide en tres directorios principales que organizan el hardware, la simulación y el software:</p>
+<h3 id="femto_unsrc-descripcion-rtl">femto_UN/src/ — Descripción RTL</h3>
+<p>Contiene los módulos Verilog sintetizables que componen el SoC:</p>
+<ul>
+<li><strong><code>femto.v</code></strong>: Top-level de la arquitectura del procesador (<code>tt_um_femto</code> y <code>femto</code>).</li>
+<li>
+<p><strong><code>femtorv32_quark_un_irq.v</code></strong>: Núcleo del procesador FemtoRV32 Quark (RV32I). Contiene la máquina de estados finita de control, el banco de 32 registros, la ALU y la lógica de interrupciones.</p>
+</li>
+<li>
+<p><strong><code>MappedSPIFlash.v</code></strong>: Controlador de alta velocidad para memoria flash</p>
+</li>
+<li>
+<p><strong><code>MappedSPIRAM.v</code></strong>: Controlador para memoria RAM externa.</p>
+</li>
+<li>
+<p><strong><code>perip_uart.v</code> / <code>uart.v</code></strong>: Transmisor y receptor UART serie con divisor de baudios configurable.</p>
+</li>
+<li>
+<p><strong><code>perip_mult.v</code> / <code>mult.v</code></strong>: Acelerador por hardware para operaciones de multiplicación de 32 bits.</p>
+</li>
+<li>
+<p><strong><code>bram.v</code></strong>: Memoria RAM estática interna para pruebas o almacenamiento rápido.</p>
+</li>
+</ul>
+<h3 id="tinytapeout-entorno-de-simulacion-y-verificacion">tinytapeout/ — Entorno de Simulación y Verificación</h3>
+<p>Contiene los scripts y bancos de prueba para verificar el hardware antes de su fabricación:</p>
+<ul>
+<li>
+<p><strong><code>Makefile</code></strong>: Automatiza el flujo de simulación RTL con Icarus Verilog (<code>make sim</code>) y los bancos de prueba.</p>
+</li>
+<li>
+<p><strong><code>tt_um_femto_cocotb.v</code></strong>: Módulo envoltorio (<em>wrapper</em>) para Cocotb. Expone señales internas del procesador (PC, registros <code>x1</code> a <code>x31</code>, buses) sin alterar el diseño de silicio.</p>
+</li>
+<li>
+<p><strong><code>cores/sim_spi_flash/</code></strong>: Modelo de simulación en Verilog de memoria Flash SPI/QSPI (<code>spiflash.v</code>).</p>
+</li>
+<li>
+<p><strong><code>cores/sim_spi_ram/</code></strong>: Modelo de simulación en Verilog de memoria RAM SPI (<code>spiram.v</code>).</p>
+</li>
+</ul>
+<h3 id="femtorv-firmware-y-herramientas-de-software">femtoRV/ — Firmware y Herramientas de Software</h3>
+<p>Contiene programas en ensamblador RISC-V y utilidades de conversión:</p>
+<ul>
+<li>
+<p><strong><code>firmware/asm/</code></strong>: Código fuente de programas de prueba en ensamblador (por ejemplo, <code>test_ram_load.S</code>).</p>
+</li>
+<li>
+<p><strong><code>fix_shift.py</code></strong>: Script de utilidad para pre-desplazar el binario 1 bit y compensar el bug del chip físico original.</p>
+</li>
+</ul>
+<hr />
+<h2 id="3-mapa-de-memoria-memory-map">3. Mapa de Memoria (Memory Map)</h2>
+<table style="border-collapse: collapse; width: 100%; text-align: left;">
+  <thead>
+    <tr>
+      <th style="border: 1px solid #777; padding: 8px;">Rango de Direcciones</th>
+      <th style="border: 1px solid #777; padding: 8px;">Módulo / Periférico</th>
+      <th style="border: 1px solid #777; padding: 8px; text-align: center;">Acceso</th>
+      <th style="border: 1px solid #777; padding: 8px;">Descripción</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="border: 1px solid #777; padding: 8px;"><code>0x0000_0000</code> - <code>0x0000_FFFF</code></td>
+      <td style="border: 1px solid #777; padding: 8px;">Memoria Flash SPI / QSPI</td>
+      <td style="border: 1px solid #777; padding: 8px; text-align: center;">Lectura (R)</td>
+      <td style="border: 1px solid #777; padding: 8px;">Espacio para código de programa e instrucciones.</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid #777; padding: 8px;"><code>0x0001_0000</code> - <code>0x0001_FFFF</code></td>
+      <td style="border: 1px solid #777; padding: 8px;">Memoria RAM SPI Externa</td>
+      <td style="border: 1px solid #777; padding: 8px; text-align: center;">Lectura / Escritura (R/W)</td>
+      <td style="border: 1px solid #777; padding: 8px;">Espacio para variables, pila (stack) y datos.</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid #777; padding: 8px;"><code>0x0040_0000</code></td>
+      <td style="border: 1px solid #777; padding: 8px;">UART</td>
+      <td style="border: 1px solid #777; padding: 8px; text-align: center;">Lectura / Escritura (R/W)</td>
+      <td style="border: 1px solid #777; padding: 8px;">Registro de transmisión (TX) y recepción (RX).</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid #777; padding: 8px;"><code>0x0041_0000</code></td>
+      <td style="border: 1px solid #777; padding: 8px;">GPIO / LEDs</td>
+      <td style="border: 1px solid #777; padding: 8px; text-align: center;">Escritura (W)</td>
+      <td style="border: 1px solid #777; padding: 8px;">Control de pines de salida y LEDs de depuración.</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid #777; padding: 8px;"><code>0x0042_0000</code></td>
+      <td style="border: 1px solid #777; padding: 8px;">Multiplicador Hardware</td>
+      <td style="border: 1px solid #777; padding: 8px; text-align: center;">Lectura / Escritura (R/W)</td>
+      <td style="border: 1px solid #777; padding: 8px;">Entrada de operandos y lectura del resultado.</td>
+    </tr>
+  </tbody>
+</table>
+<hr />
+<h2 id="4-puntos-criticos-y-cosas-a-tener-en-cuenta">4. Puntos Críticos y Cosas a Tener en Cuenta</h2>
+<p>Al trabajar con este proyecto, es fundamental considerar los siguientes aspectos técnicos:</p>
+<h3 id="1-mapeo-de-pines-de-tiny-tapeout">1. Mapeo de Pines de Tiny Tapeout</h3>
+<p>El chip utiliza la interfaz estándar de 24 pines de Tiny Tapeout:</p>
+<table style="border-collapse: collapse; width: 100%; text-align: left; margin-bottom: 1.5rem;">
+  <thead>
+    <tr>
+      <th style="border: 1px solid #777; padding: 8px;">Bus</th>
+      <th style="border: 1px solid #777; padding: 8px;">Pin</th>
+      <th style="border: 1px solid #777; padding: 8px; text-align: center;">Dirección</th>
+      <th style="border: 1px solid #777; padding: 8px;">Función / Descripción</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td rowspan="3" style="border: 1px solid #777; padding: 8px; vertical-align: middle;"><b><code>ui_in[7:0]</code></b><br>(Entradas Dedicadas)</td>
+      <td style="border: 1px solid #777; padding: 8px;"><code>ui_in[0]</code></td>
+      <td style="border: 1px solid #777; padding: 8px; text-align: center;">Entrada</td>
+      <td style="border: 1px solid #777; padding: 8px;">MISO de SPI Flash tradicional</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid #777; padding: 8px;"><code>ui_in[2]</code></td>
+      <td style="border: 1px solid #777; padding: 8px; text-align: center;">Entrada</td>
+      <td style="border: 1px solid #777; padding: 8px;">UART RX (Recepción serie)</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid #777; padding: 8px;"><code>ui_in[3]</code></td>
+      <td style="border: 1px solid #777; padding: 8px; text-align: center;">Entrada</td>
+      <td style="border: 1px solid #777; padding: 8px;">Petición de interrupción (IRQ)</td>
+    </tr>
+    <tr>
+      <td rowspan="5" style="border: 1px solid #777; padding: 8px; vertical-align: middle;"><b><code>uo_out[7:0]</code></b><br>(Salidas Dedicadas)</td>
+      <td style="border: 1px solid #777; padding: 8px;"><code>uo_out[0]</code></td>
+      <td style="border: 1px solid #777; padding: 8px; text-align: center;">Salida</td>
+      <td style="border: 1px solid #777; padding: 8px;">MOSI de SPI Flash tradicional</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid #777; padding: 8px;"><code>uo_out[2]</code></td>
+      <td style="border: 1px solid #777; padding: 8px; text-align: center;">Salida</td>
+      <td style="border: 1px solid #777; padding: 8px;">Chip Select Flash tradicional (<code>CS#</code>)</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid #777; padding: 8px;"><code>uo_out[5]</code></td>
+      <td style="border: 1px solid #777; padding: 8px; text-align: center;">Salida</td>
+      <td style="border: 1px solid #777; padding: 8px;">Reloj SPI SCK tradicional</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid #777; padding: 8px;"><code>uo_out[6]</code></td>
+      <td style="border: 1px solid #777; padding: 8px; text-align: center;">Salida</td>
+      <td style="border: 1px solid #777; padding: 8px;">LED indicador de estado</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid #777; padding: 8px;"><code>uo_out[7]</code></td>
+      <td style="border: 1px solid #777; padding: 8px; text-align: center;">Salida</td>
+      <td style="border: 1px solid #777; padding: 8px;">UART TX (Transmisión serie)</td>
+    </tr>
+    <tr>
+      <td rowspan="8" style="border: 1px solid #777; padding: 8px; vertical-align: middle;"><b><code>uio[7:0]</code></b><br>(Pines Bidireccionales - QSPI PMOD)</td>
+      <td style="border: 1px solid #777; padding: 8px;"><code>uio[0]</code></td>
+      <td style="border: 1px solid #777; padding: 8px; text-align: center;">Salida</td>
+      <td style="border: 1px solid #777; padding: 8px;">Chip Select Flash QSPI (<code>ce[0]</code>, activo en bajo)</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid #777; padding: 8px;"><code>uio[1]</code></td>
+      <td style="border: 1px solid #777; padding: 8px; text-align: center;">Bidireccional</td>
+      <td style="border: 1px solid #777; padding: 8px;">SIO0 / MOSI</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid #777; padding: 8px;"><code>uio[2]</code></td>
+      <td style="border: 1px solid #777; padding: 8px; text-align: center;">Bidireccional</td>
+      <td style="border: 1px solid #777; padding: 8px;">SIO1 / MISO</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid #777; padding: 8px;"><code>uio[3]</code></td>
+      <td style="border: 1px solid #777; padding: 8px; text-align: center;">Salida</td>
+      <td style="border: 1px solid #777; padding: 8px;">Reloj serie SCK (QSPI)</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid #777; padding: 8px;"><code>uio[4]</code></td>
+      <td style="border: 1px solid #777; padding: 8px; text-align: center;">Bidireccional</td>
+      <td style="border: 1px solid #777; padding: 8px;">SIO2</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid #777; padding: 8px;"><code>uio[5]</code></td>
+      <td style="border: 1px solid #777; padding: 8px; text-align: center;">Bidireccional</td>
+      <td style="border: 1px solid #777; padding: 8px;">SIO3</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid #777; padding: 8px;"><code>uio[6]</code></td>
+      <td style="border: 1px solid #777; padding: 8px; text-align: center;">Salida</td>
+      <td style="border: 1px solid #777; padding: 8px;">Chip Select RAM SPI (<code>ce[1]</code>, activo en bajo)</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid #777; padding: 8px;"><code>uio[7]</code></td>
+      <td style="border: 1px solid #777; padding: 8px; text-align: center;">Salida</td>
+      <td style="border: 1px solid #777; padding: 8px;">Señal auxiliar en nivel alto (<code>1'b1</code>)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="3-sincronizacion-del-reset-rst_n">3. Sincronización del Reset (<code>rst_n</code>)</h3>
+<p>El pin de reset es activo en bajo (<code>0</code> = reset, <code>1</code> = ejecución normal).</p>
+<p>Para evitar metaestabilidad en el silicio, la señal se registra internamente en el flanco de bajada de reloj (<code>negedge clk</code>) antes de propagarse a los módulos del SoC.</p>
+<h3 id="5-formato-de-instrucciones-y-little-endian">5. Formato de Instrucciones y Little-Endian</h3>
+<p>El procesador opera en modo nativo <strong>Little-Endian</strong>.s
+ Las direcciones de instrucción deben estar siempre alineadas a múltiplos de 4 bytes (<code>PC[1:0] == 2'b00</code>).</p>
+<hr /></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js"></script>
+        <script src="../../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
