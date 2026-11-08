@@ -1,0 +1,18 @@
+site_name: VLSI
+site_url: https://github.com/exteruz/VLSI_documentacion
+nav:
+  - Inicio: index.md
+  - Herramientas: tools/tools.md
+  - Guía de Usuario:
+      - Introducción: user/1-introduccion.md
+      - Simulación: user/2-simulacion.md
+      - Síntesis: user/3-sintesis.md
+      - Flujo Físico: user/4-openlane.md
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+      pygments_lang_class: true
