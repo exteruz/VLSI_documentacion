@@ -16,46 +16,32 @@ El repositorio se divide en tres directorios principales que organizan el hardwa
 
 ### femto_UN/src/ — Descripción RTL 
 
-Contiene los módulos Verilog sintetizables que componen el SoC:
-
-- **`femto.v`**: Top-level de la arquitectura del procesador (`tt_um_femto` y `femto`).
-- **`femtorv32_quark_un_irq.v`**: Núcleo del procesador FemtoRV32 Quark (RV32I). Contiene la máquina de estados finita de control, el banco de 32 registros, la ALU y la lógica de interrupciones.
-
-
-
-- **`MappedSPIFlash.v`**: Controlador de alta velocidad para memoria flash
-
-- **`MappedSPIRAM.v`**: Controlador para memoria RAM externa.
-
-- **`perip_uart.v` / `uart.v`**: Transmisor y receptor UART serie con divisor de baudios configurable.
-
-- **`perip_mult.v` / `mult.v`**: Acelerador por hardware para operaciones de multiplicación de 32 bits.
-
-- **`bram.v`**: Memoria RAM estática interna para pruebas o almacenamiento rápido.
-
+??? info "Descripción de Módulos RTL "
+    * **`femto.v`**: Top-level de la arquitectura del procesador (`tt_um_femto` y `femto`).
+    * **`femtorv32_quark_un_irq.v`**: Núcleo del procesador FemtoRV32 Quark (RV32I). Contiene la máquina de estados finita de control, el banco de 32 registros, la ALU y la lógica de interrupciones.
+    * **`MappedSPIFlash.v`**: Controlador de alta velocidad para memoria flash.
+    * **`MappedSPIRAM.v`**: Controlador para memoria RAM externa.
+    * **`perip_uart.v` / `uart.v`**: Transmisor y receptor UART serie con divisor de baudios configurable.
+    * **`perip_mult.v` / `mult.v`**: Acelerador por hardware para operaciones de multiplicación de 32 bits.
+    * **`bram.v`**: Memoria RAM estática interna para pruebas o almacenamiento rápido.
 
 ### tinytapeout/ — Entorno de Simulación y Verificación
 
 Contiene los scripts y bancos de prueba para verificar el hardware antes de su fabricación:
 
-- **`Makefile`**: Automatiza el flujo de simulación RTL con Icarus Verilog (`make sim`) y los bancos de prueba.
-
-- **`tt_um_femto_cocotb.v`**: Módulo envoltorio (*wrapper*) para Cocotb. Expone señales internas del procesador (PC, registros `x1` a `x31`, buses) sin alterar el diseño de silicio.
-
-
-- **`cores/sim_spi_flash/`**: Modelo de simulación en Verilog de memoria Flash SPI/QSPI (`spiflash.v`).
-
-- **`cores/sim_spi_ram/`**: Modelo de simulación en Verilog de memoria RAM SPI (`spiram.v`).
+??? info "Archivos y Modelos de Simulación "
+    * **`Makefile`**: Automatiza el flujo de simulación RTL con Icarus Verilog (`make sim`) y los bancos de prueba.
+    * **`tt_um_femto_cocotb.v`**: Módulo envoltorio (*wrapper*) para Cocotb. Expone señales internas del procesador (PC, registros `x1` a `x31`, buses) sin alterar el diseño de silicio.
+    * **`cores/sim_spi_flash/`**: Modelo de simulación en Verilog de memoria Flash SPI/QSPI (`spiflash.v`).
+    * **`cores/sim_spi_ram/`**: Modelo de simulación en Verilog de memoria RAM SPI (`spiram.v`).
 
 
 ### femtoRV/ — Firmware y Herramientas de Software
 
 Contiene programas en ensamblador RISC-V y utilidades de conversión:
-
-- **`firmware/asm/`**: Código fuente de programas de prueba en ensamblador (por ejemplo, `test_ram_load.S`).
-
-- **`fix_shift.py`**: Script de utilidad para pre-desplazar el binario 1 bit y compensar el bug del chip físico original.
-
+??? info "Firmware y Utilidades de Software "
+    * **`firmware/asm/`**: Código fuente de programas de prueba en ensamblador (por ejemplo, `test_ram_load.S`).
+    * **`fix_shift.py`**: Script de utilidad para pre-desplazar el binario 1 bit y compensar el bug del chip físico original.
 ---
 
 ## 3. Mapa de Memoria (Memory Map)

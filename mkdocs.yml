@@ -3,11 +3,16 @@ site_url: https://github.com/exteruz/VLSI_documentacion
 nav:
   - Inicio: index.md
   - Herramientas: tools/tools.md
-  - Guía de Usuario:
+  
+  - Inicio:
       - Introducción: user/1-introduccion.md
       - Simulación: user/2-simulacion.md
-      - Síntesis: user/3-sintesis.md
-      - Flujo Físico: user/4-openlane.md
+      - Prueba en hardware: user/3-funcionamiento.md
+      
+  - Desarrollo: 
+      Bugs: development/bugs.md 
+      Spi BUS: development/spi_bus.md
+
 
 markdown_extensions:
   - admonition
@@ -16,3 +21,39 @@ markdown_extensions:
   - pymdownx.highlight:
       anchor_linenums: true
       pygments_lang_class: true
+
+theme:
+  name: material
+  language: es
+  palette:
+    # Modo Claro: Fondo limpio con cabecera gris oscuro (slate)
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: slate
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Cambiar a modo oscuro
+
+    # Modo Oscuro
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: slate
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Cambiar a modo claro
+
+  features:
+    - navigation.tracking     # Actualiza la URL al desplazarse por la página
+    - navigation.top          # Botón discreto para volver arriba
+    - content.code.copy       # Botón minimalista de copia en código
+    - search.suggest
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+    - search.suggest
+    - search.highlight
