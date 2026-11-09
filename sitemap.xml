@@ -2,26 +2,30 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://github.com/exteruz/VLSI_documentacion/</loc>
-         <lastmod>2026-11-08</lastmod>
+         <lastmod>2026-11-09</lastmod>
+    </url>
+    <url>
+         <loc>https://github.com/exteruz/VLSI_documentacion/development/bugs/</loc>
+         <lastmod>2026-11-09</lastmod>
+    </url>
+    <url>
+         <loc>https://github.com/exteruz/VLSI_documentacion/development/spi_bus/</loc>
+         <lastmod>2026-11-09</lastmod>
     </url>
     <url>
          <loc>https://github.com/exteruz/VLSI_documentacion/tools/tools/</loc>
-         <lastmod>2026-11-08</lastmod>
+         <lastmod>2026-11-09</lastmod>
     </url>
     <url>
          <loc>https://github.com/exteruz/VLSI_documentacion/user/1-introduccion/</loc>
-         <lastmod>2026-11-08</lastmod>
+         <lastmod>2026-11-09</lastmod>
     </url>
     <url>
          <loc>https://github.com/exteruz/VLSI_documentacion/user/2-simulacion/</loc>
-         <lastmod>2026-11-08</lastmod>
+         <lastmod>2026-11-09</lastmod>
     </url>
     <url>
-         <loc>https://github.com/exteruz/VLSI_documentacion/user/3-sintesis/</loc>
-         <lastmod>2026-11-08</lastmod>
-    </url>
-    <url>
-         <loc>https://github.com/exteruz/VLSI_documentacion/user/4-openlane/</loc>
-         <lastmod>2026-11-08</lastmod>
+         <loc>https://github.com/exteruz/VLSI_documentacion/user/3-funcionamiento/</loc>
+         <lastmod>2026-11-09</lastmod>
     </url>
 </urlset>

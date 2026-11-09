@@ -1,0 +1,1932 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://github.com/exteruz/VLSI_documentacion/development/spi_bus/">
+      
+      
+        <link rel="prev" href="../bugs/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>Spi BUS - VLSI</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="slate" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#1-resumen-ejecutivo-y-objetivos" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../.." title="VLSI" class="md-header__button md-logo" aria-label="VLSI" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            VLSI
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Spi BUS
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="slate" data-md-color-accent="indigo"  aria-label="Cambiar a modo oscuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="slate" data-md-color-accent="indigo"  aria-label="Cambiar a modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Pestañas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Inicio
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../tools/tools/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Herramientas
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../user/1-introduccion/" class="md-tabs__link">
+          
+  
+  
+  Inicio
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../bugs/" class="md-tabs__link">
+          
+  
+  
+  Desarrollo
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="VLSI" class="md-nav__button md-logo" aria-label="VLSI" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    VLSI
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Herramientas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Inicio
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/1-introduccion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducción
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/2-simulacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Simulación
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/3-funcionamiento/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prueba en hardware
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Desarrollo
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Desarrollo
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bugs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bugs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spi BUS
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spi BUS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-resumen-ejecutivo-y-objetivos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Resumen Ejecutivo y Objetivos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-arquitectura-de-hardware-antes-vs-despues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Arquitectura de Hardware: Antes vs. Después
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Arquitectura de Hardware: Antes vs. Después">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#arquitectura-original-2-buses-separados-8-pines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Arquitectura Original (2 Buses Separados - 8 Pines)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#arquitectura-nueva-bus-spi-compartido-5-pines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Arquitectura Nueva: Bus SPI Compartido (5 Pines)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cuadro-comparativo-de-pines-de-tiny-tapeout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cuadro Comparativo de Pines de Tiny Tapeout
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-detalle-de-archivos-creados-y-modificados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Detalle de Archivos Creados y Modificados
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Detalle de Archivos Creados y Modificados">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-nuevo-femto_unsrcunified_spi_controllerv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1. [NUEVO] femto_UN/src/Unified_SPI_Controller.v
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-modificado-femto_unsrcfemtov" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2. [MODIFICADO] femto_UN/src/femto.v
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lista-de-modificaciones-rtl-tt_um_femto-y-femto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lista de Modificaciones RTL (tt_um_femto y femto)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Lista de Modificaciones RTL (tt_um_femto y femto)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#33-modificado-tinytapeouttt_um_femto_tbv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3. [MODIFICADO] tinytapeout/tt_um_femto_TB.v
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-modificado-tinytapeoutmakefile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4. [MODIFICADO] tinytapeout/Makefile
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-recompilado-tinytapeoutfirmwareasmtest_ram_loads" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5. [RECOMPILADO] tinytapeout/firmware/asm/test_ram_load.S
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-problemas-criticos-encontrados-y-soluciones-de-ingenieria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Problemas Críticos Encontrados y Soluciones de Ingeniería
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Problemas Críticos Encontrados y Soluciones de Ingeniería">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problema-1-asignacion-no-bloqueante-de-mem_wmask-y-el-escape-de-la-cpu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problema 1: Asignación No-Bloqueante de mem_wmask y el "Escape" de la CPU
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problema-2-contencion-de-bus-x-en-simulacion-por-el-modelo-de-la-ram" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problema 2: Contención de Bus X en Simulación por el Modelo de la RAM
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problema-3-sign-extension-en-ensamblador-0xfc-vs-0x6c" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problema 3: Sign-Extension en Ensamblador (0xFC vs 0x6C)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-analisis-de-la-forma-de-onda-en-gtkwave" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Análisis de la Forma de Onda en GTKWave
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Análisis de la Forma de Onda en GTKWave">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#por-que-la-primera-l-aparece-con-una-casilla-doble-de-ancha" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ¿Por qué la primera 'l' aparece con una casilla doble de ancha?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-guia-de-reproduccion-y-verificacion-manual" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Guía de Reproducción y Verificación Manual
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Guía de Reproducción y Verificación Manual">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1-ubicacion-en-el-repositorio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 1: Ubicación en el repositorio
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-2-opcional-recompilacion-del-firmware" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 2: (Opcional) Recompilación del Firmware
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-3-compilacion-y-ejecucion-con-icarus-verilog" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 3: Compilación y Ejecución con Icarus Verilog
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-4-visualizacion-en-gtkwave" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 4: Visualización en GTKWave
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-resumen-ejecutivo-y-objetivos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Resumen Ejecutivo y Objetivos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-arquitectura-de-hardware-antes-vs-despues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Arquitectura de Hardware: Antes vs. Después
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Arquitectura de Hardware: Antes vs. Después">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#arquitectura-original-2-buses-separados-8-pines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Arquitectura Original (2 Buses Separados - 8 Pines)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#arquitectura-nueva-bus-spi-compartido-5-pines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Arquitectura Nueva: Bus SPI Compartido (5 Pines)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cuadro-comparativo-de-pines-de-tiny-tapeout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cuadro Comparativo de Pines de Tiny Tapeout
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-detalle-de-archivos-creados-y-modificados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Detalle de Archivos Creados y Modificados
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Detalle de Archivos Creados y Modificados">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-nuevo-femto_unsrcunified_spi_controllerv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1. [NUEVO] femto_UN/src/Unified_SPI_Controller.v
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-modificado-femto_unsrcfemtov" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2. [MODIFICADO] femto_UN/src/femto.v
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lista-de-modificaciones-rtl-tt_um_femto-y-femto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lista de Modificaciones RTL (tt_um_femto y femto)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Lista de Modificaciones RTL (tt_um_femto y femto)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#33-modificado-tinytapeouttt_um_femto_tbv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3. [MODIFICADO] tinytapeout/tt_um_femto_TB.v
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-modificado-tinytapeoutmakefile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4. [MODIFICADO] tinytapeout/Makefile
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-recompilado-tinytapeoutfirmwareasmtest_ram_loads" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5. [RECOMPILADO] tinytapeout/firmware/asm/test_ram_load.S
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-problemas-criticos-encontrados-y-soluciones-de-ingenieria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Problemas Críticos Encontrados y Soluciones de Ingeniería
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Problemas Críticos Encontrados y Soluciones de Ingeniería">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problema-1-asignacion-no-bloqueante-de-mem_wmask-y-el-escape-de-la-cpu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problema 1: Asignación No-Bloqueante de mem_wmask y el "Escape" de la CPU
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problema-2-contencion-de-bus-x-en-simulacion-por-el-modelo-de-la-ram" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problema 2: Contención de Bus X en Simulación por el Modelo de la RAM
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problema-3-sign-extension-en-ensamblador-0xfc-vs-0x6c" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problema 3: Sign-Extension en Ensamblador (0xFC vs 0x6C)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-analisis-de-la-forma-de-onda-en-gtkwave" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Análisis de la Forma de Onda en GTKWave
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Análisis de la Forma de Onda en GTKWave">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#por-que-la-primera-l-aparece-con-una-casilla-doble-de-ancha" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ¿Por qué la primera 'l' aparece con una casilla doble de ancha?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-guia-de-reproduccion-y-verificacion-manual" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Guía de Reproducción y Verificación Manual
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Guía de Reproducción y Verificación Manual">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1-ubicacion-en-el-repositorio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 1: Ubicación en el repositorio
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-2-opcional-recompilacion-del-firmware" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 2: (Opcional) Recompilación del Firmware
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-3-compilacion-y-ejecucion-con-icarus-verilog" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 3: Compilación y Ejecución con Icarus Verilog
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-4-visualizacion-en-gtkwave" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 4: Visualización en GTKWave
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h2 id="1-resumen-ejecutivo-y-objetivos">1. Resumen Ejecutivo y Objetivos</h2>
+<p>En la arquitectura original del SoC <code>tt_um_femto</code>, la memoria <strong>Flash SPI</strong> (que almacena las instrucciones del procesador) y la memoria <strong>RAM SPI</strong> (que almacena variables y datos dinámicos) utilizaban <strong>dos controladores SPI independientes</strong>, consumiendo un total de <strong>8 pines dedicados</strong> (6 salidas y 2 entradas).</p>
+<p>En la plataforma <strong>Tiny Tapeout</strong>, los pines de E/S son un recurso crítico (solo se dispone de 8 entradas dedicadas <code>ui_in</code> y 8 salidas dedicadas <code>uo_out</code>). El objetivo de esta implementación (<strong>Caso B: Nuevo RTL</strong>) fue:
+1. Diseñar e integrar un <strong>Controlador SPI Maestro Unificado</strong> capaz de gobernar tanto la Flash como la RAM sobre un <strong>único bus SPI compartido</strong> (<code>SCK</code>, <code>MOSI</code>, <code>MISO</code>), diferenciando los accesos mediante dos líneas independientes de selección (<code>CS_FLASH_N</code> y <code>CS_RAM_N</code>).
+2. <strong>Reducir el consumo de pines de 8 a 5</strong>, liberando 3 pines físicos en el chip para UART, interrupciones o GPIOs.
+3. Verificar el sistema mediante simulación en <strong>Icarus Verilog / GTKWave</strong>, ejecutando un firmware que escribe un texto en la RAM SPI, lo lee palabra por palabra y lo transmite exitosamente a través del periférico UART a 115200 baudios.</p>
+<hr />
+<h2 id="2-arquitectura-de-hardware-antes-vs-despues">2. Arquitectura de Hardware: Antes vs. Después</h2>
+<h3 id="arquitectura-original-2-buses-separados-8-pines">Arquitectura Original (2 Buses Separados - 8 Pines)</h3>
+<p><img alt="Simulación del SoC" src="../../img/spiBus1.png" /></p>
+<h3 id="arquitectura-nueva-bus-spi-compartido-5-pines">Arquitectura Nueva: Bus SPI Compartido (5 Pines)</h3>
+<p><img alt="Simulación del SoC" src="../../img/busspi2.png" /></p>
+<h3 id="cuadro-comparativo-de-pines-de-tiny-tapeout">Cuadro Comparativo de Pines de Tiny Tapeout</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Pin Tiny Tapeout</th>
+<th style="text-align: left;">Rol en Diseño Original</th>
+<th style="text-align: left;">Rol en Nuevo Diseño (Caso B)</th>
+<th style="text-align: left;">Estado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>uo_out[1]</code></td>
+<td style="text-align: left;"><code>spi_mosi_ram</code> (RAM)</td>
+<td style="text-align: left;"><code>spi_sck</code> (Compartido Flash + RAM)</td>
+<td style="text-align: left;">Optimizado</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>uo_out[4]</code></td>
+<td style="text-align: left;"><code>spi_clk_ram</code> (RAM)</td>
+<td style="text-align: left;"><code>mem_busy_debug</code> (Depuración)</td>
+<td style="text-align: left;"><strong>LIBERADO</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>uo_out[5]</code></td>
+<td style="text-align: left;"><code>spi_clk</code> (Flash)</td>
+<td style="text-align: left;"><code>debug_out</code> (Depuración acceso RAM)</td>
+<td style="text-align: left;"><strong>LIBERADO</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ui_in[1]</code></td>
+<td style="text-align: left;"><code>spi_miso_ram</code> (RAM)</td>
+<td style="text-align: left;"><em>Sin conectar / GPIO libre</em></td>
+<td style="text-align: left;"><strong>LIBERADO</strong></td>
+</tr>
+</tbody>
+</table>
+<h2 id="3-detalle-de-archivos-creados-y-modificados">3. Detalle de Archivos Creados y Modificados</h2>
+<h3 id="31-nuevo-femto_unsrcunified_spi_controllerv">3.1. [NUEVO] <code>femto_UN/src/Unified_SPI_Controller.v</code></h3>
+<p>Este módulo reemplaza por completo a <code>MappedSPIFlash.v</code> y <code>MappedSPIRAM.v</code>. Implementa un maestro SPI en <strong>Modo 0 (CPOL=0, CPHA=0)</strong> y soporta lecturas de Flash, lecturas de RAM y escrituras en RAM (incluyendo el envío mandatorio del comando <code>WREN</code> antes de escribir).</p>
+<details class="info">
+<summary>Código Verilog: Unified_SPI_Controller.v </summary>
+<div class="language-verilog highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="cm">/*</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="cm">- Unified_SPI_Controller.v</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="cm">- Controlador SPI Maestro Unificado para bus compartido (Flash + RAM)</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="cm">- Proyecto: tt_um_femto</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="cm"> */</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="no">`default_nettype</span><span class="w"> </span><span class="n">none</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="k">module</span><span class="w"> </span><span class="n">Unified_SPI_Controller</span><span class="w"> </span><span class="p">#(</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="k">parameter</span><span class="w"> </span><span class="n">CLK_DIV</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">2</span><span class="w">  </span><span class="c1">// Base de tiempo para SCK: periodo SCK = 2 * CLK_DIV ciclos</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="p">)(</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">    </span><span class="k">input</span><span class="w">  </span><span class="kt">wire</span><span class="w">        </span><span class="n">clk</span><span class="p">,</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">    </span><span class="k">input</span><span class="w">  </span><span class="kt">wire</span><span class="w">        </span><span class="n">resetn</span><span class="p">,</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">    </span><span class="c1">// Interfaz con FemtoRV32</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">    </span><span class="k">input</span><span class="w">  </span><span class="kt">wire</span><span class="w"> </span><span class="p">[</span><span class="mh">31</span><span class="o">:</span><span class="mh">0</span><span class="p">]</span><span class="w"> </span><span class="n">mem_addr</span><span class="p">,</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">    </span><span class="k">input</span><span class="w">  </span><span class="kt">wire</span><span class="w"> </span><span class="p">[</span><span class="mh">31</span><span class="o">:</span><span class="mh">0</span><span class="p">]</span><span class="w"> </span><span class="n">mem_wdata</span><span class="p">,</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">    </span><span class="k">input</span><span class="w">  </span><span class="kt">wire</span><span class="w"> </span><span class="p">[</span><span class="mh">3</span><span class="o">:</span><span class="mh">0</span><span class="p">]</span><span class="w">  </span><span class="n">mem_wmask</span><span class="p">,</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">    </span><span class="k">input</span><span class="w">  </span><span class="kt">wire</span><span class="w">        </span><span class="n">mem_rstrb</span><span class="p">,</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">    </span><span class="k">output</span><span class="w"> </span><span class="kt">reg</span><span class="w">  </span><span class="p">[</span><span class="mh">31</span><span class="o">:</span><span class="mh">0</span><span class="p">]</span><span class="w"> </span><span class="n">mem_rdata</span><span class="p">,</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">    </span><span class="k">output</span><span class="w"> </span><span class="kt">wire</span><span class="w">        </span><span class="n">mem_busy</span><span class="p">,</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">    </span><span class="c1">// Pines externos hacia el bus SPI compartido (5 pines)</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">    </span><span class="k">output</span><span class="w"> </span><span class="kt">reg</span><span class="w">         </span><span class="n">spi_cs_flash_n</span><span class="p">,</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">    </span><span class="k">output</span><span class="w"> </span><span class="kt">reg</span><span class="w">         </span><span class="n">spi_cs_ram_n</span><span class="p">,</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="w">    </span><span class="k">output</span><span class="w"> </span><span class="kt">reg</span><span class="w">         </span><span class="n">spi_sck</span><span class="p">,</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="w">    </span><span class="k">output</span><span class="w"> </span><span class="kt">wire</span><span class="w">        </span><span class="n">spi_mosi</span><span class="p">,</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="w">    </span><span class="k">input</span><span class="w">  </span><span class="kt">wire</span><span class="w">        </span><span class="n">spi_miso</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="p">);</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a><span class="w">    </span><span class="c1">// Decodificación de direcciones del SoC</span>
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="w">    </span><span class="c1">// 0x0000_0000 - 0x0000_FFFF: Flash SPI (Instrucciones / rodata)</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a><span class="w">    </span><span class="c1">// 0x0001_0000 - 0x0001_FFFF: RAM SPI   (Datos)</span>
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a><span class="w">    </span><span class="kt">wire</span><span class="w"> </span><span class="n">is_flash</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">mem_addr</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mh">16'h0000</span><span class="p">);</span>
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a><span class="w">    </span><span class="kt">wire</span><span class="w"> </span><span class="n">is_ram</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">mem_addr</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mh">16'h0001</span><span class="p">);</span>
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a><span class="w">    </span><span class="kt">wire</span><span class="w"> </span><span class="n">rd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mem_rstrb</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">is_flash</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">is_ram</span><span class="p">);</span>
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a><span class="w">    </span><span class="kt">wire</span><span class="w"> </span><span class="n">wr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="o">|</span><span class="n">mem_wmask</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">is_ram</span><span class="p">;</span>
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a><span class="w">    </span><span class="c1">// FSM States</span>
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a><span class="w">    </span><span class="k">localparam</span><span class="w"> </span><span class="n">ST_IDLE</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="mh">3</span><span class="mi">'d0</span><span class="p">;</span>
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a><span class="w">    </span><span class="k">localparam</span><span class="w"> </span><span class="n">ST_WREN</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="mh">3</span><span class="mi">'d1</span><span class="p">;</span>
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a><span class="w">    </span><span class="k">localparam</span><span class="w"> </span><span class="n">ST_WREN_GAP</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="mh">3</span><span class="mi">'d2</span><span class="p">;</span>
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a><span class="w">    </span><span class="k">localparam</span><span class="w"> </span><span class="n">ST_CMD_ADDR</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="mh">3</span><span class="mi">'d3</span><span class="p">;</span>
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a><span class="w">    </span><span class="k">localparam</span><span class="w"> </span><span class="n">ST_TRANSFER</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="mh">3</span><span class="mi">'d4</span><span class="p">;</span>
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a><span class="w">    </span><span class="k">localparam</span><span class="w"> </span><span class="n">ST_DESELECT</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="mh">3</span><span class="mi">'d5</span><span class="p">;</span>
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a><span class="w">    </span><span class="kt">reg</span><span class="w"> </span><span class="p">[</span><span class="mh">2</span><span class="o">:</span><span class="mh">0</span><span class="p">]</span><span class="w">  </span><span class="n">state</span><span class="p">;</span>
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a><span class="w">    </span><span class="kt">reg</span><span class="w"> </span><span class="p">[</span><span class="mh">5</span><span class="o">:</span><span class="mh">0</span><span class="p">]</span><span class="w">  </span><span class="n">bit_cnt</span><span class="p">;</span>
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a><span class="w">    </span><span class="kt">reg</span><span class="w"> </span><span class="p">[</span><span class="mh">31</span><span class="o">:</span><span class="mh">0</span><span class="p">]</span><span class="w"> </span><span class="n">shift_out</span><span class="p">;</span>
+<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a><span class="w">    </span><span class="kt">reg</span><span class="w"> </span><span class="p">[</span><span class="mh">31</span><span class="o">:</span><span class="mh">0</span><span class="p">]</span><span class="w"> </span><span class="n">shift_in</span><span class="p">;</span>
+<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a><span class="w">    </span><span class="kt">reg</span><span class="w"> </span><span class="p">[</span><span class="mh">23</span><span class="o">:</span><span class="mh">0</span><span class="p">]</span><span class="w"> </span><span class="n">addr_reg</span><span class="p">;</span>
+<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a><span class="w">    </span><span class="kt">reg</span><span class="w"> </span><span class="p">[</span><span class="mh">31</span><span class="o">:</span><span class="mh">0</span><span class="p">]</span><span class="w"> </span><span class="n">wdata_reg</span><span class="p">;</span>
+<a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a><span class="w">    </span><span class="kt">reg</span><span class="w">        </span><span class="n">is_write_op</span><span class="p">;</span>
+<a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>
+<a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a><span class="w">    </span><span class="c1">// En Modo 0 (CPOL=0, CPHA=0), MOSI presenta siempre shift_out[31].</span>
+<a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a><span class="w">    </span><span class="k">assign</span><span class="w"> </span><span class="n">spi_mosi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">shift_out</span><span class="p">[</span><span class="mh">31</span><span class="p">];</span>
+<a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a>
+<a id="__codelineno-0-59" name="__codelineno-0-59" href="#__codelineno-0-59"></a><span class="w">    </span><span class="c1">// Divisor de reloj para SCK</span>
+<a id="__codelineno-0-60" name="__codelineno-0-60" href="#__codelineno-0-60"></a><span class="w">    </span><span class="kt">reg</span><span class="w"> </span><span class="p">[</span><span class="mh">3</span><span class="o">:</span><span class="mh">0</span><span class="p">]</span><span class="w"> </span><span class="n">clk_cnt</span><span class="p">;</span>
+<a id="__codelineno-0-61" name="__codelineno-0-61" href="#__codelineno-0-61"></a><span class="w">    </span><span class="kt">wire</span><span class="w"> </span><span class="n">tick</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">clk_cnt</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">CLK_DIV</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mh">1</span><span class="p">);</span>
+<a id="__codelineno-0-62" name="__codelineno-0-62" href="#__codelineno-0-62"></a>
+<a id="__codelineno-0-63" name="__codelineno-0-63" href="#__codelineno-0-63"></a><span class="w">    </span><span class="k">always</span><span class="w"> </span><span class="p">@(</span><span class="k">posedge</span><span class="w"> </span><span class="n">clk</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="k">negedge</span><span class="w"> </span><span class="n">resetn</span><span class="p">)</span><span class="w"> </span><span class="k">begin</span>
+<a id="__codelineno-0-64" name="__codelineno-0-64" href="#__codelineno-0-64"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">resetn</span><span class="p">)</span><span class="w"> </span><span class="k">begin</span>
+<a id="__codelineno-0-65" name="__codelineno-0-65" href="#__codelineno-0-65"></a><span class="w">            </span><span class="n">clk_cnt</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mh">4</span><span class="mi">'d0</span><span class="p">;</span>
+<a id="__codelineno-0-66" name="__codelineno-0-66" href="#__codelineno-0-66"></a><span class="w">        </span><span class="k">end</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">state</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">ST_WREN</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">state</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">ST_CMD_ADDR</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">state</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">ST_TRANSFER</span><span class="p">)</span><span class="w"> </span><span class="k">begin</span>
+<a id="__codelineno-0-67" name="__codelineno-0-67" href="#__codelineno-0-67"></a><span class="w">            </span><span class="n">clk_cnt</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">tick</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mh">4</span><span class="mi">'d0</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">clk_cnt</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mh">4</span><span class="mi">'d1</span><span class="p">;</span>
+<a id="__codelineno-0-68" name="__codelineno-0-68" href="#__codelineno-0-68"></a><span class="w">        </span><span class="k">end</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">begin</span>
+<a id="__codelineno-0-69" name="__codelineno-0-69" href="#__codelineno-0-69"></a><span class="w">            </span><span class="n">clk_cnt</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mh">4</span><span class="mi">'d0</span><span class="p">;</span>
+<a id="__codelineno-0-70" name="__codelineno-0-70" href="#__codelineno-0-70"></a><span class="w">        </span><span class="k">end</span>
+<a id="__codelineno-0-71" name="__codelineno-0-71" href="#__codelineno-0-71"></a><span class="w">    </span><span class="k">end</span>
+<a id="__codelineno-0-72" name="__codelineno-0-72" href="#__codelineno-0-72"></a>
+<a id="__codelineno-0-73" name="__codelineno-0-73" href="#__codelineno-0-73"></a><span class="w">    </span><span class="c1">// Señal busy combinacional hacia el procesador:</span>
+<a id="__codelineno-0-74" name="__codelineno-0-74" href="#__codelineno-0-74"></a><span class="w">    </span><span class="c1">// Debe activarse también inmediatamente cuando wr se solicita en ST_IDLE,</span>
+<a id="__codelineno-0-75" name="__codelineno-0-75" href="#__codelineno-0-75"></a><span class="w">    </span><span class="c1">// para que la CPU FemtoRV32 no pase de largo en WAIT_ALU_OR_MEM.</span>
+<a id="__codelineno-0-76" name="__codelineno-0-76" href="#__codelineno-0-76"></a><span class="w">    </span><span class="k">assign</span><span class="w"> </span><span class="n">mem_busy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">state</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">ST_IDLE</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">wr</span><span class="p">;</span>
+<a id="__codelineno-0-77" name="__codelineno-0-77" href="#__codelineno-0-77"></a>
+<a id="__codelineno-0-78" name="__codelineno-0-78" href="#__codelineno-0-78"></a><span class="w">    </span><span class="k">always</span><span class="w"> </span><span class="p">@(</span><span class="k">posedge</span><span class="w"> </span><span class="n">clk</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="k">negedge</span><span class="w"> </span><span class="n">resetn</span><span class="p">)</span><span class="w"> </span><span class="k">begin</span>
+<a id="__codelineno-0-79" name="__codelineno-0-79" href="#__codelineno-0-79"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">resetn</span><span class="p">)</span><span class="w"> </span><span class="k">begin</span>
+<a id="__codelineno-0-80" name="__codelineno-0-80" href="#__codelineno-0-80"></a><span class="w">            </span><span class="n">state</span><span class="w">          </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">ST_IDLE</span><span class="p">;</span>
+<a id="__codelineno-0-81" name="__codelineno-0-81" href="#__codelineno-0-81"></a><span class="w">            </span><span class="n">spi_cs_flash_n</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mh">1</span><span class="mb">'b1</span><span class="p">;</span>
+<a id="__codelineno-0-82" name="__codelineno-0-82" href="#__codelineno-0-82"></a><span class="w">            </span><span class="n">spi_cs_ram_n</span><span class="w">   </span><span class="o">&lt;=</span><span class="w"> </span><span class="mh">1</span><span class="mb">'b1</span><span class="p">;</span>
+<a id="__codelineno-0-83" name="__codelineno-0-83" href="#__codelineno-0-83"></a><span class="w">            </span><span class="n">spi_sck</span><span class="w">        </span><span class="o">&lt;=</span><span class="w"> </span><span class="mh">1</span><span class="mb">'b0</span><span class="p">;</span>
+<a id="__codelineno-0-84" name="__codelineno-0-84" href="#__codelineno-0-84"></a><span class="w">            </span><span class="n">bit_cnt</span><span class="w">        </span><span class="o">&lt;=</span><span class="w"> </span><span class="mh">6</span><span class="mi">'d0</span><span class="p">;</span>
+<a id="__codelineno-0-85" name="__codelineno-0-85" href="#__codelineno-0-85"></a><span class="w">            </span><span class="n">mem_rdata</span><span class="w">      </span><span class="o">&lt;=</span><span class="w"> </span><span class="mh">32</span><span class="mi">'d0</span><span class="p">;</span>
+<a id="__codelineno-0-86" name="__codelineno-0-86" href="#__codelineno-0-86"></a><span class="w">            </span><span class="n">shift_out</span><span class="w">      </span><span class="o">&lt;=</span><span class="w"> </span><span class="mh">32</span><span class="mi">'d0</span><span class="p">;</span>
+<a id="__codelineno-0-87" name="__codelineno-0-87" href="#__codelineno-0-87"></a><span class="w">            </span><span class="n">shift_in</span><span class="w">       </span><span class="o">&lt;=</span><span class="w"> </span><span class="mh">32</span><span class="mi">'d0</span><span class="p">;</span>
+<a id="__codelineno-0-88" name="__codelineno-0-88" href="#__codelineno-0-88"></a><span class="w">            </span><span class="n">addr_reg</span><span class="w">       </span><span class="o">&lt;=</span><span class="w"> </span><span class="mh">24</span><span class="mi">'d0</span><span class="p">;</span>
+<a id="__codelineno-0-89" name="__codelineno-0-89" href="#__codelineno-0-89"></a><span class="w">            </span><span class="n">wdata_reg</span><span class="w">      </span><span class="o">&lt;=</span><span class="w"> </span><span class="mh">32</span><span class="mi">'d0</span><span class="p">;</span>
+<a id="__codelineno-0-90" name="__codelineno-0-90" href="#__codelineno-0-90"></a><span class="w">            </span><span class="n">is_write_op</span><span class="w">    </span><span class="o">&lt;=</span><span class="w"> </span><span class="mh">1</span><span class="mb">'b0</span><span class="p">;</span>
+<a id="__codelineno-0-91" name="__codelineno-0-91" href="#__codelineno-0-91"></a><span class="w">        </span><span class="k">end</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">begin</span>
+<a id="__codelineno-0-92" name="__codelineno-0-92" href="#__codelineno-0-92"></a><span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+<a id="__codelineno-0-93" name="__codelineno-0-93" href="#__codelineno-0-93"></a>
+<a id="__codelineno-0-94" name="__codelineno-0-94" href="#__codelineno-0-94"></a><span class="w">                </span><span class="nl">ST_IDLE:</span><span class="w"> </span><span class="k">begin</span>
+<a id="__codelineno-0-95" name="__codelineno-0-95" href="#__codelineno-0-95"></a><span class="w">                    </span><span class="n">spi_sck</span><span class="w">        </span><span class="o">&lt;=</span><span class="w"> </span><span class="mh">1</span><span class="mb">'b0</span><span class="p">;</span>
+<a id="__codelineno-0-96" name="__codelineno-0-96" href="#__codelineno-0-96"></a><span class="w">                    </span><span class="n">spi_cs_flash_n</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mh">1</span><span class="mb">'b1</span><span class="p">;</span>
+<a id="__codelineno-0-97" name="__codelineno-0-97" href="#__codelineno-0-97"></a><span class="w">                    </span><span class="n">spi_cs_ram_n</span><span class="w">   </span><span class="o">&lt;=</span><span class="w"> </span><span class="mh">1</span><span class="w"> </span><span class="n">meb1</span><span class="p">;</span>
+<a id="__codelineno-0-98" name="__codelineno-0-98" href="#__codelineno-0-98"></a><span class="w">                    </span><span class="n">bit_cnt</span><span class="w">        </span><span class="o">&lt;=</span><span class="w"> </span><span class="mh">6</span><span class="mi">'d0</span><span class="p">;</span>
+<a id="__codelineno-0-99" name="__codelineno-0-99" href="#__codelineno-0-99"></a>
+<a id="__codelineno-0-100" name="__codelineno-0-100" href="#__codelineno-0-100"></a><span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">wr</span><span class="p">)</span><span class="w"> </span><span class="k">begin</span>
+<a id="__codelineno-0-101" name="__codelineno-0-101" href="#__codelineno-0-101"></a><span class="w">                        </span><span class="c1">// Escritura a RAM (requiere comando WREN 0x06 previo)</span>
+<a id="__codelineno-0-102" name="__codelineno-0-102" href="#__codelineno-0-102"></a><span class="w">                        </span><span class="n">is_write_op</span><span class="w">  </span><span class="o">&lt;=</span><span class="w"> </span><span class="mh">1</span><span class="mb">'b1</span><span class="p">;</span>
+<a id="__codelineno-0-103" name="__codelineno-0-103" href="#__codelineno-0-103"></a><span class="w">                        </span><span class="n">addr_reg</span><span class="w">     </span><span class="o">&lt;=</span><span class="w"> </span><span class="p">{</span><span class="mh">8'h00</span><span class="p">,</span><span class="w"> </span><span class="n">mem_addr</span><span class="p">[</span><span class="mh">15</span><span class="o">:</span><span class="mh">2</span><span class="p">],</span><span class="w"> </span><span class="mh">2</span><span class="mb">'b00</span><span class="p">};</span>
+<a id="__codelineno-0-104" name="__codelineno-0-104" href="#__codelineno-0-104"></a><span class="w">                        </span><span class="c1">// Byte 0 (mem_wdata[7:0]) viaja primero en Little-Endian</span>
+<a id="__codelineno-0-105" name="__codelineno-0-105" href="#__codelineno-0-105"></a><span class="w">                        </span><span class="n">wdata_reg</span><span class="w">    </span><span class="o">&lt;=</span><span class="w"> </span><span class="p">{</span><span class="n">mem_wdata</span><span class="p">[</span><span class="mh">7</span><span class="o">:</span><span class="mh">0</span><span class="p">],</span><span class="w"> </span><span class="n">mem_wdata</span><span class="p">[</span><span class="mh">15</span><span class="o">:</span><span class="mh">8</span><span class="p">],</span><span class="w"> </span><span class="n">mem_wdata</span><span class="p">,</span><span class="w"> </span><span class="n">mem_wdata</span><span class="p">};</span>
+<a id="__codelineno-0-106" name="__codelineno-0-106" href="#__codelineno-0-106"></a><span class="w">                        </span><span class="n">spi_cs_ram_n</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mh">1</span><span class="mb">'b0</span><span class="p">;</span>
+<a id="__codelineno-0-107" name="__codelineno-0-107" href="#__codelineno-0-107"></a><span class="w">                        </span><span class="n">shift_out</span><span class="w">    </span><span class="o">&lt;=</span><span class="w"> </span><span class="mh">32'h06000000</span><span class="p">;</span><span class="w"> </span><span class="c1">// Comando 0x06 (WREN)</span>
+<a id="__codelineno-0-108" name="__codelineno-0-108" href="#__codelineno-0-108"></a><span class="w">                        </span><span class="n">state</span><span class="w">        </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">ST_WREN</span><span class="p">;</span>
+<a id="__codelineno-0-109" name="__codelineno-0-109" href="#__codelineno-0-109"></a><span class="w">                    </span><span class="k">end</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">rd</span><span class="p">)</span><span class="w"> </span><span class="k">begin</span>
+<a id="__codelineno-0-110" name="__codelineno-0-110" href="#__codelineno-0-110"></a><span class="w">                        </span><span class="n">is_write_op</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mh">1</span><span class="mb">'b0</span><span class="p">;</span>
+<a id="__codelineno-0-111" name="__codelineno-0-111" href="#__codelineno-0-111"></a><span class="w">                        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">is_ram</span><span class="p">)</span><span class="w"> </span><span class="k">begin</span>
+<a id="__codelineno-0-112" name="__codelineno-0-112" href="#__codelineno-0-112"></a><span class="w">                            </span><span class="n">addr_reg</span><span class="w">     </span><span class="o">&lt;=</span><span class="w"> </span><span class="p">{</span><span class="mh">8'h00</span><span class="p">,</span><span class="w"> </span><span class="n">mem_addr</span><span class="p">[</span><span class="mh">15</span><span class="o">:</span><span class="mh">2</span><span class="p">],</span><span class="w"> </span><span class="mh">2</span><span class="mb">'b00</span><span class="p">};</span>
+<a id="__codelineno-0-113" name="__codelineno-0-113" href="#__codelineno-0-113"></a><span class="w">                            </span><span class="n">spi_cs_ram_n</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mh">1</span><span class="mb">'b0</span><span class="p">;</span>
+<a id="__codelineno-0-114" name="__codelineno-0-114" href="#__codelineno-0-114"></a><span class="w">                            </span><span class="n">shift_out</span><span class="w">    </span><span class="o">&lt;=</span><span class="w"> </span><span class="p">{</span><span class="mh">8'h03</span><span class="p">,</span><span class="w"> </span><span class="mh">8'h00</span><span class="p">,</span><span class="w"> </span><span class="n">mem_addr</span><span class="p">[</span><span class="mh">15</span><span class="o">:</span><span class="mh">2</span><span class="p">],</span><span class="w"> </span><span class="mh">2</span><span class="mb">'b00</span><span class="p">};</span>
+<a id="__codelineno-0-115" name="__codelineno-0-115" href="#__codelineno-0-115"></a><span class="w">                        </span><span class="k">end</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">begin</span>
+<a id="__codelineno-0-116" name="__codelineno-0-116" href="#__codelineno-0-116"></a><span class="w">                            </span><span class="n">addr_reg</span><span class="w">       </span><span class="o">&lt;=</span><span class="w"> </span><span class="p">{</span><span class="n">mem_addr</span><span class="p">[</span><span class="mh">23</span><span class="o">:</span><span class="mh">2</span><span class="p">],</span><span class="w"> </span><span class="mh">2</span><span class="mb">'b00</span><span class="p">};</span>
+<a id="__codelineno-0-117" name="__codelineno-0-117" href="#__codelineno-0-117"></a><span class="w">                            </span><span class="n">spi_cs_flash_n</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mh">1</span><span class="mb">'b0</span><span class="p">;</span>
+<a id="__codelineno-0-118" name="__codelineno-0-118" href="#__codelineno-0-118"></a><span class="w">                            </span><span class="n">shift_out</span><span class="w">      </span><span class="o">&lt;=</span><span class="w"> </span><span class="p">{</span><span class="mh">8'h03</span><span class="p">,</span><span class="w"> </span><span class="n">mem_addr</span><span class="p">[</span><span class="mh">23</span><span class="o">:</span><span class="mh">2</span><span class="p">],</span><span class="w"> </span><span class="mh">2</span><span class="mb">'b00</span><span class="p">};</span>
+<a id="__codelineno-0-119" name="__codelineno-0-119" href="#__codelineno-0-119"></a><span class="w">                        </span><span class="k">end</span>
+<a id="__codelineno-0-120" name="__codelineno-0-120" href="#__codelineno-0-120"></a><span class="w">                        </span><span class="n">state</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">ST_CMD_ADDR</span><span class="p">;</span>
+<a id="__codelineno-0-121" name="__codelineno-0-121" href="#__codelineno-0-121"></a><span class="w">                    </span><span class="k">end</span>
+<a id="__codelineno-0-122" name="__codelineno-0-122" href="#__codelineno-0-122"></a><span class="w">                </span><span class="k">end</span>
+<a id="__codelineno-0-123" name="__codelineno-0-123" href="#__codelineno-0-123"></a>
+<a id="__codelineno-0-124" name="__codelineno-0-124" href="#__codelineno-0-124"></a><span class="w">                </span><span class="nl">ST_WREN:</span><span class="w"> </span><span class="k">begin</span>
+<a id="__codelineno-0-125" name="__codelineno-0-125" href="#__codelineno-0-125"></a><span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">tick</span><span class="p">)</span><span class="w"> </span><span class="k">begin</span>
+<a id="__codelineno-0-126" name="__codelineno-0-126" href="#__codelineno-0-126"></a><span class="w">                        </span><span class="n">spi_sck</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="o">~</span><span class="n">spi_sck</span><span class="p">;</span>
+<a id="__codelineno-0-127" name="__codelineno-0-127" href="#__codelineno-0-127"></a><span class="w">                        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">spi_sck</span><span class="p">)</span><span class="w"> </span><span class="k">begin</span>
+<a id="__codelineno-0-128" name="__codelineno-0-128" href="#__codelineno-0-128"></a><span class="w">                            </span><span class="c1">// Flanco de bajada de SCK: desplazar</span>
+<a id="__codelineno-0-129" name="__codelineno-0-129" href="#__codelineno-0-129"></a><span class="w">                            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">bit_cnt</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mh">6</span><span class="mi">'d7</span><span class="p">)</span><span class="w"> </span><span class="k">begin</span>
+<a id="__codelineno-0-130" name="__codelineno-0-130" href="#__codelineno-0-130"></a><span class="w">                                </span><span class="n">state</span><span class="w">   </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">ST_WREN_GAP</span><span class="p">;</span>
+<a id="__codelineno-0-131" name="__codelineno-0-131" href="#__codelineno-0-131"></a><span class="w">                                </span><span class="n">bit_cnt</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mh">6</span><span class="mi">'d0</span><span class="p">;</span>
+<a id="__codelineno-0-132" name="__codelineno-0-132" href="#__codelineno-0-132"></a><span class="w">                            </span><span class="k">end</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">begin</span>
+<a id="__codelineno-0-133" name="__codelineno-0-133" href="#__codelineno-0-133"></a><span class="w">                                </span><span class="n">shift_out</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="p">{</span><span class="n">shift_out</span><span class="p">[</span><span class="mh">30</span><span class="o">:</span><span class="mh">0</span><span class="p">],</span><span class="w"> </span><span class="mh">1</span><span class="mb">'b0</span><span class="p">};</span>
+<a id="__codelineno-0-134" name="__codelineno-0-134" href="#__codelineno-0-134"></a><span class="w">                                </span><span class="n">bit_cnt</span><span class="w">   </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">bit_cnt</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mh">6</span><span class="mi">'d1</span><span class="p">;</span>
+<a id="__codelineno-0-135" name="__codelineno-0-135" href="#__codelineno-0-135"></a><span class="w">                            </span><span class="k">end</span>
+<a id="__codelineno-0-136" name="__codelineno-0-136" href="#__codelineno-0-136"></a><span class="w">                        </span><span class="k">end</span>
+<a id="__codelineno-0-137" name="__codelineno-0-137" href="#__codelineno-0-137"></a><span class="w">                    </span><span class="k">end</span>
+<a id="__codelineno-0-138" name="__codelineno-0-138" href="#__codelineno-0-138"></a><span class="w">                </span><span class="k">end</span>
+<a id="__codelineno-0-139" name="__codelineno-0-139" href="#__codelineno-0-139"></a>
+<a id="__codelineno-0-140" name="__codelineno-0-140" href="#__codelineno-0-140"></a><span class="w">                </span><span class="nl">ST_WREN_GAP:</span><span class="w"> </span><span class="k">begin</span>
+<a id="__codelineno-0-141" name="__codelineno-0-141" href="#__codelineno-0-141"></a><span class="w">                    </span><span class="n">spi_sck</span><span class="w">      </span><span class="o">&lt;=</span><span class="w"> </span><span class="mh">1</span><span class="mb">'b0</span><span class="p">;</span>
+<a id="__codelineno-0-142" name="__codelineno-0-142" href="#__codelineno-0-142"></a><span class="w">                    </span><span class="n">spi_cs_ram_n</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mh">1</span><span class="mb">'b1</span><span class="p">;</span>
+<a id="__codelineno-0-143" name="__codelineno-0-143" href="#__codelineno-0-143"></a><span class="w">                    </span><span class="n">bit_cnt</span><span class="w">      </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">bit_cnt</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mh">6</span><span class="mi">'d1</span><span class="p">;</span>
+<a id="__codelineno-0-144" name="__codelineno-0-144" href="#__codelineno-0-144"></a><span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">bit_cnt</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mh">6</span><span class="mi">'d3</span><span class="p">)</span><span class="w"> </span><span class="k">begin</span>
+<a id="__codelineno-0-145" name="__codelineno-0-145" href="#__codelineno-0-145"></a><span class="w">                        </span><span class="n">spi_cs_ram_n</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mh">1</span><span class="mb">'b0</span><span class="p">;</span><span class="w"> </span><span class="c1">// Baja CS para iniciar WRITE</span>
+<a id="__codelineno-0-146" name="__codelineno-0-146" href="#__codelineno-0-146"></a><span class="w">                        </span><span class="n">shift_out</span><span class="w">    </span><span class="o">&lt;=</span><span class="w"> </span><span class="p">{</span><span class="mh">8'h02</span><span class="p">,</span><span class="w"> </span><span class="n">addr_reg</span><span class="p">};</span><span class="w"> </span><span class="c1">// Comando 0x02 + Dirección</span>
+<a id="__codelineno-0-147" name="__codelineno-0-147" href="#__codelineno-0-147"></a><span class="w">                        </span><span class="n">bit_cnt</span><span class="w">      </span><span class="o">&lt;=</span><span class="w"> </span><span class="mh">6</span><span class="mi">'d0</span><span class="p">;</span>
+<a id="__codelineno-0-148" name="__codelineno-0-148" href="#__codelineno-0-148"></a><span class="w">                        </span><span class="n">state</span><span class="w">        </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">ST_CMD_ADDR</span><span class="p">;</span>
+<a id="__codelineno-0-149" name="__codelineno-0-149" href="#__codelineno-0-149"></a><span class="w">                    </span><span class="k">end</span>
+<a id="__codelineno-0-150" name="__codelineno-0-150" href="#__codelineno-0-150"></a><span class="w">                </span><span class="k">end</span>
+<a id="__codelineno-0-151" name="__codelineno-0-151" href="#__codelineno-0-151"></a>
+<a id="__codelineno-0-152" name="__codelineno-0-152" href="#__codelineno-0-152"></a><span class="w">                </span><span class="nl">ST_CMD_ADDR:</span><span class="w"> </span><span class="k">begin</span>
+<a id="__codelineno-0-153" name="__codelineno-0-153" href="#__codelineno-0-153"></a><span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">tick</span><span class="p">)</span><span class="w"> </span><span class="k">begin</span>
+<a id="__codelineno-0-154" name="__codelineno-0-154" href="#__codelineno-0-154"></a><span class="w">                        </span><span class="n">spi_sck</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="o">~</span><span class="n">spi_sck</span><span class="p">;</span>
+<a id="__codelineno-0-155" name="__codelineno-0-155" href="#__codelineno-0-155"></a><span class="w">                        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">spi_sck</span><span class="p">)</span><span class="w"> </span><span class="k">begin</span>
+<a id="__codelineno-0-156" name="__codelineno-0-156" href="#__codelineno-0-156"></a><span class="w">                            </span><span class="c1">// Flanco de bajada de SCK: desplazar o transicionar</span>
+<a id="__codelineno-0-157" name="__codelineno-0-157" href="#__codelineno-0-157"></a><span class="w">                            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">bit_cnt</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mh">6</span><span class="mi">'d31</span><span class="p">)</span><span class="w"> </span><span class="k">begin</span>
+<a id="__codelineno-0-158" name="__codelineno-0-158" href="#__codelineno-0-158"></a><span class="w">                                </span><span class="n">bit_cnt</span><span class="w">   </span><span class="o">&lt;=</span><span class="w"> </span><span class="mh">6</span><span class="mi">'d0</span><span class="p">;</span>
+<a id="__codelineno-0-159" name="__codelineno-0-159" href="#__codelineno-0-159"></a><span class="w">                                </span><span class="n">state</span><span class="w">     </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">ST_TRANSFER</span><span class="p">;</span>
+<a id="__codelineno-0-160" name="__codelineno-0-160" href="#__codelineno-0-160"></a><span class="w">                                </span><span class="n">shift_out</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">is_write_op</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">wdata_reg</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mh">32</span><span class="mi">'d0</span><span class="p">;</span>
+<a id="__codelineno-0-161" name="__codelineno-0-161" href="#__codelineno-0-161"></a><span class="w">                            </span><span class="k">end</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">begin</span>
+<a id="__codelineno-0-162" name="__codelineno-0-162" href="#__codelineno-0-162"></a><span class="w">                                </span><span class="n">shift_out</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="p">{</span><span class="n">shift_out</span><span class="p">[</span><span class="mh">30</span><span class="o">:</span><span class="mh">0</span><span class="p">],</span><span class="w"> </span><span class="mh">1</span><span class="mb">'b0</span><span class="p">};</span>
+<a id="__codelineno-0-163" name="__codelineno-0-163" href="#__codelineno-0-163"></a><span class="w">                                </span><span class="n">bit_cnt</span><span class="w">   </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">bit_cnt</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mh">6</span><span class="mi">'d1</span><span class="p">;</span>
+<a id="__codelineno-0-164" name="__codelineno-0-164" href="#__codelineno-0-164"></a><span class="w">                            </span><span class="k">end</span>
+<a id="__codelineno-0-165" name="__codelineno-0-165" href="#__codelineno-0-165"></a><span class="w">                        </span><span class="k">end</span>
+<a id="__codelineno-0-166" name="__codelineno-0-166" href="#__codelineno-0-166"></a><span class="w">                    </span><span class="k">end</span>
+<a id="__codelineno-0-167" name="__codelineno-0-167" href="#__codelineno-0-167"></a><span class="w">                </span><span class="k">end</span>
+<a id="__codelineno-0-168" name="__codelineno-0-168" href="#__codelineno-0-168"></a>
+<a id="__codelineno-0-169" name="__codelineno-0-169" href="#__codelineno-0-169"></a><span class="w">                </span><span class="nl">ST_TRANSFER:</span><span class="w"> </span><span class="k">begin</span>
+<a id="__codelineno-0-170" name="__codelineno-0-170" href="#__codelineno-0-170"></a><span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">tick</span><span class="p">)</span><span class="w"> </span><span class="k">begin</span>
+<a id="__codelineno-0-171" name="__codelineno-0-171" href="#__codelineno-0-171"></a><span class="w">                        </span><span class="n">spi_sck</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="o">~</span><span class="n">spi_sck</span><span class="p">;</span>
+<a id="__codelineno-0-172" name="__codelineno-0-172" href="#__codelineno-0-172"></a><span class="w">                        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">spi_sck</span><span class="p">)</span><span class="w"> </span><span class="k">begin</span>
+<a id="__codelineno-0-173" name="__codelineno-0-173" href="#__codelineno-0-173"></a><span class="w">                            </span><span class="c1">// Flanco de subida de SCK: Muestreo de MISO</span>
+<a id="__codelineno-0-174" name="__codelineno-0-174" href="#__codelineno-0-174"></a><span class="w">                            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">is_write_op</span><span class="p">)</span><span class="w"> </span><span class="k">begin</span>
+<a id="__codelineno-0-175" name="__codelineno-0-175" href="#__codelineno-0-175"></a><span class="w">                                </span><span class="n">shift_in</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="p">{</span><span class="n">shift_in</span><span class="p">[</span><span class="mh">30</span><span class="o">:</span><span class="mh">0</span><span class="p">],</span><span class="w"> </span><span class="n">spi_miso</span><span class="p">};</span>
+<a id="__codelineno-0-176" name="__codelineno-0-176" href="#__codelineno-0-176"></a><span class="w">                            </span><span class="k">end</span>
+<a id="__codelineno-0-177" name="__codelineno-0-177" href="#__codelineno-0-177"></a><span class="w">                        </span><span class="k">end</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">begin</span>
+<a id="__codelineno-0-178" name="__codelineno-0-178" href="#__codelineno-0-178"></a><span class="w">                            </span><span class="c1">// Flanco de bajada de SCK: Desplazamiento o fin</span>
+<a id="__codelineno-0-179" name="__codelineno-0-179" href="#__codelineno-0-179"></a><span class="w">                            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">bit_cnt</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mh">6</span><span class="mi">'d31</span><span class="p">)</span><span class="w"> </span><span class="k">begin</span>
+<a id="__codelineno-0-180" name="__codelineno-0-180" href="#__codelineno-0-180"></a><span class="w">                                </span><span class="n">bit_cnt</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mh">6</span><span class="mi">'d0</span><span class="p">;</span>
+<a id="__codelineno-0-181" name="__codelineno-0-181" href="#__codelineno-0-181"></a><span class="w">                                </span><span class="n">state</span><span class="w">   </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">ST_DESELECT</span><span class="p">;</span>
+<a id="__codelineno-0-182" name="__codelineno-0-182" href="#__codelineno-0-182"></a><span class="w">                                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">is_write_op</span><span class="p">)</span><span class="w"> </span><span class="k">begin</span>
+<a id="__codelineno-0-183" name="__codelineno-0-183" href="#__codelineno-0-183"></a><span class="w">                                    </span><span class="c1">// Reorganizar a Little-Endian para FemtoRV32</span>
+<a id="__codelineno-0-184" name="__codelineno-0-184" href="#__codelineno-0-184"></a><span class="w">                                    </span><span class="n">mem_rdata</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-185" name="__codelineno-0-185" href="#__codelineno-0-185"></a><span class="w">                                        </span><span class="n">shift_in</span><span class="p">[</span><span class="mh">7</span><span class="o">:</span><span class="mh">0</span><span class="p">],</span><span class="w">   </span><span class="c1">// Byte 3</span>
+<a id="__codelineno-0-186" name="__codelineno-0-186" href="#__codelineno-0-186"></a><span class="w">                                        </span><span class="n">shift_in</span><span class="p">[</span><span class="mh">15</span><span class="o">:</span><span class="mh">8</span><span class="p">],</span><span class="w">  </span><span class="c1">// Byte 2</span>
+<a id="__codelineno-0-187" name="__codelineno-0-187" href="#__codelineno-0-187"></a><span class="w">                                        </span><span class="n">shift_in</span><span class="p">,</span><span class="w"> </span><span class="c1">// Byte 1</span>
+<a id="__codelineno-0-188" name="__codelineno-0-188" href="#__codelineno-0-188"></a><span class="w">                                        </span><span class="n">shift_in</span><span class="w">  </span><span class="c1">// Byte 0</span>
+<a id="__codelineno-0-189" name="__codelineno-0-189" href="#__codelineno-0-189"></a><span class="w">                                    </span><span class="p">};</span>
+<a id="__codelineno-0-190" name="__codelineno-0-190" href="#__codelineno-0-190"></a><span class="w">                                </span><span class="k">end</span>
+<a id="__codelineno-0-191" name="__codelineno-0-191" href="#__codelineno-0-191"></a><span class="w">                            </span><span class="k">end</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">begin</span>
+<a id="__codelineno-0-192" name="__codelineno-0-192" href="#__codelineno-0-192"></a><span class="w">                                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">is_write_op</span><span class="p">)</span><span class="w"> </span><span class="k">begin</span>
+<a id="__codelineno-0-193" name="__codelineno-0-193" href="#__codelineno-0-193"></a><span class="w">                                    </span><span class="n">shift_out</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="p">{</span><span class="n">shift_out</span><span class="p">[</span><span class="mh">30</span><span class="o">:</span><span class="mh">0</span><span class="p">],</span><span class="w"> </span><span class="mh">1</span><span class="mb">'b0</span><span class="p">};</span>
+<a id="__codelineno-0-194" name="__codelineno-0-194" href="#__codelineno-0-194"></a><span class="w">                                </span><span class="k">end</span>
+<a id="__codelineno-0-195" name="__codelineno-0-195" href="#__codelineno-0-195"></a><span class="w">                                </span><span class="n">bit_cnt</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">bit_cnt</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mh">6</span><span class="mi">'d1</span><span class="p">;</span>
+<a id="__codelineno-0-196" name="__codelineno-0-196" href="#__codelineno-0-196"></a><span class="w">                            </span><span class="k">end</span>
+<a id="__codelineno-0-197" name="__codelineno-0-197" href="#__codelineno-0-197"></a><span class="w">                        </span><span class="k">end</span>
+<a id="__codelineno-0-198" name="__codelineno-0-198" href="#__codelineno-0-198"></a><span class="w">                    </span><span class="k">end</span>
+<a id="__codelineno-0-199" name="__codelineno-0-199" href="#__codelineno-0-199"></a><span class="w">                </span><span class="k">end</span>
+<a id="__codelineno-0-200" name="__codelineno-0-200" href="#__codelineno-0-200"></a>
+<a id="__codelineno-0-201" name="__codelineno-0-201" href="#__codelineno-0-201"></a><span class="w">                </span><span class="nl">ST_DESELECT:</span><span class="w"> </span><span class="k">begin</span>
+<a id="__codelineno-0-202" name="__codelineno-0-202" href="#__codelineno-0-202"></a><span class="w">                    </span><span class="n">spi_sck</span><span class="w">        </span><span class="o">&lt;=</span><span class="w"> </span><span class="mh">1</span><span class="mb">'b0</span><span class="p">;</span>
+<a id="__codelineno-0-203" name="__codelineno-0-203" href="#__codelineno-0-203"></a><span class="w">                    </span><span class="n">spi_cs_flash_n</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mh">1</span><span class="mb">'b1</span><span class="p">;</span>
+<a id="__codelineno-0-204" name="__codelineno-0-204" href="#__codelineno-0-204"></a><span class="w">                    </span><span class="n">spi_cs_ram_n</span><span class="w">   </span><span class="o">&lt;=</span><span class="w"> </span><span class="mh">1</span><span class="mb">'b1</span><span class="p">;</span>
+<a id="__codelineno-0-205" name="__codelineno-0-205" href="#__codelineno-0-205"></a><span class="w">                    </span><span class="n">bit_cnt</span><span class="w">        </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">bit_cnt</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mh">6</span><span class="mi">'d1</span><span class="p">;</span>
+<a id="__codelineno-0-206" name="__codelineno-0-206" href="#__codelineno-0-206"></a><span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">bit_cnt</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mh">6</span><span class="mi">'d3</span><span class="p">)</span><span class="w"> </span><span class="k">begin</span>
+<a id="__codelineno-0-207" name="__codelineno-0-207" href="#__codelineno-0-207"></a><span class="w">                        </span><span class="n">state</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">ST_IDLE</span><span class="p">;</span>
+<a id="__codelineno-0-208" name="__codelineno-0-208" href="#__codelineno-0-208"></a><span class="w">                    </span><span class="k">end</span>
+<a id="__codelineno-0-209" name="__codelineno-0-209" href="#__codelineno-0-209"></a><span class="w">                </span><span class="k">end</span>
+<a id="__codelineno-0-210" name="__codelineno-0-210" href="#__codelineno-0-210"></a>
+<a id="__codelineno-0-211" name="__codelineno-0-211" href="#__codelineno-0-211"></a><span class="w">                </span><span class="k">default</span><span class="o">:</span><span class="w"> </span><span class="n">state</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">ST_IDLE</span><span class="p">;</span>
+<a id="__codelineno-0-212" name="__codelineno-0-212" href="#__codelineno-0-212"></a><span class="w">            </span><span class="k">endcase</span>
+<a id="__codelineno-0-213" name="__codelineno-0-213" href="#__codelineno-0-213"></a><span class="w">        </span><span class="k">end</span>
+<a id="__codelineno-0-214" name="__codelineno-0-214" href="#__codelineno-0-214"></a><span class="w">    </span><span class="k">end</span>
+<a id="__codelineno-0-215" name="__codelineno-0-215" href="#__codelineno-0-215"></a>
+<a id="__codelineno-0-216" name="__codelineno-0-216" href="#__codelineno-0-216"></a><span class="k">endmodule</span>
+</code></pre></div>
+</details>
+<hr />
+<h3 id="32-modificado-femto_unsrcfemtov">3.2. [MODIFICADO] <code>femto_UN/src/femto.v</code></h3>
+<h1 id="lista-de-modificaciones-rtl-tt_um_femto-y-femto">Lista de Modificaciones RTL (<code>tt_um_femto</code> y <code>femto</code>)</h1>
+<ul>
+<li>Se reemplazaron las instancias de <code>MappedSPIFlash</code> y <code>MappedSPIRAM</code> por <code>Unified_SPI_Controller</code>.</li>
+<li>Se conectaron los pines del bus compartido a <code>uo_out[0..3]</code> y <code>ui_in[0]</code>.</li>
+<li>Se enrutaron señales de depuración (<code>mem_busy_debug</code> y <code>debug_out</code>) a los pines liberados <code>uo_out[4..5]</code>.</li>
+<li>Se simplificó el multiplexor de lectura <code>mem_rdata</code>.</li>
+</ul>
+<details class="info">
+<summary>Parche Git: Integración de Unified_SPI_Controller en femto.v (Clic para expandir)</summary>
+<div class="language-diff highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="gd">--- a/femto_UN/src/femto.v</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="gi">+++ b/femto_UN/src/femto.v</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="gu">@@ -17,28 +17,25 @@ module tt_um_femto(</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="gd">-   femto femto0( </span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="gd">-       .clk          (clk), </span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="gd">-       .resetn       (resetn), </span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="gd">-       .spi_mosi     (uo_out[0]),</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="gd">-       .spi_mosi_ram (uo_out[1]),</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="gd">-       .spi_cs_n     (uo_out[2]),</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="gd">-       .spi_cs_n_ram (uo_out[3]),</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="gd">-       .spi_clk_ram  (uo_out[4]),</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="gd">-       .spi_clk      (uo_out[5]),</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="gd">-       .LEDS         (uo_out[6]),</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="gd">-       .TXD          (uo_out[7]),</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="gd">-       </span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="gd">-       .spi_miso     (ui_in[0]),</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="gd">-       .spi_miso_ram (ui_in[1]),</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="gd">-       .RXD          (ui_in[2]),</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="gd">-      .interrupt_request (ui_in[3])</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="gd">-   );</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="gi">+    femto femto0( </span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="gi">+        .clk               (clk), </span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="gi">+        .resetn            (resetn), </span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="gi">+        .spi_mosi          (uo_out[0]), // MOSI compartido</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="gi">+        .spi_sck           (uo_out[1]), // SCK compartido</span>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="gi">+        .spi_cs_flash_n    (uo_out[2]), // CS Flash</span>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="gi">+        .spi_cs_ram_n      (uo_out[3]), // CS RAM</span>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="gi">+        .mem_busy_debug    (uo_out[4]), // Señal de depuración (mem_busy)</span>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="gi">+        .debug_out         (uo_out[5]), // Señal de depuración (RAM access)</span>
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="gi">+        .LEDS              (uo_out[6]),</span>
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="gi">+        .TXD               (uo_out[7]),</span>
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="gi">+        .spi_miso          (ui_in[0]),  // MISO compartido</span>
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="gi">+        .RXD               (ui_in[2]),</span>
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="gi">+        .interrupt_request (ui_in[3])</span>
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="gi">+    );</span>
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a><span class="gu">@@ -70,52 +67,31 @@ module femto (</span>
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a><span class="gd">-   output        spi_mosi,</span>
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a><span class="gd">-   input         spi_miso,</span>
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a><span class="gd">-   output        spi_cs_n,</span>
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a><span class="gd">-   output        spi_clk,</span>
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a><span class="gd">-   output      spi_clk_ram,</span>
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a><span class="gd">-   output      spi_cs_n_ram,</span>
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a><span class="gd">-   input       spi_miso_ram,</span>
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a><span class="gd">-   output      spi_mosi_ram,</span>
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a><span class="gi">+   output        spi_mosi,</span>
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a><span class="gi">+   output        spi_sck,</span>
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a><span class="gi">+   output        spi_cs_flash_n,</span>
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a><span class="gi">+   output        spi_cs_ram_n,</span>
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a><span class="gi">+   input         spi_miso,</span>
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a><span class="gi">+   output        mem_busy_debug,</span>
+<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a><span class="gi">+   output        debug_out,</span>
+<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a><span class="gu">@@ -80,102 +77,75 @@ module femto (</span>
+<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a><span class="w"> </span>      .mem_rstrb(mem_rstrb),
+<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a><span class="w"> </span>      .mem_wdata(mem_wdata),
+<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a><span class="w"> </span>      .mem_wmask(mem_wmask),
+<a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a><span class="gd">-      .mem_rbusy(mapped_spi_flash_rbusy | spi_ram_rbusy),</span>
+<a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a><span class="gd">-      .mem_wbusy(spi_ram_wbusy),</span>
+<a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a><span class="gi">+      .mem_rbusy(spi_mem_busy),</span>
+<a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a><span class="gi">+      .mem_wbusy(spi_mem_busy),</span>
+<a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a><span class="w"> </span>      .interrupt_request(interrupt_request)
+<a id="__codelineno-1-61" name="__codelineno-1-61" href="#__codelineno-1-61"></a><span class="w"> </span>   );
+<a id="__codelineno-1-62" name="__codelineno-1-62" href="#__codelineno-1-62"></a>
+<a id="__codelineno-1-63" name="__codelineno-1-63" href="#__codelineno-1-63"></a><span class="gd">-   MappedSPIRAM mapped_spi_ram(...);</span>
+<a id="__codelineno-1-64" name="__codelineno-1-64" href="#__codelineno-1-64"></a><span class="gd">-   MappedSPIFlash mapped_spi_flash(...);</span>
+<a id="__codelineno-1-65" name="__codelineno-1-65" href="#__codelineno-1-65"></a><span class="gi">+   Unified_SPI_Controller #(</span>
+<a id="__codelineno-1-66" name="__codelineno-1-66" href="#__codelineno-1-66"></a><span class="gi">+      .CLK_DIV(2)</span>
+<a id="__codelineno-1-67" name="__codelineno-1-67" href="#__codelineno-1-67"></a><span class="gi">+   ) spi_ctrl (</span>
+<a id="__codelineno-1-68" name="__codelineno-1-68" href="#__codelineno-1-68"></a><span class="gi">+      .clk            (clk),</span>
+<a id="__codelineno-1-69" name="__codelineno-1-69" href="#__codelineno-1-69"></a><span class="gi">+      .resetn         (resetn),</span>
+<a id="__codelineno-1-70" name="__codelineno-1-70" href="#__codelineno-1-70"></a><span class="gi">+      .mem_addr       (mem_address),</span>
+<a id="__codelineno-1-71" name="__codelineno-1-71" href="#__codelineno-1-71"></a><span class="gi">+      .mem_wdata      (mem_wdata),</span>
+<a id="__codelineno-1-72" name="__codelineno-1-72" href="#__codelineno-1-72"></a><span class="gi">+      .mem_wmask      (mem_wmask),</span>
+<a id="__codelineno-1-73" name="__codelineno-1-73" href="#__codelineno-1-73"></a><span class="gi">+      .mem_rstrb      (mem_rstrb),</span>
+<a id="__codelineno-1-74" name="__codelineno-1-74" href="#__codelineno-1-74"></a><span class="gi">+      .mem_rdata      (spi_rdata),</span>
+<a id="__codelineno-1-75" name="__codelineno-1-75" href="#__codelineno-1-75"></a><span class="gi">+      .mem_busy       (spi_mem_busy),</span>
+<a id="__codelineno-1-76" name="__codelineno-1-76" href="#__codelineno-1-76"></a><span class="gi">+      .spi_cs_flash_n (spi_cs_flash_n),</span>
+<a id="__codelineno-1-77" name="__codelineno-1-77" href="#__codelineno-1-77"></a><span class="gi">+      .spi_cs_ram_n   (spi_cs_ram_n),</span>
+<a id="__codelineno-1-78" name="__codelineno-1-78" href="#__codelineno-1-78"></a><span class="gi">+      .spi_sck        (spi_sck),</span>
+<a id="__codelineno-1-79" name="__codelineno-1-79" href="#__codelineno-1-79"></a><span class="gi">+      .spi_mosi       (spi_mosi),</span>
+<a id="__codelineno-1-80" name="__codelineno-1-80" href="#__codelineno-1-80"></a><span class="gi">+      .spi_miso       (spi_miso)</span>
+<a id="__codelineno-1-81" name="__codelineno-1-81" href="#__codelineno-1-81"></a><span class="gi">+   );</span>
+<a id="__codelineno-1-82" name="__codelineno-1-82" href="#__codelineno-1-82"></a>
+<a id="__codelineno-1-83" name="__codelineno-1-83" href="#__codelineno-1-83"></a><span class="gi">+   assign mem_busy_debug = spi_mem_busy;</span>
+<a id="__codelineno-1-84" name="__codelineno-1-84" href="#__codelineno-1-84"></a><span class="gi">+   assign debug_out      = cs[6];</span>
+</code></pre></div>
+</details>
+<h3 id="33-modificado-tinytapeouttt_um_femto_tbv">3.3. [MODIFICADO] <code>tinytapeout/tt_um_femto_TB.v</code></h3>
+<p>Se actualizó la interconexión física en el banco de pruebas:
+1. <code>flash0</code> y <code>flashram0</code> ahora se conectan a los mismos cables: <code>spi_clk</code>, <code>spi_mosi</code> y <code>spi_miso</code>.
+2. Se incorporó un búfer tri-state de emulación con resistencia pull-up para la línea <code>MISO</code>.</p>
+<details class="info">
+<summary>Parche Git: Actualización del Banco de Pruebas (tt_um_femto_TB.v) (Clic para expandir)</summary>
+<div class="language-diff highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="gd">--- a/tinytapeout/tt_um_femto_TB.v</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="gi">+++ b/tinytapeout/tt_um_femto_TB.v</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="gu">@@ -20,10 +20,10 @@ wire VGND = 1'b0;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w"> </span>  wire spi_cs;
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="gi">+  wire spi_cs_n_ram;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w"> </span>  wire spi_clk;
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w"> </span>  wire spi_miso;
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="gd">-  wire spi_mosi;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="gd">-  wire spi_cs_n_ram;</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="gd">-  wire spi_clk_ram;</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="gd">-  wire spi_miso_ram;</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="gd">-  wire spi_mosi_ram;</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="gi">+  wire ram_so;</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="gi">+  wire mem_busy_debug;</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="gi">+  wire debug_out;</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="gu">@@ -36,8 +36,8 @@ tt_um_femto uut(</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="gd">-   .ui_in  ({4'b0000, interrupt_request, RXD, spi_miso_ram, spi_miso}),</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="gd">-   .uo_out ({TXD, LEDS, spi_clk, spi_clk_ram, spi_cs_n_ram, spi_cs, spi_mosi_ram, spi_mosi}));</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="gi">+   .ui_in  ({4'b0000, interrupt_request, RXD, 1'b0, spi_miso}),</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="gi">+   .uo_out ({TXD, LEDS, debug_out, mem_busy_debug, spi_cs_n_ram, spi_cs, spi_clk, spi_mosi}));</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="gu">@@ -74,12 +74,16 @@ tt_um_femto uut(</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w"> </span>  FRAM_SPI flashram0(
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w"> </span>   .CSB(spi_cs_n_ram),     // Chip Select (activo en bajo)
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="gd">-   .SCK(spi_clk_ram),    // SPI Clock</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="gd">-   .SI(spi_mosi_ram),     // Serial Input (MOSI)</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="gd">-   .SO(spi_miso_ram),     // Serial Output (MISO)</span>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="gi">+   .SCK(spi_clk),          // SPI Clock compartido</span>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="gi">+   .SI(spi_mosi),          // MOSI compartido</span>
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a><span class="gi">+   .SO(ram_so),            // Salida de RAM</span>
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="w"> </span>   .VDD(reset_n),
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a><span class="w"> </span>   .WPB(1'b1)
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a><span class="w"> </span>  );
+<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a><span class="gi">+  // Búfer tri-state para emular el comportamiento real del pin MISO de la RAM</span>
+<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a><span class="gi">+  assign spi_miso = (!spi_cs_n_ram) ? ram_so : 1'bz;</span>
+<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a><span class="gi">+  pullup(spi_miso);</span>
+</code></pre></div>
+</details>
+<h3 id="34-modificado-tinytapeoutmakefile">3.4. [MODIFICADO] <code>tinytapeout/Makefile</code></h3>
+<p>Se sustituyeron las fuentes de los controladores individuales por el nuevo controlador unificado en la lista <code>OBJS</code>:</p>
+<div class="language-diff highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="gd">--- a/tinytapeout/Makefile</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="gi">+++ b/tinytapeout/Makefile</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="gu">@@ -13,8 +13,7 @@ OBJS+= ../femto_UN/src/uart.v</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w"> </span>OBJS+= ../femto_UN/src/perip_mult.v
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w"> </span>OBJS+= ../femto_UN/src/mult.v
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w"> </span>OBJS+= ../femto_UN/src/bram.v
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="gd">-OBJS+= ../femto_UN/src/MappedSPIFlash.v</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="gd">-OBJS+= ../femto_UN/src/MappedSPIRAM.v</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="gi">+OBJS+= ../femto_UN/src/Unified_SPI_Controller.v</span>
+</code></pre></div>
+<hr />
+<h3 id="35-recompilado-tinytapeoutfirmwareasmtest_ram_loads">3.5. [RECOMPILADO] <code>tinytapeout/firmware/asm/test_ram_load.S</code></h3>
+<p>Código fuente en ensamblador RISC-V del test funcional. Escribe 12 bytes en la RAM SPI, los lee palabra a palabra y los transmite serialmente por UART:</p>
+<details class="info">
+<summary>Código Ensamblador RISC-V: test_ram_load.S (Clic para expandir)</summary>
+<div class="language-text highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>.section .text
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>.global _start
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>_start:
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    nop
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    lui   t1, 0x400
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    addi  t1, t1, 8            # t1 = 0x00400008 (UART TX data)
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    lui   t2, 0x400
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    addi  t2, t2, 16           # t2 = 0x00400010 (UART TX ctrl/status)
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    lui   t0, 0x10             # t0 = 0x00010000 (Base RAM SPI)
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>    # ---- Escribe 3 palabras (12 bytes) a la RAM SPI ----
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>    li    t3, 0x6C6C6548        # "Hell" en little-endian
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>    sw    t3, 0(t0)
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>    li    t3, 0x6F57206F        # "o Wo"
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>    sw    t3, 4(t0)
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>    li    t3, 0x00646C72        # "rld\0"
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>    sw    t3, 8(t0)
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>restart:
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>    li    s0, 0                 # Offset de palabra dentro de la RAM (0, 4, 8)
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>word_loop:
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>    add   t4, t0, s0
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>    lw    s1, 0(t4)             # Lectura de palabra completa (32 bits) desde RAM SPI
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>    li    s2, 4                 # Contador: 4 bytes por palabra
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>byte_loop:
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>    andi  t4, s1, 0xFF          # Extrae el byte menos significativo
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>    beqz  t4, restart           # Si es '\0', reinicia el ciclo ("Hello World")
+<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>
+<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a>wait_tx:
+<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a>    lw    t5, 0(t2)
+<a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a>    andi  t5, t5, 0x200         # Bit 9: tx_busy
+<a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a>    bnez  t5, wait_tx
+<a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a>    sw    t4, 0(t1)             # Escribe dato en UART DATA
+<a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a>    li    t6, 0x08
+<a id="__codelineno-4-38" name="__codelineno-4-38" href="#__codelineno-4-38"></a>    sw    t6, 0(t2)             # Pulso tx_wr = 1
+<a id="__codelineno-4-39" name="__codelineno-4-39" href="#__codelineno-4-39"></a>    li    t6, 0x00
+<a id="__codelineno-4-40" name="__codelineno-4-40" href="#__codelineno-4-40"></a>    sw    t6, 0(t2)             # tx_wr = 0
+<a id="__codelineno-4-41" name="__codelineno-4-41" href="#__codelineno-4-41"></a>    srli  s1, s1, 8             # Desplaza al siguiente byte de la palabra
+<a id="__codelineno-4-42" name="__codelineno-4-42" href="#__codelineno-4-42"></a>    addi  s2, s2, -1
+<a id="__codelineno-4-43" name="__codelineno-4-43" href="#__codelineno-4-43"></a>    bnez  s2, byte_loop
+<a id="__codelineno-4-44" name="__codelineno-4-44" href="#__codelineno-4-44"></a>    addi  s0, s0, 4             # Avanza a la siguiente palabra
+<a id="__codelineno-4-45" name="__codelineno-4-45" href="#__codelineno-4-45"></a>    j     word_loop
+</code></pre></div>
+</details>
+<hr />
+<h2 id="4-problemas-criticos-encontrados-y-soluciones-de-ingenieria">4. Problemas Críticos Encontrados y Soluciones de Ingeniería</h2>
+<h3 id="problema-1-asignacion-no-bloqueante-de-mem_wmask-y-el-escape-de-la-cpu">Problema 1: Asignación No-Bloqueante de <code>mem_wmask</code> y el "Escape" de la CPU</h3>
+<details class="info">
+<summary>Ver mas</summary>
+<ul>
+<li><strong>Síntoma:</strong> Al simular, el procesador escribía únicamente la primera palabra en la RAM (<code>"Hell"</code>), pero jamás avanzaba a escribir la segunda (<code>"o Wo"</code>) ni transmitía el mensaje completo. Se quedaba repitiendo la primera escritura de forma infinita.</li>
+<li><strong>Análisis Profundo:</strong></li>
+<li>En <code>femtorv32_quark_un_irq.v</code>, la señal <code>mem_wmask</code> es generada en un bloque síncrono con asignación no-bloqueante:<br />
+<code>mem_wmask &lt;= {4{isStore}} &amp; STORE_wmask;</code></li>
+<li>Esto significa que durante el ciclo <code>EXECUTE</code>, <code>mem_wmask</code> vale <code>4'b0000</code>. Su valor pasa a <code>4'b1111</code> únicamente cuando la CPU ya ha ingresado al ciclo <code>WAIT_ALU_OR_MEM</code>.</li>
+<li>Inicialmente, el controlador SPI calculaba:<br />
+<code>assign mem_busy = (state != ST_IDLE);</code></li>
+<li>Como el controlador estaba en <code>ST_IDLE</code>, en el primer flanco de reloj de <code>WAIT_ALU_OR_MEM</code>, la señal <code>mem_wbusy</code> valía <code>0</code>.</li>
+<li>La condición de salida del estado en la CPU era:<br />
+<code>if (!aluBusy &amp;&amp; !mem_rbusy &amp;&amp; !mem_wbusy) state &lt;= FETCH_INSTR;</code></li>
+<li>Dado que <code>mem_wbusy</code> era <code>0</code>, <strong>la CPU abandonaba <code>WAIT_ALU_OR_MEM</code> en un solo ciclo</strong>, pasando a <code>FETCH_INSTR</code> y luego a <code>WAIT_INSTR</code>.</li>
+<li>En el siguiente ciclo, el controlador SPI finalmente detectaba <code>wr == 1</code> y comenzaba la escritura a la RAM (que tarda $\sim 12\,\mu\text{s}$). Durante todo ese tiempo, la CPU esperaba en <code>WAIT_INSTR</code> creyendo que esperaba una instrucción de la Flash.</li>
+<li>Al terminar la escritura de la RAM, <code>mem_busy</code> caía a <code>0</code>. La CPU despertaba en <code>WAIT_INSTR</code>, <strong>asumía erróneamente que la RAM le había devuelto una instrucción</strong>, cargaba ese valor basura en el decodificador de instrucciones y descontrolaba el flujo del programa.</li>
+<li><strong>Solución Implementada:</strong>
+Se modificó la señal de estado hacia el procesador para que responda de forma <strong>combinacional inmediata</strong>:
+<div class="language-verilog highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">assign</span><span class="w"> </span><span class="n">mem_busy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">state</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">ST_IDLE</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">wr</span><span class="p">;</span>
+</code></pre></div>
+Con <code>|| wr</code>, en cuanto <code>mem_wmask</code> se activa en <code>WAIT_ALU_OR_MEM</code>, <code>mem_busy</code> sube a <code>1</code> en ese mismo instante. Esto congela a la CPU en <code>WAIT_ALU_OR_MEM</code> hasta que el controlador concluye la totalidad de la transacción SPI.</li>
+</ul>
+<hr />
+</details>
+<h3 id="problema-2-contencion-de-bus-x-en-simulacion-por-el-modelo-de-la-ram">Problema 2: Contención de Bus <code>X</code> en Simulación por el Modelo de la RAM</h3>
+<details class="info">
+<summary>Ver mas</summary>
+<ul>
+<li><strong>Síntoma:</strong> Al iniciar la simulación, la señal <code>spi_miso</code> presentaba estados desconocidos <code>X</code> (rojo en GTKWave).</li>
+<li><strong>Causa:</strong> El modelo de simulación de Cypress (<code>cores/sim_spi_ram/spiram.v</code>) fuerza su salida <code>SO = 0</code> cuando <code>CSB = 1</code> en vez de colocarla en alta impedancia <code>1'bz</code>. Cuando la Flash intentaba responder con un <code>1</code>, ambos modelos peleaban por la línea.</li>
+<li><strong>Solución:</strong> Se agregó un búfer tri-state en el testbench (<code>assign spi_miso = (!spi_cs_n_ram) ? ram_so : 1'bz;</code>), reflejando el comportamiento del silicio comercial real.</li>
+</ul>
+</details>
+<hr />
+<h3 id="problema-3-sign-extension-en-ensamblador-0xfc-vs-0x6c">Problema 3: Sign-Extension en Ensamblador (<code>0xFC</code> vs <code>0x6C</code>)</h3>
+<details class="info">
+<summary>Ver mas</summary>
+<ul>
+<li><strong>Síntoma:</strong> Al inspeccionar <code>mem[3]</code> en la RAM, contenía <code>0xFC</code> en vez de <code>0x6C</code> (<code>'l'</code>).</li>
+<li><strong>Causa:</strong> Un archivo <code>.elf</code> anterior en el repositorio se había generado con una herramienta donde <code>li t3, 0x6C6C6548</code> extendía signo produciendo <code>lui t3, 0xfc6c6</code>.</li>
+<li><strong>Solución:</strong> Se limpió el directorio <code>tinytapeout/firmware/asm/</code> y se recompiló con <code>riscv32-unknown-elf-as -march=rv32i -mabi=ilp32</code>, generando con exactitud <code>0x6C6C6548</code>.</li>
+</ul>
+</details>
+<hr />
+<h2 id="5-analisis-de-la-forma-de-onda-en-gtkwave">5. Análisis de la Forma de Onda en GTKWave</h2>
+<p>Al visualizar la señal <code>per_uart.d_in[7:0]</code> o decodificar el pin de transmisión <code>TXD</code>, se observa la secuencia:
+<div class="language-text highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>'H'  'e'  'l'  'o'  ' '  'W'  'o'  'r'  'l'  'd'
+</code></pre></div></p>
+<h3 id="por-que-la-primera-l-aparece-con-una-casilla-doble-de-ancha">¿Por qué la primera <code>'l'</code> aparece con una casilla doble de ancha?</h3>
+<ol>
+<li><strong>La palabra inglesa es "He<mark>ll</mark>o":</strong> Contiene dos letras <code>'l'</code> consecutivas (<code>0x6C</code> y <code>0x6C</code>).</li>
+<li><strong>Representación de buses en visores digitales:</strong> GTKWave únicamente dibuja la línea divisoria ("X") cuando el valor binario del bus cambia. Al transmitirse la primera <code>'l'</code> (<code>0x6C</code>) y mantenerse en <code>'l'</code> (<code>0x6C</code>) para la segunda, el bus no experimenta transición, por lo que el visualizador dibuja <strong>una sola casilla continua que dura el doble de tiempo</strong>.</li>
+<li><strong>Comprobación:</strong> La segunda <code>'l'</code> de la palabra <strong>"Wor<mark>l</mark>d"</strong> (entre la <code>'r'</code> y la <code>'d'</code>) aparece con el ancho estándar de una sola letra, confirmando la validez del decodificador.</li>
+</ol>
+<hr />
+<h2 id="6-guia-de-reproduccion-y-verificacion-manual">6. Guía de Reproducción y Verificación Manual</h2>
+<h3 id="paso-1-ubicacion-en-el-repositorio">Paso 1: Ubicación en el repositorio</h3>
+<div class="language-bash highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nb">cd</span><span class="w"> </span>/home/villa/VLSI/tinytapeout
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>git<span class="w"> </span>checkout<span class="w"> </span>bus-compartido-spi
+</code></pre></div>
+<h3 id="paso-2-opcional-recompilacion-del-firmware">Paso 2: (Opcional) Recompilación del Firmware</h3>
+<div class="language-bash highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">cd</span><span class="w"> </span>/home/villa/VLSI/tinytapeout/firmware/asm
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>make<span class="w"> </span>clean<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>make
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nb">cd</span><span class="w"> </span>../..
+</code></pre></div>
+<h3 id="paso-3-compilacion-y-ejecucion-con-icarus-verilog">Paso 3: Compilación y Ejecución con Icarus Verilog</h3>
+<div class="language-bash highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>iverilog<span class="w"> </span>-DBENCH<span class="w"> </span>-DSIM<span class="w"> </span>-DPASSTHROUGH_PLL<span class="w"> </span>-DBOARD_FREQ<span class="o">=</span><span class="m">27</span><span class="w"> </span>-DCPU_FREQ<span class="o">=</span><span class="m">27</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span>tt_um_femto_TB.v<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span>../femto_UN/src/femto.v<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span>../femto_UN/src/femtorv32_quark_un_irq.v<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">  </span>../femto_UN/src/perip_uart.v<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">  </span>../femto_UN/src/uart.v<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">  </span>../femto_UN/src/perip_mult.v<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">  </span>../femto_UN/src/mult.v<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">  </span>../femto_UN/src/bram.v<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">  </span>../femto_UN/src/Unified_SPI_Controller.v<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w">  </span>cores/sim_spi_flash/spiflash.v<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="w">  </span>cores/sim_spi_ram/spiram.v
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>vvp<span class="w"> </span>a.out
+</code></pre></div>
+<h3 id="paso-4-visualizacion-en-gtkwave">Paso 4: Visualización en GTKWave</h3>
+<p><div class="language-bash highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>gtkwave<span class="w"> </span>tt_um_femto_TB.vcd
+</code></pre></div>
+Señales recomendadas para agregar:
+- <code>tt_um_femto_TB.spi_clk</code> (SCK compartido)
+- <code>tt_um_femto_TB.spi_mosi</code> (MOSI compartido)
+- <code>tt_um_femto_TB.spi_miso</code> (MISO compartido)
+- <code>tt_um_femto_TB.spi_cs</code> (CS Flash)
+- <code>tt_um_femto_TB.spi_cs_n_ram</code> (CS RAM)
+- <code>tt_um_femto_TB.TXD</code> (Salida serial UART)
+- <code>tt_um_femto_TB.flashram0.mem[0..11]</code> (Formato de datos: ASCII)
+- <code>tt_um_femto_TB.uut.femto0.per_uart.d_in[7:0]</code> (Formato de datos: ASCII)</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tracking", "navigation.top", "content.code.copy", "search.suggest", "navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.top", "content.code.copy", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+    
+  </body>
+</html>
