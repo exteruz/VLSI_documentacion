@@ -1,6 +1,6 @@
 
 !!! info "Repositorio del Proyecto"
-    El código fuente del SoC, el macro generado con OpenRAM y el entorno de verificación en Cocotb están disponibles en el repositorio oficial del proyecto:
+    El código fuente del SoC, el macro generado con OpenRAM y el entorno de verificación en Cocotb están disponibles temporalmente en este repositorio:
 
     * **Repositorio completo:** [github.com/exteruz/asic-openRam](https://github.com/exteruz/asic-openRam)
     * **Macro OpenRAM (`.lef`, `.lib`, `.gds`, `.v`):** [`femto_UN/macros/`](https://github.com/exteruz/asic-openRam/tree/main/femto_UN/macros)
