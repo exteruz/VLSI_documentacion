@@ -1,0 +1,1825 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://github.com/exteruz/VLSI_documentacion/development/ram/cambios_32x32/">
+      
+      
+        <link rel="prev" href="../simulation/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>Actualización a 32x32 - VLSI</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="slate" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#generacion-de-memoria-openram-32x32-32-bits" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../../.." title="VLSI" class="md-header__button md-logo" aria-label="VLSI" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            VLSI
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Actualización a 32x32
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="slate" data-md-color-accent="indigo"  aria-label="Cambiar a modo oscuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="slate" data-md-color-accent="indigo"  aria-label="Cambiar a modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Pestañas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Inicio
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../tools/tools/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Herramientas
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../user/1-introduccion/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Manual de Usuario
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../bugs/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Desarrollo
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="VLSI" class="md-nav__button md-logo" aria-label="VLSI" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    VLSI
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tools/tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Herramientas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Manual de Usuario
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Manual de Usuario
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../user/1-introduccion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducción
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../user/2-simulacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Simulación
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../user/3-funcionamiento/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prueba en hardware
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Desarrollo
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Desarrollo
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bugs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bugs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spi_bus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spi BUS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementación RAM
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Implementación RAM
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ram_implementation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ram implementation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../integration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integracion con el ASIC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../simulation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Simulación
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Actualización a 32x32
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Actualización a 32x32
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-especificaciones-y-comparativa-de-arquitectura" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Especificaciones y Comparativa de Arquitectura
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-generacion-del-macro-con-openram-sky130_sram_32x32" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Generación del Macro con OpenRAM (sky130_sram_32x32)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Generación del Macro con OpenRAM (sky130_sram_32x32)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-archivo-de-configuracion-sram_32x32_configpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Archivo de Configuración (sram_32x32_config.py)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-proceso-de-compilacion-fisica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Proceso de Compilación Física
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-presupuesto-de-area-en-4x2-tiles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Presupuesto de Área en 4x2 Tiles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-definicion-del-modelo-blackbox-sky130_sram_32x32_bbv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Definición del Modelo Blackbox (sky130_sram_32x32_bb.v)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-resumen-de-archivos-del-macro-32x32" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Resumen de Archivos del Macro 32x32
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-viabilidad-e-integracion-con-el-procesador-femtorv32-quark-irq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Viabilidad e Integración con el Procesador (FemtoRV32 Quark IRQ)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Viabilidad e Integración con el Procesador (FemtoRV32 Quark IRQ)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-analisis-del-procesador-y-evaluacion-de-viabilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Análisis del Procesador y Evaluación de Viabilidad
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.1 Análisis del Procesador y Evaluación de Viabilidad">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#es-posible-implementar-la-memoria-32x32-en-este-procesador" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ¿Es posible implementar la memoria 32x32 en este procesador?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-tabla-de-conexion-de-senales-pin-to-pin-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Tabla de Conexión de Señales (Pin-to-Pin Mapping)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-procedimiento-de-implementacion-paso-a-paso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Procedimiento de Implementación Paso a Paso
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.3 Procedimiento de Implementación Paso a Paso">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1-asignar-el-rango-en-el-mapa-de-memoria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 1: Asignar el Rango en el Mapa de Memoria
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-2-generar-las-senales-de-control-de-acceso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 2: Generar las Señales de Control de Acceso
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-3-instanciar-el-macro-de-memoria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 3: Instanciar el Macro de Memoria
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-4-conectar-el-multiplexor-de-lectura-mem_rdata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 4: Conectar el Multiplexor de Lectura (mem_rdata)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-5-gestion-de-estados-de-espera-mem_rbusy-y-mem_wbusy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 5: Gestión de Estados de Espera (mem_rbusy y mem_wbusy)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-sintesis-y-enrutamiento-fisico-en-openlane-tiny-tapeout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 Síntesis y Enrutamiento Físico en OpenLane / Tiny Tapeout
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-especificaciones-y-comparativa-de-arquitectura" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Especificaciones y Comparativa de Arquitectura
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-generacion-del-macro-con-openram-sky130_sram_32x32" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Generación del Macro con OpenRAM (sky130_sram_32x32)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Generación del Macro con OpenRAM (sky130_sram_32x32)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-archivo-de-configuracion-sram_32x32_configpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Archivo de Configuración (sram_32x32_config.py)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-proceso-de-compilacion-fisica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Proceso de Compilación Física
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-presupuesto-de-area-en-4x2-tiles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Presupuesto de Área en 4x2 Tiles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-definicion-del-modelo-blackbox-sky130_sram_32x32_bbv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Definición del Modelo Blackbox (sky130_sram_32x32_bb.v)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-resumen-de-archivos-del-macro-32x32" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Resumen de Archivos del Macro 32x32
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-viabilidad-e-integracion-con-el-procesador-femtorv32-quark-irq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Viabilidad e Integración con el Procesador (FemtoRV32 Quark IRQ)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Viabilidad e Integración con el Procesador (FemtoRV32 Quark IRQ)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-analisis-del-procesador-y-evaluacion-de-viabilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Análisis del Procesador y Evaluación de Viabilidad
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.1 Análisis del Procesador y Evaluación de Viabilidad">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#es-posible-implementar-la-memoria-32x32-en-este-procesador" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ¿Es posible implementar la memoria 32x32 en este procesador?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-tabla-de-conexion-de-senales-pin-to-pin-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Tabla de Conexión de Señales (Pin-to-Pin Mapping)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-procedimiento-de-implementacion-paso-a-paso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Procedimiento de Implementación Paso a Paso
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.3 Procedimiento de Implementación Paso a Paso">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1-asignar-el-rango-en-el-mapa-de-memoria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 1: Asignar el Rango en el Mapa de Memoria
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-2-generar-las-senales-de-control-de-acceso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 2: Generar las Señales de Control de Acceso
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-3-instanciar-el-macro-de-memoria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 3: Instanciar el Macro de Memoria
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-4-conectar-el-multiplexor-de-lectura-mem_rdata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 4: Conectar el Multiplexor de Lectura (mem_rdata)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-5-gestion-de-estados-de-espera-mem_rbusy-y-mem_wbusy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 5: Gestión de Estados de Espera (mem_rbusy y mem_wbusy)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-sintesis-y-enrutamiento-fisico-en-openlane-tiny-tapeout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 Síntesis y Enrutamiento Físico en OpenLane / Tiny Tapeout
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="generacion-de-memoria-openram-32x32-32-bits">Generación de Memoria OpenRAM 32x32 (32 bits)</h1>
+<p>En esta iteración se genera el macro de memoria estática síncrona <strong>OpenRAM 32x32</strong> (<strong>32 palabras de 32 bits = 128 bytes</strong>), con granularidad de escritura por byte (<code>wmask0[3:0]</code>), dimensionado para el estándar de la tecnología <strong>SkyWater 130nm (Sky130A)</strong>.</p>
+<p>Esta memoria proporciona el doble de capacidad que la configuración anterior (128 bytes frente a 64 bytes) y conserva un bus de datos nativo de 32 bits, quedando lista como macro físico y lógico para su posterior integración con el procesador del sistema.</p>
+<hr />
+<h2 id="1-especificaciones-y-comparativa-de-arquitectura">1. Especificaciones y Comparativa de Arquitectura</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Parámetro</th>
+<th style="text-align: left;">Configuración 16x8</th>
+<th style="text-align: left;">Configuración 16x32</th>
+<th style="text-align: left;"><strong>Nueva Configuración 32x32</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Palabras (<code>num_words</code>)</strong></td>
+<td style="text-align: left;">16</td>
+<td style="text-align: left;">16</td>
+<td style="text-align: left;"><strong>32 palabras</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Ancho de Palabra (<code>word_size</code>)</strong></td>
+<td style="text-align: left;">8 bits</td>
+<td style="text-align: left;">32 bits</td>
+<td style="text-align: left;"><strong>32 bits (4 bytes)</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Capacidad Total</strong></td>
+<td style="text-align: left;">16 bytes (128 bits)</td>
+<td style="text-align: left;">64 bytes (512 bits)</td>
+<td style="text-align: left;"><strong>128 bytes (1024 bits)</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Ancho de Dirección (<code>addr0</code>)</strong></td>
+<td style="text-align: left;">4 bits (<code>[3:0]</code>)</td>
+<td style="text-align: left;">4 bits (<code>[3:0]</code>)</td>
+<td style="text-align: left;"><strong>5 bits (<code>addr0[4:0]</code>)</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Granularidad de Escritura</strong></td>
+<td style="text-align: left;">Nivel de palabra (8b)</td>
+<td style="text-align: left;">Byte (<code>wmask0[3:0]</code>)</td>
+<td style="text-align: left;"><strong>Nivel de byte (<code>wmask0[3:0]</code>)</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Puertos</strong></td>
+<td style="text-align: left;">1 RW</td>
+<td style="text-align: left;">1 RW</td>
+<td style="text-align: left;"><strong>1 RW síncrono</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Bus de Datos Físico (<code>din0</code>/<code>dout0</code>)</strong></td>
+<td style="text-align: left;">9 bits (8 + 1 spare)</td>
+<td style="text-align: left;">33 bits (32 + 1 spare)</td>
+<td style="text-align: left;"><strong>33 bits (32 + 1 spare)</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Dimensiones Físicas (LEF)</strong></td>
+<td style="text-align: left;"><span class="arithmatex">\(230.13\ \mu\text{m} \times 84.58\ \mu\text{m}\)</span></td>
+<td style="text-align: left;"><span class="arithmatex">\(309.60\ \mu\text{m} \times 154.59\ \mu\text{m}\)</span></td>
+<td style="text-align: left;"><strong><span class="arithmatex">\(310.68\ \mu\text{m} \times 160.44\ \mu\text{m}\)</span></strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Área del Macro</strong></td>
+<td style="text-align: left;"><span class="arithmatex">\(\approx 19,466\ \mu\text{m}^2\)</span></td>
+<td style="text-align: left;"><span class="arithmatex">\(\approx 47,861\ \mu\text{m}^2\)</span></td>
+<td style="text-align: left;"><strong><span class="arithmatex">\(\approx 49,846\ \mu\text{m}^2\)</span></strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Ocupación en 4x2 Tiles</strong></td>
+<td style="text-align: left;"><span class="arithmatex">\(\approx 13.5\%\)</span></td>
+<td style="text-align: left;"><span class="arithmatex">\(\approx 33.2\%\)</span></td>
+<td style="text-align: left;"><strong><span class="arithmatex">\(\approx 34.5\%\)</span></strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="2-generacion-del-macro-con-openram-sky130_sram_32x32">2. Generación del Macro con OpenRAM (<code>sky130_sram_32x32</code>)</h2>
+<h3 id="21-archivo-de-configuracion-sram_32x32_configpy">2.1 Archivo de Configuración (<code>sram_32x32_config.py</code>)</h3>
+<p>Para compilar el macro con 32 palabras de 32 bits y soporte de máscara por byte en SkyWater 130nm, se empleó la siguiente configuración en OpenRAM:</p>
+<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Capacidad: 32 palabras x 32 bits (128 bytes)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">word_size</span> <span class="o">=</span> <span class="mi">32</span>              <span class="c1"># Ancho de palabra: 32 bits</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">num_words</span> <span class="o">=</span> <span class="mi">32</span>              <span class="c1"># Profundidad: 32 palabras (5 bits de dirección)</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">write_size</span> <span class="o">=</span> <span class="mi">8</span>              <span class="c1"># Granularidad de escritura: genera el pin wmask0[3:0]</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">num_rw_ports</span> <span class="o">=</span> <span class="mi">1</span>            <span class="c1"># 1 puerto de lectura/escritura síncrono (1RW)</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">num_r_ports</span> <span class="o">=</span> <span class="mi">0</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">num_w_ports</span> <span class="o">=</span> <span class="mi">0</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">words_per_row</span> <span class="o">=</span> <span class="mi">1</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Requerido en Sky130 para simetría par en columnas de sensado</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="n">num_spare_cols</span> <span class="o">=</span> <span class="mi">1</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="n">tech_name</span> <span class="o">=</span> <span class="s2">"sky130A"</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Opciones de compilación física</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="n">nominal_corner_only</span> <span class="o">=</span> <span class="kc">True</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="n">analytical_delay</span> <span class="o">=</span> <span class="kc">True</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="n">route_supplies</span> <span class="o">=</span> <span class="s2">"ring"</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="n">check_lvsdrc</span> <span class="o">=</span> <span class="kc">True</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="n">output_name</span> <span class="o">=</span> <span class="s2">"sky130_sram_32x32"</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="n">output_path</span> <span class="o">=</span> <span class="s2">"macro_32x32"</span>
+</code></pre></div>
+<details class="note">
+<summary>Detalles de Máscara de Escritura y Simetría en Sky130</summary>
+<ol>
+<li><strong>Máscara de Byte (<code>wmask0[3:0]</code>):</strong> Con <code>write_size = 8</code> y <code>word_size = 32</code>, OpenRAM divide la fila en 4 campos de 8 bits. La señal <code>wmask0[0]</code> controla los bits <code>[7:0]</code>, <code>wmask0[1]</code> los bits <code>[15:8]</code>, <code>wmask0[2]</code> los bits <code>[23:16]</code> y <code>wmask0[3]</code> los bits <code>[31:24]</code>.</li>
+<li><strong>Bus de 33 bits y Columna de Reserva (<code>num_spare_cols = 1</code>):</strong> SkyWater 130nm requiere paridad geométrica en las columnas de la matriz de celdas SRAM (<code>sky130_fd_bd_sram__sram_sp_cell_opt1</code>). Con 32 columnas de datos + 1 columna réplica, se agrega 1 columna de reserva para completar 34 columnas simétricas. Por ello, <code>din0</code> y <code>dout0</code> son de 33 bits (<code>[32:0]</code>), donde el bit <code>[32]</code> se fija a <code>0</code> y la entrada <code>spare_wen0</code> se conecta a nivel bajo (<code>1'b0</code>).</li>
+<li><strong>Direccionamiento de 5 bits (<code>addr0[4:0]</code>):</strong> Con 32 palabras de profundidad (<span class="arithmatex">\(2^5 = 32\)</span>), el decodificador de filas utiliza 5 líneas de dirección.</li>
+</ol>
+</details>
+<h3 id="22-proceso-de-compilacion-fisica">2.2 Proceso de Compilación Física</h3>
+<p>La síntesis de layout y verificación física del macro se realizó en el entorno de OpenRAM:</p>
+<div class="language-bash highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">cd</span><span class="w"> </span>open_ram/OpenRAM
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>nix<span class="w"> </span>develop<span class="w"> </span>--extra-experimental-features<span class="w"> </span><span class="s2">"nix-command flakes"</span><span class="w"> </span>--command<span class="w"> </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">"</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="s2">  export OPENRAM_HOME=\$(pwd)/compiler</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="s2">  export OPENRAM_TECH=\$(pwd)/technology</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="s2">  export PYTHONPATH=\$OPENRAM_HOME:\$PYTHONPATH</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="s2">  .venv/bin/python sram_compiler.py sram_32x32_config.py</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="s2">"</span>
+</code></pre></div>
+<p>Los artefactos generados se ubicaron en <code>femto_UN/macros/</code>:
+* <code>sky130_sram_32x32.gds</code>: Layout físico GDSII del macro (<span class="arithmatex">\(310.68\ \mu\text{m} \times 160.44\ \mu\text{m}\)</span>).
+* <code>sky130_sram_32x32.lef</code>: Información abstracta de geometría y pines para Place &amp; Route (PnR).
+* <code>sky130_sram_32x32_TT_1p8V_25C.lib</code>: Modelo de tiempos y potencia Liberty (<em>timing corner</em> típico 1.8V, 25°C).
+* <code>sky130_sram_32x32.v</code>: Modelo funcional Verilog para simulación síncrona.
+* <code>sky130_sram_32x32.sp</code>: Netlist SPICE con transistores extraídos para LVS.</p>
+<details class="info">
+<summary>Datasheet OpenRAM: sky130_sram_32x32 (Clic para expandir)</summary>
+<p><iframe src="../../../assets/openram/sky130_sram_32x32.html" width="100%" height="700px" style="border: none;"></iframe></p>
+</details>
+<ul>
+<li><a href="../../../assets/openram/sky130_sram_32x32.lef">Descargar archivo LEF (sky130_sram_32x32.lef)</a></li>
+</ul>
+<hr />
+<h2 id="3-presupuesto-de-area-en-4x2-tiles">3. Presupuesto de Área en 4x2 Tiles</h2>
+<p>El presupuesto físico disponible para el diseño es de <strong>4x2 tiles</strong> en Tiny Tapeout:</p>
+<ul>
+<li><strong>Dimensiones totales del die (4x2 tiles):</strong> <span class="arithmatex">\(\approx 668\ \mu\text{m} \times 216\ \mu\text{m}\)</span> (Área total <span class="arithmatex">\(\approx 144,288\ \mu\text{m}^2\)</span>).</li>
+<li><strong>Dimensiones del Macro 32x32:</strong> <strong><span class="arithmatex">\(310.68\ \mu\text{m} \times 160.44\ \mu\text{m}\)</span></strong>.</li>
+<li><strong>Área ocupada por el Macro:</strong> <strong><span class="arithmatex">\(49,845.5\ \mu\text{m}^2\)</span></strong> (<span class="arithmatex">\(\approx 34.5\%\)</span> del área total).</li>
+<li><strong>Área libre disponible:</strong> <strong><span class="arithmatex">\(\approx 94,442\ \mu\text{m}^2\)</span></strong> (<span class="arithmatex">\(\approx 65.5\%\)</span>).</li>
+</ul>
+<p>El incremento de área respecto al macro 16x32 es de solo <span class="arithmatex">\(1,985\ \mu\text{m}^2\)</span> (+4.1%), pero otorga el doble de memoria utilizable, dejando suficiente holgura en el die para la integración del nuevo procesador y periféricos asociados.</p>
+<hr />
+<h2 id="4-definicion-del-modelo-blackbox-sky130_sram_32x32_bbv">4. Definición del Modelo Blackbox (<code>sky130_sram_32x32_bb.v</code>)</h2>
+<p>Para las herramientas de síntesis lógica (Yosys) y empaquetado del macro, se creó el módulo <em>blackbox</em> correspondiente respetando el pinout del archivo LEF:</p>
+<div class="language-verilog highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="cm">/* verilator lint_off UNUSED */</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">module</span><span class="w"> </span><span class="n">sky130_sram_32x32</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="no">`ifdef</span><span class="w"> </span><span class="n">USE_POWER_PINS</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="k">inout</span><span class="w">  </span><span class="kt">wire</span><span class="w">        </span><span class="n">vccd1</span><span class="p">,</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="k">inout</span><span class="w">  </span><span class="kt">wire</span><span class="w">        </span><span class="n">vssd1</span><span class="p">,</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="no">`endif</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span><span class="k">input</span><span class="w">  </span><span class="kt">wire</span><span class="w">        </span><span class="n">clk0</span><span class="p">,</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span><span class="k">input</span><span class="w">  </span><span class="kt">wire</span><span class="w">        </span><span class="n">csb0</span><span class="p">,</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span><span class="k">input</span><span class="w">  </span><span class="kt">wire</span><span class="w">        </span><span class="n">web0</span><span class="p">,</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span><span class="k">input</span><span class="w">  </span><span class="kt">wire</span><span class="w"> </span><span class="p">[</span><span class="mh">3</span><span class="o">:</span><span class="mh">0</span><span class="p">]</span><span class="w">  </span><span class="n">wmask0</span><span class="p">,</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span><span class="k">input</span><span class="w">  </span><span class="kt">wire</span><span class="w">        </span><span class="n">spare_wen0</span><span class="p">,</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">    </span><span class="k">input</span><span class="w">  </span><span class="kt">wire</span><span class="w"> </span><span class="p">[</span><span class="mh">4</span><span class="o">:</span><span class="mh">0</span><span class="p">]</span><span class="w">  </span><span class="n">addr0</span><span class="p">,</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">    </span><span class="k">input</span><span class="w">  </span><span class="kt">wire</span><span class="w"> </span><span class="p">[</span><span class="mh">32</span><span class="o">:</span><span class="mh">0</span><span class="p">]</span><span class="w"> </span><span class="n">din0</span><span class="p">,</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">    </span><span class="k">output</span><span class="w"> </span><span class="kt">wire</span><span class="w"> </span><span class="p">[</span><span class="mh">32</span><span class="o">:</span><span class="mh">0</span><span class="p">]</span><span class="w"> </span><span class="n">dout0</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="p">);</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="k">endmodule</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="cm">/* verilator lint_on UNUSED */</span>
+</code></pre></div>
+<p>El archivo se encuentra disponible en:
+* <code>femto_UN/macros/sky130_sram_32x32_bb.v</code>
+* <code>femto_UN/src/sky130_sram_32x32_bb.v</code></p>
+<hr />
+<h2 id="5-resumen-de-archivos-del-macro-32x32">5. Resumen de Archivos del Macro 32x32</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Archivo</th>
+<th style="text-align: left;">Ubicación</th>
+<th style="text-align: left;">Función</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>sram_32x32_config.py</code></td>
+<td style="text-align: left;"><code>open_ram/OpenRAM/</code></td>
+<td style="text-align: left;">Configuración fuente del compilador OpenRAM.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>sky130_sram_32x32.gds</code></td>
+<td style="text-align: left;"><code>femto_UN/macros/</code></td>
+<td style="text-align: left;">Máscaras de layout físico GDSII.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>sky130_sram_32x32.lef</code></td>
+<td style="text-align: left;"><code>femto_UN/macros/</code> y <code>docs/assets/openram/</code></td>
+<td style="text-align: left;">Definición de geometría y pines para PnR.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>sky130_sram_32x32_TT_1p8V_25C.lib</code></td>
+<td style="text-align: left;"><code>femto_UN/macros/</code></td>
+<td style="text-align: left;">Librería de caracterización de tiempos y potencia.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>sky130_sram_32x32.v</code></td>
+<td style="text-align: left;"><code>femto_UN/macros/</code></td>
+<td style="text-align: left;">Modelo Verilog funcional de simulación.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>sky130_sram_32x32.sp</code></td>
+<td style="text-align: left;"><code>femto_UN/macros/</code></td>
+<td style="text-align: left;">Netlist SPICE con parásitos para LVS.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>sky130_sram_32x32_bb.v</code></td>
+<td style="text-align: left;"><code>femto_UN/macros/</code> y <code>femto_UN/src/</code></td>
+<td style="text-align: left;">Módulo Blackbox para síntesis con Yosys.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>sky130_sram_32x32.html</code></td>
+<td style="text-align: left;"><code>docs/assets/openram/</code></td>
+<td style="text-align: left;">Datasheet interactivo del macro OpenRAM.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="6-viabilidad-e-integracion-con-el-procesador-femtorv32-quark-irq">6. Viabilidad e Integración con el Procesador (<code>FemtoRV32 Quark IRQ</code>)</h2>
+<p>En la carpeta de descargas (<code>~/Downloads/femtorv32_quark_un_irq.v</code>) se identificó una versión actualizada del núcleo <strong>FemtoRV32 Quark</strong>. A continuación se analiza la viabilidad técnica de conectar la memoria <strong>OpenRAM 32x32</strong> generada y se detalla el procedimiento paso a paso para su futura integración.</p>
+<h3 id="61-analisis-del-procesador-y-evaluacion-de-viabilidad">6.1 Análisis del Procesador y Evaluación de Viabilidad</h3>
+<p>El archivo <code>femtorv32_quark_un_irq.v</code> implementa un procesador <strong>RV32I</strong> con máquina de estados finita explícita de 4 estados (<code>FETCH_INSTR</code>, <code>WAIT_INSTR</code>, <code>EXECUTE</code>, <code>WAIT_ALU_OR_MEM</code>) y soporte de interrupciones con registros CSR (<code>mstatus</code>, <code>mtvec</code>, <code>mepc</code>, <code>mcause</code>). </p>
+<p>Una mejora sustancial en esta versión es que el banco de registros (<code>registerFile</code>) ahora se lee de manera síncrona en el ciclo <code>WAIT_INSTR</code> (<code>rs1_ram &lt;= registerFile[...]</code>), facilitando su inferencia física directa.</p>
+<h4 id="es-posible-implementar-la-memoria-32x32-en-este-procesador">¿Es posible implementar la memoria 32x32 en este procesador?</h4>
+<p><strong>Sí, es 100% viable y compatible.</strong> Las razones técnicas son:</p>
+<ol>
+<li><strong>Alineación de Bus de Datos (32 bits):</strong></li>
+<li>El procesador dispone de un bus de datos de salida <code>mem_wdata[31:0]</code> y uno de entrada <code>mem_rdata[31:0]</code>.</li>
+<li>
+<p>El macro <code>sky130_sram_32x32</code> tiene palabras de 32 bits útiles (<code>din0[31:0]</code> y <code>dout0[31:0]</code>), por lo que no se requiere empaquetamiento ni conversión de anchos de palabra.</p>
+</li>
+<li>
+<p><strong>Soporte Nativo de Máscara de Escritura por Byte (<code>wmask0[3:0]</code>):</strong></p>
+</li>
+<li>El procesador genera en la etapa de ejecución la señal <code>mem_wmask[3:0]</code> que activa exactamente los bytes que deben ser escritos según el tipo de instrucción:<ul>
+<li><code>4'b0001</code>, <code>4'b0010</code>, <code>4'b0100</code> o <code>4'b1000</code> para <code>sb</code> (<em>store byte</em>).</li>
+<li><code>4'b0011</code> o <code>4'b1100</code> para <code>sh</code> (<em>store halfword</em>).</li>
+<li><code>4'b1111</code> para <code>sw</code> (<em>store word</em>).</li>
+</ul>
+</li>
+<li>
+<p>El macro OpenRAM cuenta directamente con el puerto <code>wmask0[3:0]</code>, el cual habilita la escritura independiente de cada uno de los 4 bytes de la palabra seleccionada. La correspondencia es directa (1 a 1).</p>
+</li>
+<li>
+<p><strong>Mapeo de Direcciones (5 bits de palabra):</strong></p>
+</li>
+<li>La memoria almacena 32 palabras (<span class="arithmatex">\(2^5 = 32\)</span>), ocupando 128 bytes contiguos en el espacio de memoria.</li>
+<li>La CPU emite direcciones orientadas a byte (<code>mem_addr[31:0]</code>).</li>
+<li>Los bits <code>mem_addr[1:0]</code> corresponden al desplazamiento del byte dentro de la palabra (procesados internamente por la lógica de <em>load/store</em> de la CPU).</li>
+<li>
+<p>Los bits <code>mem_addr[6:2]</code> (5 bits) se conectan directamente a <code>addr0[4:0]</code> del macro para indexar las 32 palabras.</p>
+</li>
+<li>
+<p><strong>Sincronismo y Tiempos de Respuesta (Single-Cycle SRAM):</strong></p>
+</li>
+<li>El macro OpenRAM en tecnología Sky130A posee un tiempo de acceso de lectura inferior a <span class="arithmatex">\(3\text{ ns}\)</span>.</li>
+<li>El procesador evalúa <code>needToWait = isLoad | isStore ...</code> pasando por <code>WAIT_ALU_OR_MEM</code>. Dado que la SRAM interna responde en el mismo ciclo de reloj, las señales de espera <code>mem_rbusy</code> y <code>mem_wbusy</code> para este espacio de memoria se mantienen en <code>0</code>, garantizando que las lecturas y escrituras se resuelvan en un solo ciclo sin penalizaciones de retardo.</li>
+</ol>
+<hr />
+<h3 id="62-tabla-de-conexion-de-senales-pin-to-pin-mapping">6.2 Tabla de Conexión de Señales (Pin-to-Pin Mapping)</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Pin del Macro (<code>sky130_sram_32x32</code>)</th>
+<th style="text-align: left;">Dirección</th>
+<th style="text-align: left;">Señal en el Top-Level / SoC</th>
+<th style="text-align: left;">Origen / Función</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>clk0</code></td>
+<td style="text-align: left;">Entrada</td>
+<td style="text-align: left;"><code>clk</code></td>
+<td style="text-align: left;">Reloj maestro síncrono del sistema.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>csb0</code></td>
+<td style="text-align: left;">Entrada</td>
+<td style="text-align: left;"><code>sram_csb</code></td>
+<td style="text-align: left;">Chip Select activo en bajo: <code>~(sram_cs &amp; (mem_rstrb \| wr))</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>web0</code></td>
+<td style="text-align: left;">Entrada</td>
+<td style="text-align: left;"><code>sram_web</code></td>
+<td style="text-align: left;">Write Enable activo en bajo: <code>~(sram_cs &amp; wr)</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>wmask0[3:0]</code></td>
+<td style="text-align: left;">Entrada</td>
+<td style="text-align: left;"><code>mem_wmask[3:0]</code></td>
+<td style="text-align: left;">Máscara de byte generada por la CPU <code>FemtoRV32</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>spare_wen0</code></td>
+<td style="text-align: left;">Entrada</td>
+<td style="text-align: left;"><code>1'b0</code></td>
+<td style="text-align: left;">Deshabilita escritura en la columna de reserva.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>addr0[4:0]</code></td>
+<td style="text-align: left;">Entrada</td>
+<td style="text-align: left;"><code>mem_addr[6:2]</code></td>
+<td style="text-align: left;">Selección de palabra (0 a 31) en los 128 bytes de la RAM.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>din0[32:0]</code></td>
+<td style="text-align: left;">Entrada</td>
+<td style="text-align: left;"><code>{1'b0, mem_wdata[31:0]}</code></td>
+<td style="text-align: left;">Dato de escritura (bit 32 fijado a <code>0</code>).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>dout0[32:0]</code></td>
+<td style="text-align: left;">Salida</td>
+<td style="text-align: left;"><code>sram_dout_raw[32:0]</code></td>
+<td style="text-align: left;">Dato leído (bits <code>[31:0]</code> van hacia el MUX de <code>mem_rdata</code>).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>vccd1</code> / <code>vssd1</code></td>
+<td style="text-align: left;">Alimentación</td>
+<td style="text-align: left;"><code>1'b1</code> / <code>1'b0</code></td>
+<td style="text-align: left;">Rieles de potencia 1.8V y tierra (en modo <code>USE_POWER_PINS</code>).</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="63-procedimiento-de-implementacion-paso-a-paso">6.3 Procedimiento de Implementación Paso a Paso</h3>
+<p>Para implementar la memoria en el diseño cuando se decida integrarla con el procesador, se debe seguir la siguiente metodología sin alterar el núcleo <code>FemtoRV32</code>:</p>
+<h4 id="paso-1-asignar-el-rango-en-el-mapa-de-memoria">Paso 1: Asignar el Rango en el Mapa de Memoria</h4>
+<p>Se reserva una región de memoria en el decodificador de direcciones del SoC para la SRAM interna (por ejemplo, base <code>0x00410000</code> o la que defina la arquitectura):</p>
+<div class="language-verilog highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">// Rango de 128 bytes: 0x00410000 a 0x0041007F</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kt">wire</span><span class="w"> </span><span class="n">sram_cs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">mem_addr</span><span class="p">[</span><span class="mh">31</span><span class="o">:</span><span class="mh">16</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mh">16'h0041</span><span class="p">);</span>
+</code></pre></div>
+<h4 id="paso-2-generar-las-senales-de-control-de-acceso">Paso 2: Generar las Señales de Control de Acceso</h4>
+<p>Se generan las señales de habilitación de chip select (<code>csb0</code>) y control de escritura (<code>web0</code>):</p>
+<div class="language-verilog highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kt">wire</span><span class="w"> </span><span class="n">wr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">|</span><span class="n">mem_wmask</span><span class="p">;</span><span class="w">                        </span><span class="c1">// Escritura activa si algún byte tiene wmask = 1</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="kt">wire</span><span class="w"> </span><span class="n">rd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mem_rstrb</span><span class="p">;</span><span class="w">                         </span><span class="c1">// Lectura activa solicitada por la CPU</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="kt">wire</span><span class="w"> </span><span class="n">sram_csb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">~</span><span class="p">(</span><span class="n">sram_cs</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">rd</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">wr</span><span class="p">));</span><span class="w">      </span><span class="c1">// Activo en bajo cuando hay lectura o escritura en el rango</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="kt">wire</span><span class="w"> </span><span class="n">sram_web</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">~</span><span class="p">(</span><span class="n">sram_cs</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">wr</span><span class="p">);</span><span class="w">             </span><span class="c1">// Activo en bajo únicamente en ciclos de escritura</span>
+</code></pre></div>
+<h4 id="paso-3-instanciar-el-macro-de-memoria">Paso 3: Instanciar el Macro de Memoria</h4>
+<p>En el módulo contenedor (Top-Level del SoC) se instancia <code>sky130_sram_32x32</code>:</p>
+<div class="language-verilog highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kt">wire</span><span class="w"> </span><span class="p">[</span><span class="mh">32</span><span class="o">:</span><span class="mh">0</span><span class="p">]</span><span class="w"> </span><span class="n">sram_dout_raw</span><span class="p">;</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="kt">wire</span><span class="w"> </span><span class="p">[</span><span class="mh">31</span><span class="o">:</span><span class="mh">0</span><span class="p">]</span><span class="w"> </span><span class="n">sram_dout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sram_dout_raw</span><span class="p">[</span><span class="mh">31</span><span class="o">:</span><span class="mh">0</span><span class="p">];</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="n">sky130_sram_32x32</span><span class="w"> </span><span class="n">u_sram</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="no">`ifdef</span><span class="w"> </span><span class="n">USE_POWER_PINS</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span><span class="p">.</span><span class="n">vccd1</span><span class="p">(</span><span class="mh">1</span><span class="mb">'b1</span><span class="p">),</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span><span class="p">.</span><span class="n">vssd1</span><span class="p">(</span><span class="mh">1</span><span class="mb">'b0</span><span class="p">),</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="no">`endif</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">    </span><span class="p">.</span><span class="n">clk0</span><span class="p">(</span><span class="n">clk</span><span class="p">),</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">    </span><span class="p">.</span><span class="n">csb0</span><span class="p">(</span><span class="n">sram_csb</span><span class="p">),</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">    </span><span class="p">.</span><span class="n">web0</span><span class="p">(</span><span class="n">sram_web</span><span class="p">),</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">    </span><span class="p">.</span><span class="n">wmask0</span><span class="p">(</span><span class="n">mem_wmask</span><span class="p">),</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">    </span><span class="p">.</span><span class="n">spare_wen0</span><span class="p">(</span><span class="mh">1</span><span class="mb">'b0</span><span class="p">),</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">    </span><span class="p">.</span><span class="n">addr0</span><span class="p">(</span><span class="n">mem_addr</span><span class="p">[</span><span class="mh">6</span><span class="o">:</span><span class="mh">2</span><span class="p">]),</span><span class="w">          </span><span class="c1">// 5 bits: 32 palabras</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">    </span><span class="p">.</span><span class="n">din0</span><span class="p">({</span><span class="mh">1</span><span class="mb">'b0</span><span class="p">,</span><span class="w"> </span><span class="n">mem_wdata</span><span class="p">[</span><span class="mh">31</span><span class="o">:</span><span class="mh">0</span><span class="p">]}),</span><span class="w"> </span><span class="c1">// 33 bits: bit spare = 0</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">    </span><span class="p">.</span><span class="n">dout0</span><span class="p">(</span><span class="n">sram_dout_raw</span><span class="p">)</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="p">);</span>
+</code></pre></div>
+<h4 id="paso-4-conectar-el-multiplexor-de-lectura-mem_rdata">Paso 4: Conectar el Multiplexor de Lectura (<code>mem_rdata</code>)</h4>
+<p>En el multiplexor central que alimenta <code>mem_rdata</code> de la CPU, se conecta la salida de la SRAM:</p>
+<div class="language-verilog highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">always</span><span class="w"> </span><span class="p">@(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">begin</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="n">mem_addr</span><span class="p">[</span><span class="mh">31</span><span class="o">:</span><span class="mh">16</span><span class="p">])</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">        </span><span class="mh">16'h0000</span><span class="o">:</span><span class="w"> </span><span class="n">mem_rdata</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">flash_rdata</span><span class="p">;</span><span class="w">   </span><span class="c1">// Memoria de programa Flash SPI</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">        </span><span class="mh">16'h0040</span><span class="o">:</span><span class="w"> </span><span class="n">mem_rdata</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">uart_rdata</span><span class="p">;</span><span class="w">    </span><span class="c1">// Periférico UART</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">        </span><span class="mh">16'h0041</span><span class="o">:</span><span class="w"> </span><span class="n">mem_rdata</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sram_dout</span><span class="p">;</span><span class="w">     </span><span class="c1">// OpenRAM 32x32 (128 bytes)</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">        </span><span class="k">default</span><span class="o">:</span><span class="w">  </span><span class="n">mem_rdata</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">32'h00000000</span><span class="p">;</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span><span class="k">endcase</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="k">end</span>
+</code></pre></div>
+<h4 id="paso-5-gestion-de-estados-de-espera-mem_rbusy-y-mem_wbusy">Paso 5: Gestión de Estados de Espera (<code>mem_rbusy</code> y <code>mem_wbusy</code>)</h4>
+<p>Dado que la OpenRAM interna es síncrona en un ciclo dentro del chip, cuando la CPU accede al rango <code>sram_cs</code>, no se deben activar líneas de espera:</p>
+<div class="language-verilog highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">assign</span><span class="w"> </span><span class="n">mem_rbusy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sram_cs</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mh">1</span><span class="mb">'b0</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="n">flash_rbusy</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">spi_ram_rbusy</span><span class="p">);</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="k">assign</span><span class="w"> </span><span class="n">mem_wbusy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sram_cs</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mh">1</span><span class="mb">'b0</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">spi_ram_wbusy</span><span class="p">;</span>
+</code></pre></div>
+<hr />
+<h3 id="64-sintesis-y-enrutamiento-fisico-en-openlane-tiny-tapeout">6.4 Síntesis y Enrutamiento Físico en OpenLane / Tiny Tapeout</h3>
+<p>Para la integración física definitiva:
+1. <strong>Blackbox:</strong> Incluir <code>sky130_sram_32x32_bb.v</code> en la lista <code>source_files</code> de <code>info.yaml</code>.
+2. <strong>Archivos Extra:</strong> Declarar en <code>config.json</code>:
+   * <code>EXTRA_LEFS</code>: <code>dir::../macros/sky130_sram_32x32.lef</code>
+   * <code>EXTRA_GDS_FILES</code>: <code>dir::../macros/sky130_sram_32x32.gds</code>
+   * <code>EXTRA_LIBS</code>: <code>dir::../macros/sky130_sram_32x32_TT_1p8V_25C.lib</code>
+3. <strong>Colocación:</strong> Definir <code>location: [15, 30]</code> en la sección <code>MACROS</code> de <code>config.json</code> para aprovechar el presupuesto de <strong>4x2 tiles</strong>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.indexes", "navigation.instant", "navigation.tabs", "navigation.tracking", "navigation.top", "content.code.copy", "search.suggest", "search.highlight"], "search": "../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
