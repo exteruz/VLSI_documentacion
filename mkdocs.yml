@@ -15,6 +15,7 @@ nav:
           - development/ram/ram_implementation.md
           - Integracion con el ASIC: development/ram/integration.md
           - Simulación: development/ram/simulation.md
+          - Actualización a 32x32: development/ram/cambios_32x32.md
 
 markdown_extensions:
   - attr_list
