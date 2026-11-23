@@ -14,7 +14,7 @@
         <link rel="prev" href="../integration/">
       
       
-        <link rel="next" href="../cambios_32x32/">
+        <link rel="next" href="../tinytapeout_env/">
       
       
         
@@ -873,7 +873,7 @@
   <a href="#verificacion-grafica-de-la-simulacion" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Verificacion Grafica de la simulacion.
+        Verificacion Grafica de la simulacion
       
     </span>
   </a>
@@ -901,14 +901,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../cambios_32x32/" class="md-nav__link">
+      <a href="../tinytapeout_env/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Actualización a 32x32
+    Entorno y Simulación en TinyTapeout
   
 
     
@@ -1010,7 +1010,7 @@
   <a href="#verificacion-grafica-de-la-simulacion" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Verificacion Grafica de la simulacion.
+        Verificacion Grafica de la simulacion
       
     </span>
   </a>
@@ -1042,15 +1042,20 @@
   <h1>Simulación</h1>
 
 <h3 id="simulacion">SIMULACION</h3>
-<p>Esta simulación verifica que la memoria OpenRAM funcione correctamente integrada con el procesador RISC-V y el puerto serie (UART) del sistema. Para lograrlo, el entorno de prueba emula una memoria Flash externa que le entrega al procesador un programa de verificación; al ejecutarse, el procesador escribe el carácter 'K' (0x4B) en la memoria OpenRAM, lo lee de vuelta para comprobar que el dato se almacenó sin errores y finalmente lo envía hacia el exterior por el pin de transmisión UART.</p>
+<p>Esta simulación verifica que la memoria OpenRAM 32×32 funcione correctamente integrada con el procesador RISC-V FemtoRV32 Quark y el puerto serie (UART) del sistema. Para lograrlo, el entorno de prueba emula una memoria Flash externa que entrega al procesador un firmware de verificación; al ejecutarse, el procesador escribe una palabra completa de 32 bits (<code>0x1234564B</code>) en la OpenRAM, realiza una escritura selectiva por máscara de byte (<code>0xAA</code> en el byte 1 con <code>wmask0 = 4'b0010</code>), lee el dato resultante (<code>0x1234AA4B</code>) para comprobar que el almacenamiento y la máscara funcionaron sin errores, y finalmente transmite el byte 0 (el carácter <code>'K'</code>, <code>0x4B</code>) hacia el exterior mediante el pin UART.</p>
 <h2 id="funcionamiento-del-testbench-en-cocotb">Funcionamiento del Testbench en Cocotb</h2>
 <p>La verificación funcional se implementa en Python mediante <strong>Cocotb</strong> (<code>test_tt_um_femto_openram.py</code>) sobre el <em>wrapper</em> <code>tt_um_femto_cocotb</code>. A diferencia de un <em>testbench</em> tradicional en Verilog, Cocotb permite coordinar tareas concurrentes (<em>corutinas</em>) que interactúan con los pines del SoC en tiempo real.</p>
 <p>El flujo de ejecución del código de prueba se divide en cuatro etapas:</p>
 <ol>
-<li><strong>Generación de reloj y secuencia de reset:</strong> Cocotb instancia un generador de reloj (<code>Clock</code>) sobre la entrada <code>clk</code>, habilita el bloque de Tiny Tapeout (<code>ena = 1</code>) y mantiene <code>rst_n = 0</code> durante los ciclos iniciales para llevar los registros internos y la máquina de estados a un estado conocido antes de liberar el procesador.</li>
-<li><strong>Emulación concurrente de la SPI Flash:</strong> Como el núcleo <strong>FemtoRV32</strong> arranca leyendo instrucciones desde una memoria externa, el script lanza una corutina en segundo plano (<code>cocotb.start_soon</code>) que escucha el bus SPI (<code>CS_n</code>, <code>SCK</code>, <code>MOSI</code>). Al detectar el comando de lectura (<code>0x03</code>) y la dirección de memoria, Python inyecta bit a bit por <code>MISO</code> el arreglo hexadecimal del programa de prueba.</li>
-<li><strong>Interacción con la OpenRAM y periféricos:</strong> Conforme el procesador ejecuta las instrucciones entregadas por la Flash emulada, escribe el carácter <code>'K'</code> (<code>0x4B</code>) en la dirección base de la memoria interna (<code>0x00410000</code>), lo lee de vuelta al registro <code>x3</code> y ordena su envío por el periférico <strong>UART</strong> (<code>0x00400000</code>).</li>
-<li><strong>Decodificador UART y validación automática (<code>assert</code>):</strong> En paralelo, una segunda corutina monitorea el pin de transmisión serie (<code>uart_tx</code>). Al detectar el flanco de bajada del bit de inicio (<em>start bit</em>), muestrea los 8 bits siguientes a la tasa de baudios configurada, reconstruye el byte recibido y ejecuta una comprobación automática (<code>assert</code>) verificando que el dato transmitido sea exactamente <code>'K'</code> (<code>0x4B</code>).</li>
+<li><strong>Generación de reloj y secuencia de reset:</strong> Cocotb instancia un generador de reloj (<code>Clock</code>) sobre la entrada <code>clk</code> a ~27 MHz (periodo de 37038 ps), habilita el bloque de Tiny Tapeout (<code>ena = 1</code>) y mantiene <code>rst_n = 0</code> durante los ciclos iniciales para inicializar los registros internos y la máquina de estados antes de liberar la CPU.</li>
+<li><strong>Emulación concurrente de la SPI Flash:</strong> Dado que el núcleo <strong>FemtoRV32</strong> arranca leyendo instrucciones desde una memoria externa, el script lanza una corutina en segundo plano (<code>cocotb.start_soon</code>) que escucha el bus SPI (<code>CS_n</code>, <code>SCK</code>, <code>MOSI</code>). Al detectar el comando de lectura estándar (<code>0x03</code>) y la dirección de memoria, inyecta bit a bit por <code>MISO</code> las instrucciones del firmware de prueba.</li>
+<li><strong>Interacción con la OpenRAM 32x32 y periféricos:</strong> Conforme el procesador ejecuta las instrucciones, realiza:</li>
+<li>Escritura en la palabra 0 (<code>0x00410000</code>) de la palabra <code>0x1234564B</code> con instrucción <code>sw</code> (<code>wmask0 = 4'b1111</code>).</li>
+<li>Lectura de comprobación con <code>lw</code> hacia el registro <code>x3</code>.</li>
+<li>Modificación selectiva del byte 1 con <code>sb</code> (<code>0xAA</code>, <code>wmask0 = 4'b0010</code>) sin alterar los bytes adyacentes.</li>
+<li>Segunda lectura con <code>lw</code> comprobando que <code>x3 = 0x1234AA4B</code>.</li>
+<li>Envío del byte 0 (<code>'K'</code> = <code>0x4B</code>) al periférico UART (<code>0x00400000</code>).</li>
+<li><strong>Decodificador UART y validación automática (<code>assert</code>):</strong> En paralelo, una segunda corutina monitorea el pin de transmisión serie (<code>uart_tx</code>). Al detectar el flanco de bajada del bit de inicio (<em>start bit</em>), muestrea los 8 bits siguientes a 115200 baudios, reconstruye el byte recibido y valida automáticamente mediante <code>assert</code> que el dato transmitido sea exactamente <code>'K'</code> (<code>0x4B</code>), al mismo tiempo que comprueba que el registro interno <code>x3</code> de la CPU contenga <code>0x1234AA4B</code>.</li>
 </ol>
 <p><img alt="Diagrama de flujo" src="../../../img/development/ram/diagrama2.png" /></p>
 <details class="example">
@@ -1059,152 +1064,177 @@
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">cocotb.clock</span><span class="w"> </span><span class="kn">import</span> <span class="n">Clock</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">cocotb.triggers</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClockCycles</span><span class="p">,</span> <span class="n">FallingEdge</span><span class="p">,</span> <span class="n">First</span><span class="p">,</span> <span class="n">RisingEdge</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Escribe 'K' (0x4B) en OpenRAM (0x00410000), lo lee en x3 y lo transmite por UART hardware</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">OPENRAM_PROGRAM</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">([</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="mh">0x13</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span>  <span class="c1"># 0x00: nop</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="mh">0xB7</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x41</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span>  <span class="c1"># 0x04: lui x1, 0x00410      (x1 = 0x00410000 Base OpenRAM)</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="mh">0x13</span><span class="p">,</span> <span class="mh">0x01</span><span class="p">,</span> <span class="mh">0xB0</span><span class="p">,</span> <span class="mh">0x04</span><span class="p">,</span>  <span class="c1"># 0x08: li  x2, 0x4B         (x2 = 'K')</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="mh">0x23</span><span class="p">,</span> <span class="mh">0x80</span><span class="p">,</span> <span class="mh">0x20</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span>  <span class="c1"># 0x0C: sb  x2, 0(x1)        (Escribe 'K' en OpenRAM[0])</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="mh">0x83</span><span class="p">,</span> <span class="mh">0x81</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span>  <span class="c1"># 0x10: lb  x3, 0(x1)        (Lee de vuelta OpenRAM[0] -&gt; x3)</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="mh">0x37</span><span class="p">,</span> <span class="mh">0x02</span><span class="p">,</span> <span class="mh">0x40</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span>  <span class="c1"># 0x14: lui x4, 0x00400      (x4 = 0x00400000 Base UART)</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="mh">0x23</span><span class="p">,</span> <span class="mh">0x04</span><span class="p">,</span> <span class="mh">0x32</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span>  <span class="c1"># 0x18: sb  x3, 8(x4)        (Carga 'K' en d_in_uart [0x00400008])</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="mh">0x93</span><span class="p">,</span> <span class="mh">0x02</span><span class="p">,</span> <span class="mh">0x80</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span>  <span class="c1"># 0x1C: li  x5, 0x08         (Bit 3 = tx_wr)</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="mh">0x23</span><span class="p">,</span> <span class="mh">0x08</span><span class="p">,</span> <span class="mh">0x52</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span>  <span class="c1"># 0x20: sb  x5, 16(x4)       (Activa tx_wr = 1 en uart_ctrl [0x00400010])</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    <span class="mh">0x23</span><span class="p">,</span> <span class="mh">0x08</span><span class="p">,</span> <span class="mh">0x02</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span>  <span class="c1"># 0x24: sb  x0, 16(x4)       (Limpia tx_wr = 0 en uart_ctrl [0x00400010])</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="mh">0x6F</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span>  <span class="c1"># 0x28: jal x0, 0            (loop: j loop)</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="p">])</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="k">class</span><span class="w"> </span><span class="nc">SpiFlash</span><span class="p">:</span>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dut</span><span class="p">,</span> <span class="n">contents</span><span class="p">):</span>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">dut</span> <span class="o">=</span> <span class="n">dut</span>
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">contents</span> <span class="o">=</span> <span class="n">contents</span>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">reads</span> <span class="o">=</span> <span class="p">[]</span>
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">read_byte</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">):</span>
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>        <span class="k">if</span> <span class="n">address</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">contents</span><span class="p">):</span>
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">contents</span><span class="p">[</span><span class="n">address</span><span class="p">]</span>
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>        <span class="k">return</span> <span class="mi">0</span>
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">dut</span><span class="o">.</span><span class="n">flash_miso</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">0</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Programa de prueba OpenRAM 32x32 (128 bytes, palabras de 32 bits con wmask0[3:0]):</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># 1. lui x1, 0x00410      (x1 = 0x00410000, base de OpenRAM)</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># 2. lui x2, 0x12345; addi x2, x2, 0x64B  (x2 = 0x1234564B)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># 3. sw  x2, 0(x1)        (Escribe palabra completa de 32 bits en OpenRAM[0], wmask0 = 4'b1111)</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># 4. lw  x3, 0(x1)        (Lee de vuelta palabra completa de 32 bits -&gt; x3 = 0x1234564B)</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># 5. li  x6, 0xAA         (x6 = 0xAA)</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># 6. sb  x6, 1(x1)        (Escribe byte en offset 1: prueba wmask0 = 4'b0010 sin alterar bytes 0, 2, 3)</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># 7. lw  x3, 0(x1)        (Lee de vuelta palabra -&gt; x3 = 0x1234AA4B)</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># 8. lui x4, 0x00400      (x4 = 0x00400000, base UART)</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># 9. sb  x3, 8(x4)        (Transmite byte 0 'K' [0x4B] por UART)</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># 10. li x5, 0x08; sb x5, 16(x4); sb x0, 16(x4)  (Dispara y limpia TX UART)</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># 11. loop: j loop</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="n">OPENRAM_PROGRAM</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">([</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="mh">0x13</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span>  <span class="c1"># 0x00: nop</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="mh">0xB7</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x41</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span>  <span class="c1"># 0x04: lui x1, 0x00410</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    <span class="mh">0x37</span><span class="p">,</span> <span class="mh">0x51</span><span class="p">,</span> <span class="mh">0x34</span><span class="p">,</span> <span class="mh">0x12</span><span class="p">,</span>  <span class="c1"># 0x08: lui x2, 0x12345</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    <span class="mh">0x13</span><span class="p">,</span> <span class="mh">0x01</span><span class="p">,</span> <span class="mh">0xB1</span><span class="p">,</span> <span class="mh">0x64</span><span class="p">,</span>  <span class="c1"># 0x0C: addi x2, x2, 0x64B (x2 = 0x1234564B)</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    <span class="mh">0x23</span><span class="p">,</span> <span class="mh">0xA0</span><span class="p">,</span> <span class="mh">0x20</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span>  <span class="c1"># 0x10: sw x2, 0(x1)       (wmask0 = 4'b1111)</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>    <span class="mh">0x83</span><span class="p">,</span> <span class="mh">0xA1</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span>  <span class="c1"># 0x14: lw x3, 0(x1)       (x3 = 0x1234564B)</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    <span class="mh">0x13</span><span class="p">,</span> <span class="mh">0x03</span><span class="p">,</span> <span class="mh">0xA0</span><span class="p">,</span> <span class="mh">0x0A</span><span class="p">,</span>  <span class="c1"># 0x18: li x6, 0xAA</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>    <span class="mh">0xA3</span><span class="p">,</span> <span class="mh">0x80</span><span class="p">,</span> <span class="mh">0x60</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span>  <span class="c1"># 0x1C: sb x6, 1(x1)       (wmask0 = 4'b0010)</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>    <span class="mh">0x83</span><span class="p">,</span> <span class="mh">0xA1</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span>  <span class="c1"># 0x20: lw x3, 0(x1)       (x3 = 0x1234AA4B)</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>    <span class="mh">0x37</span><span class="p">,</span> <span class="mh">0x02</span><span class="p">,</span> <span class="mh">0x40</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span>  <span class="c1"># 0x24: lui x4, 0x00400</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>    <span class="mh">0x23</span><span class="p">,</span> <span class="mh">0x04</span><span class="p">,</span> <span class="mh">0x32</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span>  <span class="c1"># 0x28: sb x3, 8(x4)       (carga byte 0 [0x4B = 'K'] a UART)</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>    <span class="mh">0x93</span><span class="p">,</span> <span class="mh">0x02</span><span class="p">,</span> <span class="mh">0x80</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span>  <span class="c1"># 0x2C: li x5, 0x08</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>    <span class="mh">0x23</span><span class="p">,</span> <span class="mh">0x08</span><span class="p">,</span> <span class="mh">0x52</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span>  <span class="c1"># 0x30: sb x5, 16(x4)      (tx_wr = 1)</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>    <span class="mh">0x23</span><span class="p">,</span> <span class="mh">0x08</span><span class="p">,</span> <span class="mh">0x02</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span>  <span class="c1"># 0x34: sb x0, 16(x4)      (tx_wr = 0)</span>
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>    <span class="mh">0x6F</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span>  <span class="c1"># 0x38: j loop</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a><span class="p">])</span>
 <a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>            <span class="k">await</span> <span class="n">FallingEdge</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dut</span><span class="o">.</span><span class="n">flash_cs_n</span><span class="p">)</span>
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>            <span class="n">request</span> <span class="o">=</span> <span class="mi">0</span>
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">32</span><span class="p">):</span>
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>                <span class="k">await</span> <span class="n">RisingEdge</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dut</span><span class="o">.</span><span class="n">flash_clk</span><span class="p">)</span>
-<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>                <span class="n">request</span> <span class="o">=</span> <span class="p">(</span><span class="n">request</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">|</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dut</span><span class="o">.</span><span class="n">flash_mosi</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
-<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>
-<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>            <span class="n">command</span> <span class="o">=</span> <span class="p">(</span><span class="n">request</span> <span class="o">&gt;&gt;</span> <span class="mi">24</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFF</span>
-<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>            <span class="n">address</span> <span class="o">=</span> <span class="n">request</span> <span class="o">&amp;</span> <span class="mh">0xFFFFFF</span>
-<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>            <span class="k">assert</span> <span class="n">command</span> <span class="o">==</span> <span class="mh">0x03</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"Comando SPI inesperado: 0x</span><span class="si">{</span><span class="n">command</span><span class="si">:</span><span class="s2">02x</span><span class="si">}</span><span class="s2">"</span>
-<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">reads</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">command</span><span class="p">,</span> <span class="n">address</span><span class="p">))</span>
-<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>
-<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>            <span class="k">while</span> <span class="ow">not</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dut</span><span class="o">.</span><span class="n">flash_cs_n</span><span class="o">.</span><span class="n">value</span><span class="p">):</span>
-<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>                <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_byte</span><span class="p">(</span><span class="n">address</span><span class="p">)</span>
-<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>                <span class="n">address</span> <span class="o">+=</span> <span class="mi">1</span>
-<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>
-<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>                <span class="k">for</span> <span class="n">bit</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>                    <span class="k">await</span> <span class="n">First</span><span class="p">(</span>
-<a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>                        <span class="n">FallingEdge</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dut</span><span class="o">.</span><span class="n">flash_clk</span><span class="p">),</span>
-<a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>                        <span class="n">RisingEdge</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dut</span><span class="o">.</span><span class="n">flash_cs_n</span><span class="p">),</span>
-<a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a>                    <span class="p">)</span>
-<a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a>                    <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dut</span><span class="o">.</span><span class="n">flash_cs_n</span><span class="o">.</span><span class="n">value</span><span class="p">):</span>
-<a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a>                        <span class="bp">self</span><span class="o">.</span><span class="n">dut</span><span class="o">.</span><span class="n">flash_miso</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">0</span>
-<a id="__codelineno-0-59" name="__codelineno-0-59" href="#__codelineno-0-59"></a>                        <span class="k">break</span>
-<a id="__codelineno-0-60" name="__codelineno-0-60" href="#__codelineno-0-60"></a>                    <span class="bp">self</span><span class="o">.</span><span class="n">dut</span><span class="o">.</span><span class="n">flash_miso</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="p">(</span><span class="n">value</span> <span class="o">&gt;&gt;</span> <span class="n">bit</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">1</span>
-<a id="__codelineno-0-61" name="__codelineno-0-61" href="#__codelineno-0-61"></a>                <span class="k">else</span><span class="p">:</span>
-<a id="__codelineno-0-62" name="__codelineno-0-62" href="#__codelineno-0-62"></a>                    <span class="k">continue</span>
-<a id="__codelineno-0-63" name="__codelineno-0-63" href="#__codelineno-0-63"></a>                <span class="k">break</span>
-<a id="__codelineno-0-64" name="__codelineno-0-64" href="#__codelineno-0-64"></a>
-<a id="__codelineno-0-65" name="__codelineno-0-65" href="#__codelineno-0-65"></a>
-<a id="__codelineno-0-66" name="__codelineno-0-66" href="#__codelineno-0-66"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">uart_rx_monitor</span><span class="p">(</span><span class="n">dut</span><span class="p">,</span> <span class="n">received_bytes</span><span class="p">,</span> <span class="n">clks_per_bit</span><span class="o">=</span><span class="mi">208</span><span class="p">):</span>
-<a id="__codelineno-0-67" name="__codelineno-0-67" href="#__codelineno-0-67"></a><span class="w">    </span><span class="sd">"""Decodifica tramas UART 8N1 en dut.uart_tx (27 MHz / 115200 baud = 234 ciclos/bit)."""</span>
-<a id="__codelineno-0-68" name="__codelineno-0-68" href="#__codelineno-0-68"></a>    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-<a id="__codelineno-0-69" name="__codelineno-0-69" href="#__codelineno-0-69"></a>        <span class="k">await</span> <span class="n">FallingEdge</span><span class="p">(</span><span class="n">dut</span><span class="o">.</span><span class="n">uart_tx</span><span class="p">)</span>
-<a id="__codelineno-0-70" name="__codelineno-0-70" href="#__codelineno-0-70"></a>        <span class="k">await</span> <span class="n">ClockCycles</span><span class="p">(</span><span class="n">dut</span><span class="o">.</span><span class="n">clk</span><span class="p">,</span> <span class="n">clks_per_bit</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span>
-<a id="__codelineno-0-71" name="__codelineno-0-71" href="#__codelineno-0-71"></a>        <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">dut</span><span class="o">.</span><span class="n">uart_tx</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-<a id="__codelineno-0-72" name="__codelineno-0-72" href="#__codelineno-0-72"></a>            <span class="k">continue</span>
-<a id="__codelineno-0-73" name="__codelineno-0-73" href="#__codelineno-0-73"></a>
-<a id="__codelineno-0-74" name="__codelineno-0-74" href="#__codelineno-0-74"></a>        <span class="n">byte_val</span> <span class="o">=</span> <span class="mi">0</span>
-<a id="__codelineno-0-75" name="__codelineno-0-75" href="#__codelineno-0-75"></a>        <span class="k">for</span> <span class="n">bit_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">):</span>
-<a id="__codelineno-0-76" name="__codelineno-0-76" href="#__codelineno-0-76"></a>            <span class="k">await</span> <span class="n">ClockCycles</span><span class="p">(</span><span class="n">dut</span><span class="o">.</span><span class="n">clk</span><span class="p">,</span> <span class="n">clks_per_bit</span><span class="p">)</span>
-<a id="__codelineno-0-77" name="__codelineno-0-77" href="#__codelineno-0-77"></a>            <span class="n">byte_val</span> <span class="o">|=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">dut</span><span class="o">.</span><span class="n">uart_tx</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">bit_idx</span>
-<a id="__codelineno-0-78" name="__codelineno-0-78" href="#__codelineno-0-78"></a>
-<a id="__codelineno-0-79" name="__codelineno-0-79" href="#__codelineno-0-79"></a>        <span class="k">await</span> <span class="n">ClockCycles</span><span class="p">(</span><span class="n">dut</span><span class="o">.</span><span class="n">clk</span><span class="p">,</span> <span class="n">clks_per_bit</span><span class="p">)</span>
-<a id="__codelineno-0-80" name="__codelineno-0-80" href="#__codelineno-0-80"></a>        <span class="n">received_bytes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">byte_val</span><span class="p">)</span>
-<a id="__codelineno-0-81" name="__codelineno-0-81" href="#__codelineno-0-81"></a>        <span class="n">char_repr</span> <span class="o">=</span> <span class="nb">chr</span><span class="p">(</span><span class="n">byte_val</span><span class="p">)</span> <span class="k">if</span> <span class="mi">32</span> <span class="o">&lt;=</span> <span class="n">byte_val</span> <span class="o">&lt;</span> <span class="mi">127</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">"</span><span class="se">\\</span><span class="s2">x</span><span class="si">{</span><span class="n">byte_val</span><span class="si">:</span><span class="s2">02x</span><span class="si">}</span><span class="s2">"</span>
-<a id="__codelineno-0-82" name="__codelineno-0-82" href="#__codelineno-0-82"></a>        <span class="n">dut</span><span class="o">.</span><span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[UART RX] Byte recibido en pin uart_tx: 0x</span><span class="si">{</span><span class="n">byte_val</span><span class="si">:</span><span class="s2">02X</span><span class="si">}</span><span class="s2"> ('</span><span class="si">{</span><span class="n">char_repr</span><span class="si">}</span><span class="s2">')"</span><span class="p">)</span>
-<a id="__codelineno-0-83" name="__codelineno-0-83" href="#__codelineno-0-83"></a>
-<a id="__codelineno-0-84" name="__codelineno-0-84" href="#__codelineno-0-84"></a>
-<a id="__codelineno-0-85" name="__codelineno-0-85" href="#__codelineno-0-85"></a><span class="nd">@cocotb</span><span class="o">.</span><span class="n">test</span><span class="p">()</span>
-<a id="__codelineno-0-86" name="__codelineno-0-86" href="#__codelineno-0-86"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_openram_write_read_uart</span><span class="p">(</span><span class="n">dut</span><span class="p">):</span>
-<a id="__codelineno-0-87" name="__codelineno-0-87" href="#__codelineno-0-87"></a><span class="w">    </span><span class="sd">"""Escribe 'K' (0x4B) en OpenRAM (0x00410000), lo lee en x3 y lo transmite por UART."""</span>
-<a id="__codelineno-0-88" name="__codelineno-0-88" href="#__codelineno-0-88"></a>    <span class="n">dut</span><span class="o">.</span><span class="n">rst_n</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">0</span>
-<a id="__codelineno-0-89" name="__codelineno-0-89" href="#__codelineno-0-89"></a>    <span class="n">dut</span><span class="o">.</span><span class="n">uart_rx</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">1</span>
-<a id="__codelineno-0-90" name="__codelineno-0-90" href="#__codelineno-0-90"></a>    <span class="n">dut</span><span class="o">.</span><span class="n">ram_miso</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">0</span>
-<a id="__codelineno-0-91" name="__codelineno-0-91" href="#__codelineno-0-91"></a>    <span class="n">dut</span><span class="o">.</span><span class="n">flash_miso</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">0</span>
-<a id="__codelineno-0-92" name="__codelineno-0-92" href="#__codelineno-0-92"></a>
-<a id="__codelineno-0-93" name="__codelineno-0-93" href="#__codelineno-0-93"></a>    <span class="n">clock</span> <span class="o">=</span> <span class="n">Clock</span><span class="p">(</span><span class="n">dut</span><span class="o">.</span><span class="n">clk</span><span class="p">,</span> <span class="mi">37038</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">"ps"</span><span class="p">)</span>  <span class="c1"># ~27 MHz</span>
-<a id="__codelineno-0-94" name="__codelineno-0-94" href="#__codelineno-0-94"></a>    <span class="n">cocotb</span><span class="o">.</span><span class="n">start_soon</span><span class="p">(</span><span class="n">clock</span><span class="o">.</span><span class="n">start</span><span class="p">())</span>
-<a id="__codelineno-0-95" name="__codelineno-0-95" href="#__codelineno-0-95"></a>
-<a id="__codelineno-0-96" name="__codelineno-0-96" href="#__codelineno-0-96"></a>    <span class="n">flash</span> <span class="o">=</span> <span class="n">SpiFlash</span><span class="p">(</span><span class="n">dut</span><span class="p">,</span> <span class="n">OPENRAM_PROGRAM</span><span class="p">)</span>
-<a id="__codelineno-0-97" name="__codelineno-0-97" href="#__codelineno-0-97"></a>    <span class="n">cocotb</span><span class="o">.</span><span class="n">start_soon</span><span class="p">(</span><span class="n">flash</span><span class="o">.</span><span class="n">run</span><span class="p">())</span>
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a><span class="k">class</span><span class="w"> </span><span class="nc">SpiFlash</span><span class="p">:</span>
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dut</span><span class="p">,</span> <span class="n">contents</span><span class="p">):</span>
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">dut</span> <span class="o">=</span> <span class="n">dut</span>
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">contents</span> <span class="o">=</span> <span class="n">contents</span>
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">reads</span> <span class="o">=</span> <span class="p">[]</span>
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">read_byte</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">):</span>
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>        <span class="k">if</span> <span class="n">address</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">contents</span><span class="p">):</span>
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">contents</span><span class="p">[</span><span class="n">address</span><span class="p">]</span>
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>        <span class="k">return</span> <span class="mi">0</span>
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">dut</span><span class="o">.</span><span class="n">flash_miso</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">0</span>
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>            <span class="k">await</span> <span class="n">FallingEdge</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dut</span><span class="o">.</span><span class="n">flash_cs_n</span><span class="p">)</span>
+<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>            <span class="n">request</span> <span class="o">=</span> <span class="mi">0</span>
+<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>
+<a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">32</span><span class="p">):</span>
+<a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>                <span class="k">await</span> <span class="n">RisingEdge</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dut</span><span class="o">.</span><span class="n">flash_clk</span><span class="p">)</span>
+<a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a>                <span class="n">request</span> <span class="o">=</span> <span class="p">(</span><span class="n">request</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">|</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dut</span><span class="o">.</span><span class="n">flash_mosi</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+<a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a>
+<a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a>            <span class="n">command</span> <span class="o">=</span> <span class="p">(</span><span class="n">request</span> <span class="o">&gt;&gt;</span> <span class="mi">24</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFF</span>
+<a id="__codelineno-0-59" name="__codelineno-0-59" href="#__codelineno-0-59"></a>            <span class="n">address</span> <span class="o">=</span> <span class="n">request</span> <span class="o">&amp;</span> <span class="mh">0xFFFFFF</span>
+<a id="__codelineno-0-60" name="__codelineno-0-60" href="#__codelineno-0-60"></a>            <span class="k">assert</span> <span class="n">command</span> <span class="o">==</span> <span class="mh">0x03</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"Comando SPI inesperado: 0x</span><span class="si">{</span><span class="n">command</span><span class="si">:</span><span class="s2">02x</span><span class="si">}</span><span class="s2">"</span>
+<a id="__codelineno-0-61" name="__codelineno-0-61" href="#__codelineno-0-61"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">reads</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">command</span><span class="p">,</span> <span class="n">address</span><span class="p">))</span>
+<a id="__codelineno-0-62" name="__codelineno-0-62" href="#__codelineno-0-62"></a>
+<a id="__codelineno-0-63" name="__codelineno-0-63" href="#__codelineno-0-63"></a>            <span class="k">while</span> <span class="ow">not</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dut</span><span class="o">.</span><span class="n">flash_cs_n</span><span class="o">.</span><span class="n">value</span><span class="p">):</span>
+<a id="__codelineno-0-64" name="__codelineno-0-64" href="#__codelineno-0-64"></a>                <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_byte</span><span class="p">(</span><span class="n">address</span><span class="p">)</span>
+<a id="__codelineno-0-65" name="__codelineno-0-65" href="#__codelineno-0-65"></a>                <span class="n">address</span> <span class="o">+=</span> <span class="mi">1</span>
+<a id="__codelineno-0-66" name="__codelineno-0-66" href="#__codelineno-0-66"></a>
+<a id="__codelineno-0-67" name="__codelineno-0-67" href="#__codelineno-0-67"></a>                <span class="k">for</span> <span class="n">bit</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+<a id="__codelineno-0-68" name="__codelineno-0-68" href="#__codelineno-0-68"></a>                    <span class="k">await</span> <span class="n">First</span><span class="p">(</span>
+<a id="__codelineno-0-69" name="__codelineno-0-69" href="#__codelineno-0-69"></a>                        <span class="n">FallingEdge</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dut</span><span class="o">.</span><span class="n">flash_clk</span><span class="p">),</span>
+<a id="__codelineno-0-70" name="__codelineno-0-70" href="#__codelineno-0-70"></a>                        <span class="n">RisingEdge</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dut</span><span class="o">.</span><span class="n">flash_cs_n</span><span class="p">),</span>
+<a id="__codelineno-0-71" name="__codelineno-0-71" href="#__codelineno-0-71"></a>                    <span class="p">)</span>
+<a id="__codelineno-0-72" name="__codelineno-0-72" href="#__codelineno-0-72"></a>                    <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dut</span><span class="o">.</span><span class="n">flash_cs_n</span><span class="o">.</span><span class="n">value</span><span class="p">):</span>
+<a id="__codelineno-0-73" name="__codelineno-0-73" href="#__codelineno-0-73"></a>                        <span class="bp">self</span><span class="o">.</span><span class="n">dut</span><span class="o">.</span><span class="n">flash_miso</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">0</span>
+<a id="__codelineno-0-74" name="__codelineno-0-74" href="#__codelineno-0-74"></a>                        <span class="k">break</span>
+<a id="__codelineno-0-75" name="__codelineno-0-75" href="#__codelineno-0-75"></a>                    <span class="bp">self</span><span class="o">.</span><span class="n">dut</span><span class="o">.</span><span class="n">flash_miso</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="p">(</span><span class="n">value</span> <span class="o">&gt;&gt;</span> <span class="n">bit</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">1</span>
+<a id="__codelineno-0-76" name="__codelineno-0-76" href="#__codelineno-0-76"></a>                <span class="k">else</span><span class="p">:</span>
+<a id="__codelineno-0-77" name="__codelineno-0-77" href="#__codelineno-0-77"></a>                    <span class="k">continue</span>
+<a id="__codelineno-0-78" name="__codelineno-0-78" href="#__codelineno-0-78"></a>                <span class="k">break</span>
+<a id="__codelineno-0-79" name="__codelineno-0-79" href="#__codelineno-0-79"></a>
+<a id="__codelineno-0-80" name="__codelineno-0-80" href="#__codelineno-0-80"></a>
+<a id="__codelineno-0-81" name="__codelineno-0-81" href="#__codelineno-0-81"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">uart_rx_monitor</span><span class="p">(</span><span class="n">dut</span><span class="p">,</span> <span class="n">received_bytes</span><span class="p">,</span> <span class="n">clks_per_bit</span><span class="o">=</span><span class="mi">208</span><span class="p">):</span>
+<a id="__codelineno-0-82" name="__codelineno-0-82" href="#__codelineno-0-82"></a><span class="w">    </span><span class="sd">"""Decodifica tramas UART 8N1 en dut.uart_tx (27 MHz / 115200 baud = 234 ciclos/bit)."""</span>
+<a id="__codelineno-0-83" name="__codelineno-0-83" href="#__codelineno-0-83"></a>    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+<a id="__codelineno-0-84" name="__codelineno-0-84" href="#__codelineno-0-84"></a>        <span class="k">await</span> <span class="n">FallingEdge</span><span class="p">(</span><span class="n">dut</span><span class="o">.</span><span class="n">uart_tx</span><span class="p">)</span>
+<a id="__codelineno-0-85" name="__codelineno-0-85" href="#__codelineno-0-85"></a>        <span class="k">await</span> <span class="n">ClockCycles</span><span class="p">(</span><span class="n">dut</span><span class="o">.</span><span class="n">clk</span><span class="p">,</span> <span class="n">clks_per_bit</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span>
+<a id="__codelineno-0-86" name="__codelineno-0-86" href="#__codelineno-0-86"></a>        <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">dut</span><span class="o">.</span><span class="n">uart_tx</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+<a id="__codelineno-0-87" name="__codelineno-0-87" href="#__codelineno-0-87"></a>            <span class="k">continue</span>
+<a id="__codelineno-0-88" name="__codelineno-0-88" href="#__codelineno-0-88"></a>
+<a id="__codelineno-0-89" name="__codelineno-0-89" href="#__codelineno-0-89"></a>        <span class="n">byte_val</span> <span class="o">=</span> <span class="mi">0</span>
+<a id="__codelineno-0-90" name="__codelineno-0-90" href="#__codelineno-0-90"></a>        <span class="k">for</span> <span class="n">bit_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">):</span>
+<a id="__codelineno-0-91" name="__codelineno-0-91" href="#__codelineno-0-91"></a>            <span class="k">await</span> <span class="n">ClockCycles</span><span class="p">(</span><span class="n">dut</span><span class="o">.</span><span class="n">clk</span><span class="p">,</span> <span class="n">clks_per_bit</span><span class="p">)</span>
+<a id="__codelineno-0-92" name="__codelineno-0-92" href="#__codelineno-0-92"></a>            <span class="n">byte_val</span> <span class="o">|=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">dut</span><span class="o">.</span><span class="n">uart_tx</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">bit_idx</span>
+<a id="__codelineno-0-93" name="__codelineno-0-93" href="#__codelineno-0-93"></a>
+<a id="__codelineno-0-94" name="__codelineno-0-94" href="#__codelineno-0-94"></a>        <span class="k">await</span> <span class="n">ClockCycles</span><span class="p">(</span><span class="n">dut</span><span class="o">.</span><span class="n">clk</span><span class="p">,</span> <span class="n">clks_per_bit</span><span class="p">)</span>
+<a id="__codelineno-0-95" name="__codelineno-0-95" href="#__codelineno-0-95"></a>        <span class="n">received_bytes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">byte_val</span><span class="p">)</span>
+<a id="__codelineno-0-96" name="__codelineno-0-96" href="#__codelineno-0-96"></a>        <span class="n">char_repr</span> <span class="o">=</span> <span class="nb">chr</span><span class="p">(</span><span class="n">byte_val</span><span class="p">)</span> <span class="k">if</span> <span class="mi">32</span> <span class="o">&lt;=</span> <span class="n">byte_val</span> <span class="o">&lt;</span> <span class="mi">127</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">"</span><span class="se">\\</span><span class="s2">x</span><span class="si">{</span><span class="n">byte_val</span><span class="si">:</span><span class="s2">02x</span><span class="si">}</span><span class="s2">"</span>
+<a id="__codelineno-0-97" name="__codelineno-0-97" href="#__codelineno-0-97"></a>        <span class="n">dut</span><span class="o">.</span><span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[UART RX] Byte recibido en pin uart_tx: 0x</span><span class="si">{</span><span class="n">byte_val</span><span class="si">:</span><span class="s2">02X</span><span class="si">}</span><span class="s2"> ('</span><span class="si">{</span><span class="n">char_repr</span><span class="si">}</span><span class="s2">')"</span><span class="p">)</span>
 <a id="__codelineno-0-98" name="__codelineno-0-98" href="#__codelineno-0-98"></a>
-<a id="__codelineno-0-99" name="__codelineno-0-99" href="#__codelineno-0-99"></a>    <span class="n">uart_bytes</span> <span class="o">=</span> <span class="p">[]</span>
-<a id="__codelineno-0-100" name="__codelineno-0-100" href="#__codelineno-0-100"></a>    <span class="n">cocotb</span><span class="o">.</span><span class="n">start_soon</span><span class="p">(</span><span class="n">uart_rx_monitor</span><span class="p">(</span><span class="n">dut</span><span class="p">,</span> <span class="n">uart_bytes</span><span class="p">))</span>
-<a id="__codelineno-0-101" name="__codelineno-0-101" href="#__codelineno-0-101"></a>
-<a id="__codelineno-0-102" name="__codelineno-0-102" href="#__codelineno-0-102"></a>    <span class="k">await</span> <span class="n">ClockCycles</span><span class="p">(</span><span class="n">dut</span><span class="o">.</span><span class="n">clk</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
-<a id="__codelineno-0-103" name="__codelineno-0-103" href="#__codelineno-0-103"></a>    <span class="n">dut</span><span class="o">.</span><span class="n">rst_n</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">1</span>
-<a id="__codelineno-0-104" name="__codelineno-0-104" href="#__codelineno-0-104"></a>
-<a id="__codelineno-0-105" name="__codelineno-0-105" href="#__codelineno-0-105"></a>    <span class="n">sram_read_verified</span> <span class="o">=</span> <span class="kc">False</span>
-<a id="__codelineno-0-106" name="__codelineno-0-106" href="#__codelineno-0-106"></a>    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20000</span><span class="p">):</span>
-<a id="__codelineno-0-107" name="__codelineno-0-107" href="#__codelineno-0-107"></a>        <span class="k">await</span> <span class="n">RisingEdge</span><span class="p">(</span><span class="n">dut</span><span class="o">.</span><span class="n">clk</span><span class="p">)</span>
-<a id="__codelineno-0-108" name="__codelineno-0-108" href="#__codelineno-0-108"></a>
-<a id="__codelineno-0-109" name="__codelineno-0-109" href="#__codelineno-0-109"></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">sram_read_verified</span><span class="p">:</span>
-<a id="__codelineno-0-110" name="__codelineno-0-110" href="#__codelineno-0-110"></a>            <span class="k">try</span><span class="p">:</span>
-<a id="__codelineno-0-111" name="__codelineno-0-111" href="#__codelineno-0-111"></a>                <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">dut</span><span class="o">.</span><span class="n">dut</span><span class="o">.</span><span class="n">femto0</span><span class="o">.</span><span class="n">CPU</span><span class="o">.</span><span class="n">registerFile</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="mh">0x4B</span><span class="p">:</span>
-<a id="__codelineno-0-112" name="__codelineno-0-112" href="#__codelineno-0-112"></a>                    <span class="n">sram_read_verified</span> <span class="o">=</span> <span class="kc">True</span>
-<a id="__codelineno-0-113" name="__codelineno-0-113" href="#__codelineno-0-113"></a>                    <span class="n">dut</span><span class="o">.</span><span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"[SRAM OK] Registro x3 cargó 0x4B ('K') desde OpenRAM"</span><span class="p">)</span>
-<a id="__codelineno-0-114" name="__codelineno-0-114" href="#__codelineno-0-114"></a>            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-<a id="__codelineno-0-115" name="__codelineno-0-115" href="#__codelineno-0-115"></a>                <span class="k">pass</span>
+<a id="__codelineno-0-99" name="__codelineno-0-99" href="#__codelineno-0-99"></a>
+<a id="__codelineno-0-100" name="__codelineno-0-100" href="#__codelineno-0-100"></a><span class="nd">@cocotb</span><span class="o">.</span><span class="n">test</span><span class="p">()</span>
+<a id="__codelineno-0-101" name="__codelineno-0-101" href="#__codelineno-0-101"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_openram_write_read_uart</span><span class="p">(</span><span class="n">dut</span><span class="p">):</span>
+<a id="__codelineno-0-102" name="__codelineno-0-102" href="#__codelineno-0-102"></a><span class="w">    </span><span class="sd">"""Verifica OpenRAM 32x32: escritura y lectura de 32 bits (sw/lw), byte-mask (sb) y salida UART."""</span>
+<a id="__codelineno-0-103" name="__codelineno-0-103" href="#__codelineno-0-103"></a>    <span class="n">dut</span><span class="o">.</span><span class="n">rst_n</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">0</span>
+<a id="__codelineno-0-104" name="__codelineno-0-104" href="#__codelineno-0-104"></a>    <span class="n">dut</span><span class="o">.</span><span class="n">uart_rx</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">1</span>
+<a id="__codelineno-0-105" name="__codelineno-0-105" href="#__codelineno-0-105"></a>    <span class="n">dut</span><span class="o">.</span><span class="n">ram_miso</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">0</span>
+<a id="__codelineno-0-106" name="__codelineno-0-106" href="#__codelineno-0-106"></a>    <span class="n">dut</span><span class="o">.</span><span class="n">flash_miso</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">0</span>
+<a id="__codelineno-0-107" name="__codelineno-0-107" href="#__codelineno-0-107"></a>
+<a id="__codelineno-0-108" name="__codelineno-0-108" href="#__codelineno-0-108"></a>    <span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-0-109" name="__codelineno-0-109" href="#__codelineno-0-109"></a>        <span class="n">clock</span> <span class="o">=</span> <span class="n">Clock</span><span class="p">(</span><span class="n">dut</span><span class="o">.</span><span class="n">clk</span><span class="p">,</span> <span class="mi">37038</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">"ps"</span><span class="p">)</span>  <span class="c1"># ~27 MHz</span>
+<a id="__codelineno-0-110" name="__codelineno-0-110" href="#__codelineno-0-110"></a>    <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+<a id="__codelineno-0-111" name="__codelineno-0-111" href="#__codelineno-0-111"></a>        <span class="n">clock</span> <span class="o">=</span> <span class="n">Clock</span><span class="p">(</span><span class="n">dut</span><span class="o">.</span><span class="n">clk</span><span class="p">,</span> <span class="mi">37038</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">"ps"</span><span class="p">)</span>
+<a id="__codelineno-0-112" name="__codelineno-0-112" href="#__codelineno-0-112"></a>    <span class="n">cocotb</span><span class="o">.</span><span class="n">start_soon</span><span class="p">(</span><span class="n">clock</span><span class="o">.</span><span class="n">start</span><span class="p">())</span>
+<a id="__codelineno-0-113" name="__codelineno-0-113" href="#__codelineno-0-113"></a>
+<a id="__codelineno-0-114" name="__codelineno-0-114" href="#__codelineno-0-114"></a>    <span class="n">flash</span> <span class="o">=</span> <span class="n">SpiFlash</span><span class="p">(</span><span class="n">dut</span><span class="p">,</span> <span class="n">OPENRAM_PROGRAM</span><span class="p">)</span>
+<a id="__codelineno-0-115" name="__codelineno-0-115" href="#__codelineno-0-115"></a>    <span class="n">cocotb</span><span class="o">.</span><span class="n">start_soon</span><span class="p">(</span><span class="n">flash</span><span class="o">.</span><span class="n">run</span><span class="p">())</span>
 <a id="__codelineno-0-116" name="__codelineno-0-116" href="#__codelineno-0-116"></a>
-<a id="__codelineno-0-117" name="__codelineno-0-117" href="#__codelineno-0-117"></a>        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">uart_bytes</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
-<a id="__codelineno-0-118" name="__codelineno-0-118" href="#__codelineno-0-118"></a>            <span class="k">break</span>
-<a id="__codelineno-0-119" name="__codelineno-0-119" href="#__codelineno-0-119"></a>    <span class="k">else</span><span class="p">:</span>
-<a id="__codelineno-0-120" name="__codelineno-0-120" href="#__codelineno-0-120"></a>        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
-<a id="__codelineno-0-121" name="__codelineno-0-121" href="#__codelineno-0-121"></a>            <span class="sa">f</span><span class="s2">"Timeout esperando UART; bytes recibidos=</span><span class="si">{</span><span class="n">uart_bytes</span><span class="si">}</span><span class="s2">, "</span>
-<a id="__codelineno-0-122" name="__codelineno-0-122" href="#__codelineno-0-122"></a>            <span class="sa">f</span><span class="s2">"PC=0x</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">dut</span><span class="o">.</span><span class="n">debug_pc</span><span class="o">.</span><span class="n">value</span><span class="p">)</span><span class="si">:</span><span class="s2">06x</span><span class="si">}</span><span class="s2">"</span>
-<a id="__codelineno-0-123" name="__codelineno-0-123" href="#__codelineno-0-123"></a>        <span class="p">)</span>
-<a id="__codelineno-0-124" name="__codelineno-0-124" href="#__codelineno-0-124"></a>
-<a id="__codelineno-0-125" name="__codelineno-0-125" href="#__codelineno-0-125"></a>    <span class="k">assert</span> <span class="n">sram_read_verified</span><span class="p">,</span> <span class="s2">"El registro x3 nunca recibió 0x4B ('K') desde OpenRAM"</span>
-<a id="__codelineno-0-126" name="__codelineno-0-126" href="#__codelineno-0-126"></a>    <span class="k">assert</span> <span class="n">uart_bytes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mh">0x4B</span><span class="p">,</span> <span class="p">(</span>
-<a id="__codelineno-0-127" name="__codelineno-0-127" href="#__codelineno-0-127"></a>        <span class="sa">f</span><span class="s2">"Se esperaba 'K' (0x4B) por UART, se recibió: </span><span class="si">{</span><span class="n">uart_bytes</span><span class="si">}</span><span class="s2">"</span>
-<a id="__codelineno-0-128" name="__codelineno-0-128" href="#__codelineno-0-128"></a>    <span class="p">)</span>
-<a id="__codelineno-0-129" name="__codelineno-0-129" href="#__codelineno-0-129"></a>    <span class="n">dut</span><span class="o">.</span><span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Prueba OpenRAM + UART hardware completada con éxito: 'K' (0x4B) verificado."</span><span class="p">)</span>
+<a id="__codelineno-0-117" name="__codelineno-0-117" href="#__codelineno-0-117"></a>    <span class="n">uart_bytes</span> <span class="o">=</span> <span class="p">[]</span>
+<a id="__codelineno-0-118" name="__codelineno-0-118" href="#__codelineno-0-118"></a>    <span class="n">cocotb</span><span class="o">.</span><span class="n">start_soon</span><span class="p">(</span><span class="n">uart_rx_monitor</span><span class="p">(</span><span class="n">dut</span><span class="p">,</span> <span class="n">uart_bytes</span><span class="p">))</span>
+<a id="__codelineno-0-119" name="__codelineno-0-119" href="#__codelineno-0-119"></a>
+<a id="__codelineno-0-120" name="__codelineno-0-120" href="#__codelineno-0-120"></a>    <span class="k">await</span> <span class="n">ClockCycles</span><span class="p">(</span><span class="n">dut</span><span class="o">.</span><span class="n">clk</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+<a id="__codelineno-0-121" name="__codelineno-0-121" href="#__codelineno-0-121"></a>    <span class="n">dut</span><span class="o">.</span><span class="n">rst_n</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">1</span>
+<a id="__codelineno-0-122" name="__codelineno-0-122" href="#__codelineno-0-122"></a>
+<a id="__codelineno-0-123" name="__codelineno-0-123" href="#__codelineno-0-123"></a>    <span class="n">sram_read_verified</span> <span class="o">=</span> <span class="kc">False</span>
+<a id="__codelineno-0-124" name="__codelineno-0-124" href="#__codelineno-0-124"></a>    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20000</span><span class="p">):</span>
+<a id="__codelineno-0-125" name="__codelineno-0-125" href="#__codelineno-0-125"></a>        <span class="k">await</span> <span class="n">RisingEdge</span><span class="p">(</span><span class="n">dut</span><span class="o">.</span><span class="n">clk</span><span class="p">)</span>
+<a id="__codelineno-0-126" name="__codelineno-0-126" href="#__codelineno-0-126"></a>
+<a id="__codelineno-0-127" name="__codelineno-0-127" href="#__codelineno-0-127"></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">sram_read_verified</span><span class="p">:</span>
+<a id="__codelineno-0-128" name="__codelineno-0-128" href="#__codelineno-0-128"></a>            <span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-0-129" name="__codelineno-0-129" href="#__codelineno-0-129"></a>                <span class="c1"># Verificamos que x3 cargue 0x1234AA4B (demuestra escritura word 32b y byte mask parcial)</span>
+<a id="__codelineno-0-130" name="__codelineno-0-130" href="#__codelineno-0-130"></a>                <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">dut</span><span class="o">.</span><span class="n">dut</span><span class="o">.</span><span class="n">femto0</span><span class="o">.</span><span class="n">CPU</span><span class="o">.</span><span class="n">registerFile</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="mh">0x1234AA4B</span><span class="p">:</span>
+<a id="__codelineno-0-131" name="__codelineno-0-131" href="#__codelineno-0-131"></a>                    <span class="n">sram_read_verified</span> <span class="o">=</span> <span class="kc">True</span>
+<a id="__codelineno-0-132" name="__codelineno-0-132" href="#__codelineno-0-132"></a>                    <span class="n">dut</span><span class="o">.</span><span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"[SRAM OK] Registro x3 cargó 0x1234AA4B desde OpenRAM 32x32"</span><span class="p">)</span>
+<a id="__codelineno-0-133" name="__codelineno-0-133" href="#__codelineno-0-133"></a>            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+<a id="__codelineno-0-134" name="__codelineno-0-134" href="#__codelineno-0-134"></a>                <span class="k">pass</span>
+<a id="__codelineno-0-135" name="__codelineno-0-135" href="#__codelineno-0-135"></a>
+<a id="__codelineno-0-136" name="__codelineno-0-136" href="#__codelineno-0-136"></a>        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">uart_bytes</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+<a id="__codelineno-0-137" name="__codelineno-0-137" href="#__codelineno-0-137"></a>            <span class="k">break</span>
+<a id="__codelineno-0-138" name="__codelineno-0-138" href="#__codelineno-0-138"></a>    <span class="k">else</span><span class="p">:</span>
+<a id="__codelineno-0-139" name="__codelineno-0-139" href="#__codelineno-0-139"></a>        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
+<a id="__codelineno-0-140" name="__codelineno-0-140" href="#__codelineno-0-140"></a>            <span class="sa">f</span><span class="s2">"Timeout esperando UART; bytes recibidos=</span><span class="si">{</span><span class="n">uart_bytes</span><span class="si">}</span><span class="s2">, "</span>
+<a id="__codelineno-0-141" name="__codelineno-0-141" href="#__codelineno-0-141"></a>            <span class="sa">f</span><span class="s2">"PC=0x</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">dut</span><span class="o">.</span><span class="n">debug_pc</span><span class="o">.</span><span class="n">value</span><span class="p">)</span><span class="si">:</span><span class="s2">06x</span><span class="si">}</span><span class="s2">"</span>
+<a id="__codelineno-0-142" name="__codelineno-0-142" href="#__codelineno-0-142"></a>        <span class="p">)</span>
+<a id="__codelineno-0-143" name="__codelineno-0-143" href="#__codelineno-0-143"></a>
+<a id="__codelineno-0-144" name="__codelineno-0-144" href="#__codelineno-0-144"></a>    <span class="k">assert</span> <span class="n">sram_read_verified</span><span class="p">,</span> <span class="s2">"El registro x3 nunca recibió 0x1234AA4B desde OpenRAM 32x32"</span>
+<a id="__codelineno-0-145" name="__codelineno-0-145" href="#__codelineno-0-145"></a>    <span class="k">assert</span> <span class="n">uart_bytes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mh">0x4B</span><span class="p">,</span> <span class="p">(</span>
+<a id="__codelineno-0-146" name="__codelineno-0-146" href="#__codelineno-0-146"></a>        <span class="sa">f</span><span class="s2">"Se esperaba 'K' (0x4B) por UART, se recibió: </span><span class="si">{</span><span class="n">uart_bytes</span><span class="si">}</span><span class="s2">"</span>
+<a id="__codelineno-0-147" name="__codelineno-0-147" href="#__codelineno-0-147"></a>    <span class="p">)</span>
+<a id="__codelineno-0-148" name="__codelineno-0-148" href="#__codelineno-0-148"></a>    <span class="n">dut</span><span class="o">.</span><span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Prueba OpenRAM 32x32 + UART hardware completada con éxito: 0x1234AA4B y 'K' (0x4B) verificados."</span><span class="p">)</span>
 </code></pre></div>
 </details>
 <h3 id="codigo-ensamblador">Codigo ensamblador</h3>
 <div class="language-asm highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nl">_start:</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="nf">nop</span><span class="w">                     </span><span class="c1"># Espera inicial tras reset</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="nf">nop</span><span class="w">                     </span><span class="c1"># 0x00: Espera inicial tras reset</span>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="c1"># 1. Escritura y lectura en OpenRAM (0x00410000)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="nf">lui</span><span class="w">  </span><span class="no">x1</span><span class="p">,</span><span class="w"> </span><span class="mi">0x00410</span><span class="w">        </span><span class="c1"># x1 = 0x00410000 (Base OpenRAM)</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="nf">li</span><span class="w">   </span><span class="no">x2</span><span class="p">,</span><span class="w"> </span><span class="mi">0x4B</span><span class="w">           </span><span class="c1"># x2 = 'K'</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="nf">sb</span><span class="w">   </span><span class="no">x2</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">(</span><span class="no">x1</span><span class="p">)</span><span class="w">          </span><span class="c1"># OpenRAM[0] = 'K'</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span><span class="nf">lb</span><span class="w">   </span><span class="no">x3</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">(</span><span class="no">x1</span><span class="p">)</span><span class="w">          </span><span class="c1"># x3 = OpenRAM[0]</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="c1"># 2. Transmisión del dato por UART (0x00400000)</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="nf">lui</span><span class="w">  </span><span class="no">x4</span><span class="p">,</span><span class="w"> </span><span class="mi">0x00400</span><span class="w">        </span><span class="c1"># x4 = 0x00400000 (Base UART)</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">    </span><span class="nf">sb</span><span class="w">   </span><span class="no">x3</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="p">(</span><span class="no">x4</span><span class="p">)</span><span class="w">          </span><span class="c1"># Cargar 'K' en registro de datos TX</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span><span class="nf">li</span><span class="w">   </span><span class="no">x5</span><span class="p">,</span><span class="w"> </span><span class="mi">0x08</span><span class="w">           </span><span class="c1"># Máscara bit 3 (tx_wr)</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">    </span><span class="nf">sb</span><span class="w">   </span><span class="no">x5</span><span class="p">,</span><span class="w"> </span><span class="mi">16</span><span class="p">(</span><span class="no">x4</span><span class="p">)</span><span class="w">         </span><span class="c1"># Iniciar transmisión (tx_wr = 1)</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">    </span><span class="nf">sb</span><span class="w">   </span><span class="no">x0</span><span class="p">,</span><span class="w"> </span><span class="mi">16</span><span class="p">(</span><span class="no">x4</span><span class="p">)</span><span class="w">         </span><span class="c1"># Limpiar pulso (tx_wr = 0)</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="nl">loop:</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">    </span><span class="nf">jal</span><span class="w">  </span><span class="no">x0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="w">              </span><span class="c1"># Detener ejecución</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="c1"># 1. Escritura y lectura de palabra completa (32 bits) en OpenRAM</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="nf">lui</span><span class="w">  </span><span class="no">x1</span><span class="p">,</span><span class="w"> </span><span class="mi">0x00410</span><span class="w">        </span><span class="c1"># 0x04: x1 = 0x00410000 (Base OpenRAM 32x32)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="nf">lui</span><span class="w">  </span><span class="no">x2</span><span class="p">,</span><span class="w"> </span><span class="mi">0x12345</span><span class="w">        </span><span class="c1"># 0x08: x2 = 0x12345000</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="nf">addi</span><span class="w"> </span><span class="no">x2</span><span class="p">,</span><span class="w"> </span><span class="no">x2</span><span class="p">,</span><span class="w"> </span><span class="mi">0x64B</span><span class="w">      </span><span class="c1"># 0x0C: x2 = 0x1234564B (byte 0 = 0x4B = 'K')</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span><span class="nf">sw</span><span class="w">   </span><span class="no">x2</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">(</span><span class="no">x1</span><span class="p">)</span><span class="w">          </span><span class="c1"># 0x10: OpenRAM[0] = 0x1234564B (wmask0 = 4'b1111)</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="nf">lw</span><span class="w">   </span><span class="no">x3</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">(</span><span class="no">x1</span><span class="p">)</span><span class="w">          </span><span class="c1"># 0x14: x3 = OpenRAM[0] -&gt; 0x1234564B</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="c1"># 2. Modificación selectiva por byte (prueba de máscara wmask0 = 4'b0010)</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">    </span><span class="nf">li</span><span class="w">   </span><span class="no">x6</span><span class="p">,</span><span class="w"> </span><span class="mi">0xAA</span><span class="w">           </span><span class="c1"># 0x18: x6 = 0xAA</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span><span class="nf">sb</span><span class="w">   </span><span class="no">x6</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">(</span><span class="no">x1</span><span class="p">)</span><span class="w">          </span><span class="c1"># 0x1C: Escribe 0xAA en byte 1 (wmask0 = 4'b0010)</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">    </span><span class="nf">lw</span><span class="w">   </span><span class="no">x3</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">(</span><span class="no">x1</span><span class="p">)</span><span class="w">          </span><span class="c1"># 0x20: x3 = OpenRAM[0] -&gt; 0x1234AA4B</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">    </span><span class="c1"># 3. Transmisión del dato por UART (0x00400000)</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">    </span><span class="nf">lui</span><span class="w">  </span><span class="no">x4</span><span class="p">,</span><span class="w"> </span><span class="mi">0x00400</span><span class="w">        </span><span class="c1"># 0x24: x4 = 0x00400000 (Base UART)</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">    </span><span class="nf">sb</span><span class="w">   </span><span class="no">x3</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="p">(</span><span class="no">x4</span><span class="p">)</span><span class="w">          </span><span class="c1"># 0x28: Carga byte 0 [0x4B = 'K'] en d_in_uart (0x00400008)</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">    </span><span class="nf">li</span><span class="w">   </span><span class="no">x5</span><span class="p">,</span><span class="w"> </span><span class="mi">0x08</span><span class="w">           </span><span class="c1"># 0x2C: x5 = 0x08 (Bit 3 = tx_wr)</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">    </span><span class="nf">sb</span><span class="w">   </span><span class="no">x5</span><span class="p">,</span><span class="w"> </span><span class="mi">16</span><span class="p">(</span><span class="no">x4</span><span class="p">)</span><span class="w">         </span><span class="c1"># 0x30: Inicia transmisión (tx_wr = 1)</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">    </span><span class="nf">sb</span><span class="w">   </span><span class="no">x0</span><span class="p">,</span><span class="w"> </span><span class="mi">16</span><span class="p">(</span><span class="no">x4</span><span class="p">)</span><span class="w">         </span><span class="c1"># 0x34: Limpia pulso (tx_wr = 0)</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="nl">loop:</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">    </span><span class="nf">j</span><span class="w">    </span><span class="no">loop</span><span class="w">               </span><span class="c1"># 0x38: Bucle infinito (codificado como jal x0, 0)</span>
 </code></pre></div>
 <details class="info">
 <summary>Ver tabla hexadecimal del firmware</summary>
@@ -1228,61 +1258,85 @@
 <td style="text-align: left;"><code>0x04</code></td>
 <td style="text-align: left;"><code>0xB7, 0x00, 0x41, 0x00</code></td>
 <td style="text-align: left;"><code>lui x1, 0x00410</code></td>
-<td style="text-align: left;"><code>x1 = 0x00410000</code> (Base OpenRAM)</td>
+<td style="text-align: left;"><code>x1 = 0x00410000</code> (Base OpenRAM 32x32)</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>0x08</code></td>
-<td style="text-align: left;"><code>0x13, 0x01, 0xB0, 0x04</code></td>
-<td style="text-align: left;"><code>li x2, 0x4B</code></td>
-<td style="text-align: left;"><code>x2 = 0x4B</code> (<code>'K'</code>)</td>
+<td style="text-align: left;"><code>0x37, 0x51, 0x34, 0x12</code></td>
+<td style="text-align: left;"><code>lui x2, 0x12345</code></td>
+<td style="text-align: left;">Carga parte alta del dato (<code>0x12345000</code>)</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>0x0C</code></td>
-<td style="text-align: left;"><code>0x23, 0x80, 0x20, 0x00</code></td>
-<td style="text-align: left;"><code>sb x2, 0(x1)</code></td>
-<td style="text-align: left;">Escribe <code>'K'</code> en <code>OpenRAM[0]</code></td>
+<td style="text-align: left;"><code>0x13, 0x01, 0xB1, 0x64</code></td>
+<td style="text-align: left;"><code>addi x2, x2, 0x64B</code></td>
+<td style="text-align: left;"><code>x2 = 0x1234564B</code> (byte 0 = <code>0x4B</code>)</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>0x10</code></td>
-<td style="text-align: left;"><code>0x83, 0x81, 0x00, 0x00</code></td>
-<td style="text-align: left;"><code>lb x3, 0(x1)</code></td>
-<td style="text-align: left;">Lee <code>OpenRAM[0]</code> hacia <code>x3</code></td>
+<td style="text-align: left;"><code>0x23, 0xA0, 0x20, 0x00</code></td>
+<td style="text-align: left;"><code>sw x2, 0(x1)</code></td>
+<td style="text-align: left;">Escribe palabra de 32 bits (<code>wmask0 = 4'b1111</code>)</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>0x14</code></td>
+<td style="text-align: left;"><code>0x83, 0xA1, 0x00, 0x00</code></td>
+<td style="text-align: left;"><code>lw x3, 0(x1)</code></td>
+<td style="text-align: left;">Lee <code>OpenRAM[0]</code> hacia <code>x3</code> (<code>0x1234564B</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>0x18</code></td>
+<td style="text-align: left;"><code>0x13, 0x03, 0xA0, 0x0A</code></td>
+<td style="text-align: left;"><code>li x6, 0xAA</code></td>
+<td style="text-align: left;">Carga <code>0xAA</code> en <code>x6</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>0x1C</code></td>
+<td style="text-align: left;"><code>0xA3, 0x80, 0x60, 0x00</code></td>
+<td style="text-align: left;"><code>sb x6, 1(x1)</code></td>
+<td style="text-align: left;">Modifica byte 1 (<code>wmask0 = 4'b0010</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>0x20</code></td>
+<td style="text-align: left;"><code>0x83, 0xA1, 0x00, 0x00</code></td>
+<td style="text-align: left;"><code>lw x3, 0(x1)</code></td>
+<td style="text-align: left;">Lee <code>OpenRAM[0]</code> modificado (<code>x3 = 0x1234AA4B</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>0x24</code></td>
 <td style="text-align: left;"><code>0x37, 0x02, 0x40, 0x00</code></td>
 <td style="text-align: left;"><code>lui x4, 0x00400</code></td>
 <td style="text-align: left;"><code>x4 = 0x00400000</code> (Base UART)</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>0x18</code></td>
+<td style="text-align: left;"><code>0x28</code></td>
 <td style="text-align: left;"><code>0x23, 0x04, 0x32, 0x00</code></td>
 <td style="text-align: left;"><code>sb x3, 8(x4)</code></td>
-<td style="text-align: left;">Carga <code>'K'</code> en <code>d_in_uart</code> (<code>0x00400008</code>)</td>
+<td style="text-align: left;">Carga byte 0 (<code>0x4B = 'K'</code>) en UART (<code>0x00400008</code>)</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>0x1C</code></td>
+<td style="text-align: left;"><code>0x2C</code></td>
 <td style="text-align: left;"><code>0x93, 0x02, 0x80, 0x00</code></td>
 <td style="text-align: left;"><code>li x5, 0x08</code></td>
 <td style="text-align: left;"><code>x5 = 0x08</code> (Bit 3 = <code>tx_wr</code>)</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>0x20</code></td>
+<td style="text-align: left;"><code>0x30</code></td>
 <td style="text-align: left;"><code>0x23, 0x08, 0x52, 0x00</code></td>
 <td style="text-align: left;"><code>sb x5, 16(x4)</code></td>
 <td style="text-align: left;">Activa <code>tx_wr = 1</code> en <code>uart_ctrl</code></td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>0x24</code></td>
+<td style="text-align: left;"><code>0x34</code></td>
 <td style="text-align: left;"><code>0x23, 0x08, 0x02, 0x00</code></td>
 <td style="text-align: left;"><code>sb x0, 16(x4)</code></td>
 <td style="text-align: left;">Limpia <code>tx_wr = 0</code> en <code>uart_ctrl</code></td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>0x28</code></td>
+<td style="text-align: left;"><code>0x38</code></td>
 <td style="text-align: left;"><code>0x6F, 0x00, 0x00, 0x00</code></td>
-<td style="text-align: left;"><code>jal x0, 0</code></td>
-<td style="text-align: left;">Bucle infinito (<code>loop: j loop</code>)</td>
+<td style="text-align: left;"><code>j loop</code></td>
+<td style="text-align: left;">Bucle infinito (<code>jal x0, 0</code>)</td>
 </tr>
 </tbody>
 </table>
@@ -1293,27 +1347,33 @@
 </details>
 <details class="note">
 <summary>Ver diagrama de flujo</summary>
-<p><img alt="Diagrama de flujo" src="../../../img/development/ram/diagrama1.png" /></p>
+<p><img alt="Diagrama de flujo" src="../../../img/development/ram/diagrama1.png" style="display: block; margin: 0 auto;" width="300" /></p>
 </details>
 <h3 id="resultado-de-la-simulacion">Resultado de la Simulación</h3>
-<p>Al ejecutar la simulacion da el siguiente resultado:</p>
-<p><img alt="Transmisión UART" src="../../../img/development/ram/simulation_result.png" /></p>
-<h3 id="verificacion-grafica-de-la-simulacion">Verificacion Grafica de la simulacion.</h3>
+<p><img alt="Transmisión UART" src="../../../img/development/ram/result.png" /></p>
+<h3 id="verificacion-grafica-de-la-simulacion">Verificacion Grafica de la simulacion</h3>
+<p>Para la inspección detallada de las formas de onda, la simulación genera el archivo VCD estándar <code>tt_um_femto_openram.vcd</code> y su archivo de configuración de señales <code>tt_um_femto_openram.gtkw</code>. Puede abrirse con:</p>
+<div class="language-bash highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">cd</span><span class="w"> </span>tinytapeout
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>gtkwave<span class="w"> </span>tt_um_femto_openram.vcd<span class="w"> </span>tt_um_femto_openram.gtkw
+</code></pre></div>
+<p>Puntos clave a comprobar en la traza:</p>
 <ol>
 <li>
-<p><strong>Ejecución completa:</strong> Verificar que <code>debug_pc[23:0]</code> inicia en <code>000000</code> y se detiene en <code>000028</code>.</p>
+<p><strong>Escritura completa (<code>sw</code>):</strong> <code>csb0 = 0</code>, <code>web0 = 0</code> y <code>wmask0 = 4'b1111</code>, escribiendo <code>0x1234564B</code> en <code>din0[31:0]</code>.</p>
 <p><img alt="Ejecución completa" src="../../../img/development/ram/simulation1.png" /></p>
 </li>
 <li>
-<p><strong>Escritura en OpenRAM:</strong> Verificar en <code>29.2 µs</code> que <code>csb0 = 0</code>, <code>web0 = 0</code>, <code>addr0 = 0</code> y <code>din0 = 04B</code>.</p>
+<ul>
+<li><strong>Escritura inicial (<code>sw</code>):</strong> En el primer flanco positivo de <code>clk0</code> con las señales de control activas (<code>csb0 = 0</code>, <code>web0 = 0</code>) y la máscara completa (<code>wmask0 = 4'b1111</code>), se verifica que el bus de entrada <code>din0[31:0]</code> presente la palabra de datos <code>0x1234564B</code> para su almacenamiento en la dirección base de la memoria.</li>
+</ul>
 <p><img alt="Escritura en OpenRAM" src="../../../img/development/ram/simulation2.png" /></p>
 </li>
 <li>
-<p><strong>Lectura desde OpenRAM:</strong> Verificar en <code>36.4 µs</code> que <code>web0 = 1</code>, <code>dout0 = X4B</code> y <code>debug_x3_dato_rd = 0000004B</code>.</p>
+<p><strong>Lectura desde OpenRAM:</strong> Verificar durante el ciclo de lectura (<code>lw</code>) que <code>web0 = 1</code>, <code>dout0 = 0_1234AA4B</code>.</p>
 <p><img alt="Lectura desde OpenRAM" src="../../../img/development/ram/simulation3.png" /></p>
 </li>
 <li>
-<p><strong>Transmisión UART:</strong> Verificar entre <code>43 µs</code> y <code>139 µs</code> el envío serie del carácter <code>'K'</code> (<code>0x4B</code>) por <code>uart_tx</code>.</p>
+<p><strong>Transmisión UART:</strong> Verificar el envío serie del carácter <code>'K'</code> (<code>0x4B</code>) por <code>uart_tx</code> con su respectivo start bit, 8 bits de datos y stop bit.</p>
 <p><img alt="Transmisión UART" src="../../../img/development/ram/simulation4.png" /></p>
 </li>
 </ol>

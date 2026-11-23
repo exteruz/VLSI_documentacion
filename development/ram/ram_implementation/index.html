@@ -773,33 +773,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#1-analisis-de-area-en-4x2-tiles" class="md-nav__link">
+  <a href="#2-generacion-del-macro-openram-sky130_sram_32x32" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1 Análisis de Área en 4x2 Tiles
+        2. Generación del Macro OpenRAM (sky130_sram_32x32)
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#2-generacion-del-macro-openram-sky130_sram_16x8" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. Generación del Macro OpenRAM (sky130_sram_16x8)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="2. Generación del Macro OpenRAM (sky130_sram_16x8)">
+    <nav class="md-nav" aria-label="2. Generación del Macro OpenRAM (sky130_sram_32x32)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#21-archivo-de-configuracion-sram_16x8_configpy" class="md-nav__link">
+  <a href="#21-archivo-de-configuracion-sram_32x32_configpy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.1 Archivo de Configuración (sram_16x8_config.py)
+        2.1 Archivo de Configuración (sram_32x32_config.py)
       
     </span>
   </a>
@@ -823,10 +812,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#3-modelo-blackbox-verilog-sky130_sram_16x8_bbv" class="md-nav__link">
+  <a href="#3-modelo-blackbox-verilog-sky130_sram_32x32_bbv" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Modelo Blackbox Verilog (sky130_sram_16x8_bb.v)
+        3. Modelo Blackbox Verilog (sky130_sram_32x32_bb.v)
       
     </span>
   </a>
@@ -834,10 +823,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#3-resumen-de-archivos-generados" class="md-nav__link">
+  <a href="#4-resumen-de-archivos-generados" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Resumen de Archivos Generados
+        4. Resumen de Archivos Generados
       
     </span>
   </a>
@@ -916,14 +905,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../cambios_32x32/" class="md-nav__link">
+      <a href="../tinytapeout_env/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Actualización a 32x32
+    Entorno y Simulación en TinyTapeout
   
 
     
@@ -979,33 +968,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#1-analisis-de-area-en-4x2-tiles" class="md-nav__link">
+  <a href="#2-generacion-del-macro-openram-sky130_sram_32x32" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1 Análisis de Área en 4x2 Tiles
+        2. Generación del Macro OpenRAM (sky130_sram_32x32)
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#2-generacion-del-macro-openram-sky130_sram_16x8" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. Generación del Macro OpenRAM (sky130_sram_16x8)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="2. Generación del Macro OpenRAM (sky130_sram_16x8)">
+    <nav class="md-nav" aria-label="2. Generación del Macro OpenRAM (sky130_sram_32x32)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#21-archivo-de-configuracion-sram_16x8_configpy" class="md-nav__link">
+  <a href="#21-archivo-de-configuracion-sram_32x32_configpy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.1 Archivo de Configuración (sram_16x8_config.py)
+        2.1 Archivo de Configuración (sram_32x32_config.py)
       
     </span>
   </a>
@@ -1029,10 +1007,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#3-modelo-blackbox-verilog-sky130_sram_16x8_bbv" class="md-nav__link">
+  <a href="#3-modelo-blackbox-verilog-sky130_sram_32x32_bbv" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Modelo Blackbox Verilog (sky130_sram_16x8_bb.v)
+        3. Modelo Blackbox Verilog (sky130_sram_32x32_bb.v)
       
     </span>
   </a>
@@ -1040,10 +1018,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#3-resumen-de-archivos-generados" class="md-nav__link">
+  <a href="#4-resumen-de-archivos-generados" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Resumen de Archivos Generados
+        4. Resumen de Archivos Generados
       
     </span>
   </a>
@@ -1077,76 +1055,82 @@
 </ul>
 </div>
 <h1 id="creacion-de-la-memoria-usando-openram">Creacion de la memoria usando OpenRam</h1>
-<p>Este apartado describe el proceso de creación del macro de memoria RAM estática síncrona (<strong>OpenRAM 16×8</strong>, 16 palabras de 8 bits = 16 bytes) a través de <strong>OpenRAM</strong> sobre la tecnología SkyWater 130nm, dimensionado para el SoC <strong>femto_UN</strong> dentro del presupuesto de área de <strong>4×2 tiles</strong> de Tiny Tapeout.</p>
-<h2 id="1-analisis-de-area-en-4x2-tiles">1 Análisis de Área en <code>4x2</code> Tiles</h2>
-<p>El bloque asignado de <strong><code>4x2</code> tiles</strong> en Tiny Tapeout ofrece un área total de <strong><span class="arithmatex">\(154,095\ \mu\text{m}^2\)</span></strong> (<span class="arithmatex">\(682.56\ \mu\text{m} \times 225.76\ \mu\text{m}\)</span>, equivalente a 8 <em>tiles</em>).</p>
-<ul>
-<li><strong>Diseño anterior (<code>femto_UN</code> sin RAM):</strong> El procesador RISC-V y sus periféricos ocupaban cerca de <strong><span class="arithmatex">\(74,000\ \mu\text{m}^2\)</span></strong> </li>
-<li><strong>Diseño nuevo (<code>femto_UN</code> + OpenRAM <code>16x8</code>):</strong> El macro <code>sky130_sram_16x8</code> (con su margen de aislamiento) suma aproximadamente <strong><span class="arithmatex">\(22,000\ \mu\text{m}^2\)</span></strong> </li>
-</ul>
-<p>Al integrarlos, el diseño completo ocupa cerca del <strong><span class="arithmatex">\(62.3\%\)</span></strong> del área (<span class="arithmatex">\(96,000\ \mu\text{m}^2\)</span> o <strong>5.3 <em>tiles</em></strong>), conservando un <strong><span class="arithmatex">\(37.7\%\)</span> de espacio libre</strong> para enrutamiento y síntesis de reloj (<em>CTS</em>), por lo que cabe sin ampliar los <code>4x2</code> tiles.</p>
-<h2 id="2-generacion-del-macro-openram-sky130_sram_16x8">2. Generación del Macro OpenRAM (<code>sky130_sram_16x8</code>)</h2>
-<p>El macro se compila con el generador de memorias OpenRAM configurado para la tecnología Sky130.</p>
-<h3 id="21-archivo-de-configuracion-sram_16x8_configpy">2.1 Archivo de Configuración (<code>sram_16x8_config.py</code>)</h3>
-<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">word_size</span> <span class="o">=</span> <span class="mi">8</span>               <span class="c1"># Ancho de palabra útil: 8 bits (1 byte)</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">num_words</span> <span class="o">=</span> <span class="mi">16</span>              <span class="c1"># Profundidad: 16 palabras (4 bits de dirección)</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">num_rw_ports</span> <span class="o">=</span> <span class="mi">1</span>            <span class="c1"># 1 puerto síncrono lectura/escritura (1RW)</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">num_r_ports</span> <span class="o">=</span> <span class="mi">0</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">num_w_ports</span> <span class="o">=</span> <span class="mi">0</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">tech_name</span> <span class="o">=</span> <span class="s2">"sky130"</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">process_corners</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"TT"</span><span class="p">]</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">supply_voltages</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.8</span><span class="p">]</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="n">temperatures</span> <span class="o">=</span> <span class="p">[</span><span class="mi">25</span><span class="p">]</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="n">nominal_corner_only</span> <span class="o">=</span> <span class="kc">True</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="n">route_supplies</span> <span class="o">=</span> <span class="kc">True</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="n">check_lvsdrc</span> <span class="o">=</span> <span class="kc">True</span>
+<p>Este apartado describe el proceso de creación del macro de memoria RAM estática síncrona (<strong>OpenRAM 32×32</strong>, 32 palabras de 32 bits = 128 bytes) a través de <strong>OpenRAM</strong> sobre la tecnología SkyWater 130nm (Sky130A), con máscara de escritura por byte (<code>wmask0[3:0]</code>), dimensionado para el SoC <strong>femto_UN</strong> dentro del presupuesto de área de <strong>4×2 tiles</strong> de Tiny Tapeout.</p>
+<h2 id="2-generacion-del-macro-openram-sky130_sram_32x32">2. Generación del Macro OpenRAM (<code>sky130_sram_32x32</code>)</h2>
+<p>El macro se compila con el generador de memorias OpenRAM configurado para la tecnología SkyWater 130nm.</p>
+<h3 id="21-archivo-de-configuracion-sram_32x32_configpy">2.1 Archivo de Configuración (<code>sram_32x32_config.py</code>)</h3>
+<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Capacidad: 32 palabras x 32 bits (128 bytes)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">word_size</span> <span class="o">=</span> <span class="mi">32</span>              <span class="c1"># Ancho de palabra: 32 bits (4 bytes)</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">num_words</span> <span class="o">=</span> <span class="mi">32</span>              <span class="c1"># Profundidad: 32 palabras (5 bits de dirección)</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">write_size</span> <span class="o">=</span> <span class="mi">8</span>              <span class="c1"># Granularidad de escritura: genera el pin wmask0[3:0]</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">num_rw_ports</span> <span class="o">=</span> <span class="mi">1</span>            <span class="c1"># 1 puerto de lectura/escritura síncrono (1RW)</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">num_r_ports</span> <span class="o">=</span> <span class="mi">0</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">num_w_ports</span> <span class="o">=</span> <span class="mi">0</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">words_per_row</span> <span class="o">=</span> <span class="mi">1</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Requerido en Sky130 para simetría par en columnas de sensado</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="n">num_spare_cols</span> <span class="o">=</span> <span class="mi">1</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="n">tech_name</span> <span class="o">=</span> <span class="s2">"sky130A"</span>
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Parámetro crítico para simetría Sky130</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="n">num_spare_cols</span> <span class="o">=</span> <span class="mi">1</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Opciones de compilación física</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="n">nominal_corner_only</span> <span class="o">=</span> <span class="kc">True</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="n">analytical_delay</span> <span class="o">=</span> <span class="kc">True</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="n">route_supplies</span> <span class="o">=</span> <span class="s2">"ring"</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="n">check_lvsdrc</span> <span class="o">=</span> <span class="kc">True</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="n">output_name</span> <span class="o">=</span> <span class="s2">"sky130_sram_32x32"</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="n">output_path</span> <span class="o">=</span> <span class="s2">"macro_32x32"</span>
 </code></pre></div>
+<p>Granularidad de escritura
+<img alt="Descripción de la imagen" src="../../../img/development/ram/arquitectura.png" /></p>
 <details class="note">
-<summary>Por qué se incluye <code>num_spare_cols = 1</code> (Columna de Reserva)</summary>
-<p>En SkyWater 130nm, la celda de memoria SRAM de 6 transistores (<code>sky130_fd_bd_sram__sram_sp_cell_opt1</code>) requiere restricciones de pitch de columna y simetría en los amplificadores de sentido (<em>sense amplifiers</em>). OpenRAM exige <code>num_spare_cols = 1</code>, lo que genera un bus interno de <strong>9 bits</strong> (<code>din0[8:0]</code>, <code>dout0[8:0]</code>) y una señal de control <code>spare_wen0</code>. En el hardware, los 8 bits útiles se conectan al bus de datos del procesador y el noveno bit se fija a <code>0</code> para garantizar compatibilidad eléctrica y dimensional.</p>
+<summary>Por qué se incluye <code>num_spare_cols = 1</code> y Máscara de Escritura (<code>write_size = 8</code>)</summary>
+<ol>
+<li><strong>Máscara de Byte (<code>wmask0[3:0]</code>):</strong> Con <code>write_size = 8</code> y <code>word_size = 32</code>, OpenRAM divide la fila en 4 campos independientes de 8 bits. La señal <code>wmask0[0]</code> controla los bits <code>[7:0]</code>, <code>wmask0[1]</code> los bits <code>[15:8]</code>, <code>wmask0[2]</code> los bits <code>[23:16]</code> y <code>wmask0[3]</code> los bits <code>[31:24]</code>. Esto permite que el procesador RISC-V ejecute instrucciones <code>sb</code> (<em>store byte</em>) y <code>sh</code> (<em>store halfword</em>) directamente sin destruir los bytes adyacentes de la palabra.</li>
+<li><strong>Bus de 33 bits y Columna de Reserva (<code>num_spare_cols = 1</code>):</strong> En SkyWater 130nm, la celda SRAM de 6 transistores (<code>sky130_fd_bd_sram__sram_sp_cell_opt1</code>) requiere restricciones de simetría física y paridad en los amplificadores de sentido (<em>sense amplifiers</em>). OpenRAM exige <code>num_spare_cols = 1</code>, generando un bus de 33 bits (<code>din0[32:0]</code>, <code>dout0[32:0]</code>) y una señal <code>spare_wen0</code>. En el hardware, los 32 bits útiles se conectan al bus de datos y el bit 32 se fija a <code>0</code> con <code>spare_wen0 = 1'b0</code>.</li>
+</ol>
 </details>
 <h3 id="22-archivos-del-macro-producidos">2.2 Archivos del Macro Producidos</h3>
 <p>Los archivos resultantes se alojan en el directorio <code>femto_UN/macros/</code>:
-* <code>sky130_sram_16x8.gds</code>: Layout físico GDSII.
+* <code>sky130_sram_32x32.gds</code>: Layout físico GDSII.
 <img alt="Descripción de la imagen" src="../../../img/development/ram/ram.png" />
-* <code>sky130_sram_16x8.lef</code>: Información abstracta de geometría y pines para Place &amp; Route (PnR).
-* <code>sky130_sram_16x8_TT_1p8V_25C.lib</code>: Modelo de tiempos y potencia Liberty (<em>timing corner</em> típico 1.8V, 25°C).
-* <code>sky130_sram_16x8.v</code>: Modelo funcional de simulación Verilog.</p>
+* <code>sky130_sram_32x32.lef</code>: Información abstracta de geometría y pines para Place &amp; Route (PnR).
+* <code>sky130_sram_32x32_TT_1p8V_25C.lib</code>: Modelo de tiempos y potencia Liberty (<em>timing corner</em> típico 1.8V, 25°C).
+* <code>sky130_sram_32x32.v</code>: Modelo funcional de simulación Verilog.
+* <code>sky130_sram_32x32.sp</code>: Netlist SPICE con transistores extraídos para LVS.</p>
 <hr />
 <details class="info">
-<summary>Datasheet OpenRAM: sky130_sram_16x8 (Clic para expandir)</summary>
-<p><iframe src="../../../assets/openram/sky130_sram_16x8.html" width="100%" height="700px" style="border: none;"></iframe></p>
+<summary>Datasheet OpenRAM: sky130_sram_32x32 (Clic para expandir)</summary>
+<p><iframe src="../../../assets/openram/sky130_sram_32x32.html" width="100%" height="700px" style="border: none;"></iframe></p>
 </details>
 <ul>
-<li><a href="../../../assets/openram/sky130_sram_16x8.lef">Descargar archivo LEF (sky130_sram_16x8.lef)</a></li>
+<li><a href="../../../assets/openram/sky130_sram_32x32.lef">Descargar archivo LEF (sky130_sram_32x32.lef)</a></li>
 </ul>
-<h2 id="3-modelo-blackbox-verilog-sky130_sram_16x8_bbv">3. Modelo Blackbox Verilog (<code>sky130_sram_16x8_bb.v</code>)</h2>
+<h2 id="3-modelo-blackbox-verilog-sky130_sram_32x32_bbv">3. Modelo Blackbox Verilog (<code>sky130_sram_32x32_bb.v</code>)</h2>
 <p>Para que Yosys reconozca el macro como un bloque pre-sintetizado durante la síntesis lógica sin inferir compuertas internas, se define el <em>blackbox</em> respetando la totalidad de pines del archivo LEF:</p>
 <div class="language-verilog highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="cm">/* verilator lint_off UNUSED */</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">module</span><span class="w"> </span><span class="n">sky130_sram_16x8</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">module</span><span class="w"> </span><span class="n">sky130_sram_32x32</span><span class="w"> </span><span class="p">(</span>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="no">`ifdef</span><span class="w"> </span><span class="n">USE_POWER_PINS</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="k">inout</span><span class="w">  </span><span class="kt">wire</span><span class="w">       </span><span class="n">vccd1</span><span class="p">,</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="k">inout</span><span class="w">  </span><span class="kt">wire</span><span class="w">       </span><span class="n">vssd1</span><span class="p">,</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="k">inout</span><span class="w">  </span><span class="kt">wire</span><span class="w">        </span><span class="n">vccd1</span><span class="p">,</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="k">inout</span><span class="w">  </span><span class="kt">wire</span><span class="w">        </span><span class="n">vssd1</span><span class="p">,</span>
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="no">`endif</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="k">input</span><span class="w">  </span><span class="kt">wire</span><span class="w">       </span><span class="n">clk0</span><span class="p">,</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span><span class="k">input</span><span class="w">  </span><span class="kt">wire</span><span class="w">       </span><span class="n">csb0</span><span class="p">,</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="k">input</span><span class="w">  </span><span class="kt">wire</span><span class="w">       </span><span class="n">web0</span><span class="p">,</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="k">input</span><span class="w">  </span><span class="kt">wire</span><span class="w">       </span><span class="n">spare_wen0</span><span class="p">,</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="k">input</span><span class="w">  </span><span class="kt">wire</span><span class="w"> </span><span class="p">[</span><span class="mh">3</span><span class="o">:</span><span class="mh">0</span><span class="p">]</span><span class="w"> </span><span class="n">addr0</span><span class="p">,</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">    </span><span class="k">input</span><span class="w">  </span><span class="kt">wire</span><span class="w"> </span><span class="p">[</span><span class="mh">8</span><span class="o">:</span><span class="mh">0</span><span class="p">]</span><span class="w"> </span><span class="n">din0</span><span class="p">,</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span><span class="k">output</span><span class="w"> </span><span class="kt">wire</span><span class="w"> </span><span class="p">[</span><span class="mh">8</span><span class="o">:</span><span class="mh">0</span><span class="p">]</span><span class="w"> </span><span class="n">dout0</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="p">);</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="k">endmodule</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="cm">/* verilator lint_on UNUSED */</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="k">input</span><span class="w">  </span><span class="kt">wire</span><span class="w">        </span><span class="n">clk0</span><span class="p">,</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span><span class="k">input</span><span class="w">  </span><span class="kt">wire</span><span class="w">        </span><span class="n">csb0</span><span class="p">,</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="k">input</span><span class="w">  </span><span class="kt">wire</span><span class="w">        </span><span class="n">web0</span><span class="p">,</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="k">input</span><span class="w">  </span><span class="kt">wire</span><span class="w"> </span><span class="p">[</span><span class="mh">3</span><span class="o">:</span><span class="mh">0</span><span class="p">]</span><span class="w">  </span><span class="n">wmask0</span><span class="p">,</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="k">input</span><span class="w">  </span><span class="kt">wire</span><span class="w">        </span><span class="n">spare_wen0</span><span class="p">,</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">    </span><span class="k">input</span><span class="w">  </span><span class="kt">wire</span><span class="w"> </span><span class="p">[</span><span class="mh">4</span><span class="o">:</span><span class="mh">0</span><span class="p">]</span><span class="w">  </span><span class="n">addr0</span><span class="p">,</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span><span class="k">input</span><span class="w">  </span><span class="kt">wire</span><span class="w"> </span><span class="p">[</span><span class="mh">32</span><span class="o">:</span><span class="mh">0</span><span class="p">]</span><span class="w"> </span><span class="n">din0</span><span class="p">,</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">    </span><span class="k">output</span><span class="w"> </span><span class="kt">wire</span><span class="w"> </span><span class="p">[</span><span class="mh">32</span><span class="o">:</span><span class="mh">0</span><span class="p">]</span><span class="w"> </span><span class="n">dout0</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="p">);</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="k">endmodule</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="cm">/* verilator lint_on UNUSED */</span>
 </code></pre></div>
-<p>El archivo se almacena en <code>femto_UN/macros/sky130_sram_16x8_bb.v</code> y en <code>femto_UN/src/sky130_sram_16x8_bb.v</code>.</p>
+<p>El archivo se almacena en <code>femto_UN/macros/sky130_sram_32x32_bb.v</code> y en <code>femto_UN/src/sky130_sram_32x32_bb.v</code>.</p>
 <hr />
-<h2 id="3-resumen-de-archivos-generados">3. Resumen de Archivos Generados</h2>
+<h2 id="4-resumen-de-archivos-generados">4. Resumen de Archivos Generados</h2>
 <table>
 <thead>
 <tr>
@@ -1157,32 +1141,37 @@
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><code>sram_16x8_config.py</code></td>
-<td style="text-align: left;"><code>asic_ram/VLSI/</code></td>
+<td style="text-align: left;"><code>sram_32x32_config.py</code></td>
+<td style="text-align: left;"><code>open_ram/OpenRAM/</code></td>
 <td style="text-align: left;">Script de configuración para el compilador OpenRAM.</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>sky130_sram_16x8.gds</code></td>
+<td style="text-align: left;"><code>sky130_sram_32x32.gds</code></td>
 <td style="text-align: left;"><code>femto_UN/macros/</code></td>
-<td style="text-align: left;">Layout físico GDSII del macro.</td>
+<td style="text-align: left;">Layout físico GDSII del macro (<span class="arithmatex">\(310.68\ \mu\text{m} \times 160.44\ \mu\text{m}\)</span>).</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>sky130_sram_16x8.lef</code></td>
+<td style="text-align: left;"><code>sky130_sram_32x32.lef</code></td>
 <td style="text-align: left;"><code>femto_UN/macros/</code></td>
 <td style="text-align: left;">Definición abstracta LEF (geometría y pines para PnR).</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>sky130_sram_16x8_TT_1p8V_25C.lib</code></td>
+<td style="text-align: left;"><code>sky130_sram_32x32_TT_1p8V_25C.lib</code></td>
 <td style="text-align: left;"><code>femto_UN/macros/</code></td>
 <td style="text-align: left;">Modelo de tiempos y potencia Liberty (<code>1.8 V</code>, <code>25 °C</code>).</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>sky130_sram_16x8.v</code></td>
+<td style="text-align: left;"><code>sky130_sram_32x32.v</code></td>
 <td style="text-align: left;"><code>femto_UN/macros/</code></td>
-<td style="text-align: left;">Modelo funcional Verilog para simulación.</td>
+<td style="text-align: left;">Modelo funcional Verilog para simulación síncrona.</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>sky130_sram_16x8_bb.v</code></td>
+<td style="text-align: left;"><code>sky130_sram_32x32.sp</code></td>
+<td style="text-align: left;"><code>femto_UN/macros/</code></td>
+<td style="text-align: left;">Netlist SPICE con transistores extraídos para LVS.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>sky130_sram_32x32_bb.v</code></td>
 <td style="text-align: left;"><code>femto_UN/macros/</code> y <code>femto_UN/src/</code></td>
 <td style="text-align: left;">Módulo Blackbox para síntesis lógica con Yosys.</td>
 </tr>

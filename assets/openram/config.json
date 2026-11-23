@@ -33,21 +33,21 @@
 
   "//": "OpenRAM Hard Macro Configuration",
   "MACROS": {
-    "sky130_sram_16x8": {
-      "gds": ["dir::../macros/sky130_sram_16x8.gds"],
-      "lef": ["dir::../macros/sky130_sram_16x8.lef"],
+    "sky130_sram_32x32": {
+      "gds": ["dir::../macros/sky130_sram_32x32.gds"],
+      "lef": ["dir::../macros/sky130_sram_32x32.lef"],
       "instances": {
         "femto0.u_sram": {
-          "location": [15, 35],
+          "location": [15, 30],
           "orientation": "N"
         }
       },
-      "nl": ["dir::../macros/sky130_sram_16x8.v"]
+      "nl": ["dir::../macros/sky130_sram_32x32.v"]
     }
   },
-  "EXTRA_LEFS": ["dir::../macros/sky130_sram_16x8.lef"],
-  "EXTRA_GDS_FILES": ["dir::../macros/sky130_sram_16x8.gds"],
-  "EXTRA_LIBS": ["dir::../macros/sky130_sram_16x8_TT_1p8V_25C.lib"],
+  "EXTRA_LEFS": ["dir::../macros/sky130_sram_32x32.lef"],
+  "EXTRA_GDS_FILES": ["dir::../macros/sky130_sram_32x32.gds"],
+  "EXTRA_LIBS": ["dir::../macros/sky130_sram_32x32_TT_1p8V_25C.lib"],
   "PDN_MACRO_CONNECTIONS": [
     "femto0.u_sram vccd1 vssd1 vccd1 vssd1"
   ],
