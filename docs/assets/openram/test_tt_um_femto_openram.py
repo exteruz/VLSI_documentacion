@@ -2,19 +2,34 @@ import cocotb
 from cocotb.clock import Clock
 from cocotb.triggers import ClockCycles, FallingEdge, First, RisingEdge
 
-# Escribe 'K' (0x4B) en OpenRAM (0x00410000), lo lee en x3 y lo transmite por UART hardware
+# Programa de prueba OpenRAM 32x32 (128 bytes, palabras de 32 bits con wmask0[3:0]):
+# 1. lui x1, 0x00410      (x1 = 0x00410000, base de OpenRAM)
+# 2. lui x2, 0x12345; addi x2, x2, 0x64B  (x2 = 0x1234564B)
+# 3. sw  x2, 0(x1)        (Escribe palabra completa de 32 bits en OpenRAM[0], wmask0 = 4'b1111)
+# 4. lw  x3, 0(x1)        (Lee de vuelta palabra completa de 32 bits -> x3 = 0x1234564B)
+# 5. li  x6, 0xAA         (x6 = 0xAA)
+# 6. sb  x6, 1(x1)        (Escribe byte en offset 1: prueba wmask0 = 4'b0010 sin alterar bytes 0, 2, 3)
+# 7. lw  x3, 0(x1)        (Lee de vuelta palabra -> x3 = 0x1234AA4B)
+# 8. lui x4, 0x00400      (x4 = 0x00400000, base UART)
+# 9. sb  x3, 8(x4)        (Transmite byte 0 'K' [0x4B] por UART)
+# 10. li x5, 0x08; sb x5, 16(x4); sb x0, 16(x4)  (Dispara y limpia TX UART)
+# 11. loop: j loop
 OPENRAM_PROGRAM = bytes([
     0x13, 0x00, 0x00, 0x00,  # 0x00: nop
-    0xB7, 0x00, 0x41, 0x00,  # 0x04: lui x1, 0x00410      (x1 = 0x00410000 Base OpenRAM)
-    0x13, 0x01, 0xB0, 0x04,  # 0x08: li  x2, 0x4B         (x2 = 'K')
-    0x23, 0x80, 0x20, 0x00,  # 0x0C: sb  x2, 0(x1)        (Escribe 'K' en OpenRAM[0])
-    0x83, 0x81, 0x00, 0x00,  # 0x10: lb  x3, 0(x1)        (Lee de vuelta OpenRAM[0] -> x3)
-    0x37, 0x02, 0x40, 0x00,  # 0x14: lui x4, 0x00400      (x4 = 0x00400000 Base UART)
-    0x23, 0x04, 0x32, 0x00,  # 0x18: sb  x3, 8(x4)        (Carga 'K' en d_in_uart [0x00400008])
-    0x93, 0x02, 0x80, 0x00,  # 0x1C: li  x5, 0x08         (Bit 3 = tx_wr)
-    0x23, 0x08, 0x52, 0x00,  # 0x20: sb  x5, 16(x4)       (Activa tx_wr = 1 en uart_ctrl [0x00400010])
-    0x23, 0x08, 0x02, 0x00,  # 0x24: sb  x0, 16(x4)       (Limpia tx_wr = 0 en uart_ctrl [0x00400010])
-    0x6F, 0x00, 0x00, 0x00,  # 0x28: jal x0, 0            (loop: j loop)
+    0xB7, 0x00, 0x41, 0x00,  # 0x04: lui x1, 0x00410
+    0x37, 0x51, 0x34, 0x12,  # 0x08: lui x2, 0x12345
+    0x13, 0x01, 0xB1, 0x64,  # 0x0C: addi x2, x2, 0x64B (x2 = 0x1234564B)
+    0x23, 0xA0, 0x20, 0x00,  # 0x10: sw x2, 0(x1)       (wmask0 = 4'b1111)
+    0x83, 0xA1, 0x00, 0x00,  # 0x14: lw x3, 0(x1)       (x3 = 0x1234564B)
+    0x13, 0x03, 0xA0, 0x0A,  # 0x18: li x6, 0xAA
+    0xA3, 0x80, 0x60, 0x00,  # 0x1C: sb x6, 1(x1)       (wmask0 = 4'b0010)
+    0x83, 0xA1, 0x00, 0x00,  # 0x20: lw x3, 0(x1)       (x3 = 0x1234AA4B)
+    0x37, 0x02, 0x40, 0x00,  # 0x24: lui x4, 0x00400
+    0x23, 0x04, 0x32, 0x00,  # 0x28: sb x3, 8(x4)       (carga byte 0 [0x4B = 'K'] a UART)
+    0x93, 0x02, 0x80, 0x00,  # 0x2C: li x5, 0x08
+    0x23, 0x08, 0x52, 0x00,  # 0x30: sb x5, 16(x4)      (tx_wr = 1)
+    0x23, 0x08, 0x02, 0x00,  # 0x34: sb x0, 16(x4)      (tx_wr = 0)
+    0x6F, 0x00, 0x00, 0x00,  # 0x38: j loop
 ])
 
 
@@ -84,13 +99,16 @@ async def uart_rx_monitor(dut, received_bytes, clks_per_bit=208):
 
 @cocotb.test()
 async def test_openram_write_read_uart(dut):
-    """Escribe 'K' (0x4B) en OpenRAM (0x00410000), lo lee en x3 y lo transmite por UART."""
+    """Verifica OpenRAM 32x32: escritura y lectura de 32 bits (sw/lw), byte-mask (sb) y salida UART."""
     dut.rst_n.value = 0
     dut.uart_rx.value = 1
     dut.ram_miso.value = 0
     dut.flash_miso.value = 0
 
-    clock = Clock(dut.clk, 37038, unit="ps")  # ~27 MHz
+    try:
+        clock = Clock(dut.clk, 37038, units="ps")  # ~27 MHz
+    except TypeError:
+        clock = Clock(dut.clk, 37038, unit="ps")
     cocotb.start_soon(clock.start())
 
     flash = SpiFlash(dut, OPENRAM_PROGRAM)
@@ -108,9 +126,10 @@ async def test_openram_write_read_uart(dut):
 
         if not sram_read_verified:
             try:
-                if int(dut.dut.femto0.CPU.registerFile[3].value) == 0x4B:
+                # Verificamos que x3 cargue 0x1234AA4B (demuestra escritura word 32b y byte mask parcial)
+                if int(dut.dut.femto0.CPU.registerFile[3].value) == 0x1234AA4B:
                     sram_read_verified = True
-                    dut._log.info("[SRAM OK] Registro x3 cargó 0x4B ('K') desde OpenRAM")
+                    dut._log.info("[SRAM OK] Registro x3 cargó 0x1234AA4B desde OpenRAM 32x32")
             except Exception:
                 pass
 
@@ -122,8 +141,8 @@ async def test_openram_write_read_uart(dut):
             f"PC=0x{int(dut.debug_pc.value):06x}"
         )
 
-    assert sram_read_verified, "El registro x3 nunca recibió 0x4B ('K') desde OpenRAM"
+    assert sram_read_verified, "El registro x3 nunca recibió 0x1234AA4B desde OpenRAM 32x32"
     assert uart_bytes[0] == 0x4B, (
         f"Se esperaba 'K' (0x4B) por UART, se recibió: {uart_bytes}"
     )
-    dut._log.info("Prueba OpenRAM + UART hardware completada con éxito: 'K' (0x4B) verificado.")
+    dut._log.info("Prueba OpenRAM 32x32 + UART hardware completada con éxito: 0x1234AA4B y 'K' (0x4B) verificados.")

@@ -19,7 +19,7 @@ OBJS+= ../femto_UN/src/MappedSPIRAM.v
 //OBJS+= cores/spi_flash/MappedSPIFlash.v
 SIM_OBJS = cores/sim_spi_flash/spiflash.v
 SIM_OBJS+= cores/sim_spi_ram/spiram.v
-SIM_OBJS+= ../femto_UN/macros/sky130_sram_16x8.v
+SIM_OBJS+= ../femto_UN/macros/sky130_sram_32x32.v
 SIM_OBJS_SKY = verilog_model/sky130_fd_sc_hd.v
 SIM_OBJS_SKY += verilog_model/primitives.v
 
@@ -34,12 +34,12 @@ ${TARGET}.svf : ${TARGET}.bit
 
 sim: 
 	rm -f a.out *.vcd
-	iverilog -g2012 -DBENCH -DSIM -DPASSTHROUGH_PLL -DBOARD_FREQ=27 -DCPU_FREQ=27 tt_um_femto_TB.v ${OBJS} ${SIM_OBJS}
+	iverilog -g2012 -DBENCH -DSIM -DPASSTHROUGH_PLL -DBOARD_FREQ=27 -DCPU_FREQ=27 -s tt_um_femto_TB tt_um_femto_TB.v ${OBJS} ${SIM_OBJS}
 	vvp a.out
-	gtkwave tt_um_femto_TB.vcd
+	gtkwave tt_um_femto_TB.vcd &
 
-COCOTB_MAKEFILES := $(shell cocotb-config --makefiles)
-COCOTB_SOURCES := $(abspath tt_um_femto_cocotb.v $(OBJS) ../femto_UN/macros/sky130_sram_16x8.v)
+COCOTB_MAKEFILES ?= $(shell cocotb-config --makefiles 2>/dev/null)
+COCOTB_SOURCES := $(abspath tt_um_femto_cocotb.v $(OBJS) ../femto_UN/macros/sky130_sram_32x32.v)
 
 cocotb:
 	$(MAKE) -f $(COCOTB_MAKEFILES)/Makefile.sim \
@@ -48,6 +48,7 @@ cocotb:
 		VERILOG_SOURCES="$(COCOTB_SOURCES)" \
 		COMPILE_ARGS="-g2012 -DBENCH" \
 		TOPLEVEL=tt_um_femto_cocotb \
+		MODULE=test_tt_um_femto \
 		COCOTB_TEST_MODULES=test_tt_um_femto \
 		COCOTB_RESULTS_FILE=build/cocotb/results.xml \
 		SIM_BUILD=build/cocotb
@@ -60,10 +61,10 @@ cocotb_openram:
 		VERILOG_SOURCES="$(COCOTB_SOURCES)" \
 		COMPILE_ARGS="-g2012 -DBENCH" \
 		TOPLEVEL=tt_um_femto_cocotb \
+		MODULE=test_tt_um_femto_openram \
 		COCOTB_TEST_MODULES=test_tt_um_femto_openram \
 		COCOTB_RESULTS_FILE=build/cocotb_openram/results.xml \
-		SIM_BUILD=build/cocotb_openram \
-		WAVES=1
+		SIM_BUILD=build/cocotb_openram
 #conda install -c conda-forge click
 # o sudo pip3 install Click
 
